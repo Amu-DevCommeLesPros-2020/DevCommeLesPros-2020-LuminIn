@@ -79,7 +79,7 @@ void bd_ecriture_compagnies(char const* const chemin_bd, compagnies const* const
         for(node const* n = cos->tete; n; n = n->next)
         {
             compagnie *co = (compagnie*)(n->data);
-            fprintf(table_compagnie, "%zu,%s,%.5s,%s\n", co->id, co->nom, co->code_postal, c->mail);
+            fprintf(table_compagnie, "%zu,%s,%.5s,%s\n", co->id, co->nom, co->code_postal, co->mail);
         }
     }
     

@@ -1,4 +1,5 @@
 #include "bd.h"
+#include "compagnie.h"
 #include "journal.h"
 #include "types.h"
 
@@ -124,6 +125,15 @@ int main()
         TEST(strcmp(co->mail, "nobody@bowhere.com") == 0);
 
         free_compagnies(cos);
+    }
+
+    // Test pour créer un profil de compagnie.
+    {
+        compagnies *cos = malloc(sizeof(compagnies));
+        cos->tete = NULL;
+
+        size_t const id = co_creer_profil(cos, "Fictive", "99000", "nobody@nowhere.com");
+        TEST(id == 1);
     }
 
     printf("%d/%d\n", tests_reussis, tests_executes);
