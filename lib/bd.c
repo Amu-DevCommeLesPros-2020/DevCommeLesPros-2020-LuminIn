@@ -1,11 +1,11 @@
 #include "bd.h"
 
 #include "journal.h"
+#include "types.h"
 
 #include <sys/stat.h>
 
 #include <limits.h>
-#include <stdbool.h>
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>

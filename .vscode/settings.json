@@ -78,6 +78,7 @@
         "thread": "c",
         "cinttypes": "c",
         "cstdbool": "c",
-        "typeindex": "c"
+        "typeindex": "c",
+        "unistd.h": "c"
     }
 }

@@ -1,12 +1,13 @@
 #include "bd.h"
 #include "journal.h"
+#include "types.h"
 
 #include <sys/stat.h>
+#include <unistd.h>
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
 
 // Nombre total de tests exécutés. 
 int tests_executes = 0;
