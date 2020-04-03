@@ -1,0 +1,21 @@
+{
+    "files.associations": {
+        "filesystem": "c",
+        "__hash_table": "c",
+        "__tree": "c",
+        "algorithm": "c",
+        "cstdio": "c",
+        "deque": "c",
+        "forward_list": "c",
+        "list": "c",
+        "map": "c",
+        "set": "c",
+        "string": "c",
+        "string_view": "c",
+        "unordered_map": "c",
+        "unordered_set": "c",
+        "vector": "c",
+        "*.tcc": "c",
+        "functional": "c"
+    }
+}

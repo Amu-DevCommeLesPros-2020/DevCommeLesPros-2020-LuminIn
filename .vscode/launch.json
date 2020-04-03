@@ -26,7 +26,7 @@
             "request": "launch",
             "program": "${workspaceFolder}/build/test",
             "args": [],
-            "cwd": "${workspaceFolder}",
+            "cwd": "${workspaceFolder}/build",
             "preLaunchTask": "make test"
         }
     ]
