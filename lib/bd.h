@@ -18,13 +18,11 @@ typedef struct compagnies
     node *tete;
 } compagnies;
 
-// Ouvre la BD pour l'écriture.
-// Retourne vrai si la BD est prête pour écriture/lecture.
-bool bd_ouvrir(char const* const chemin_bd);
+// Lit la BD et rempli les structures données.
+void bd_lecture(char const* const chemin_bd, compagnies** cs);
 
-// Ferme la BD.
-void bd_fermer();
+// Écrit la BD avec les structures données.
+void bd_ecriture(char const* const chemin_bd, compagnie const* const c);
 
-// Lit la table compagnie.
-// Retourne une liste de compagnies.
-compagnies* bd_lecture_compagnies();
+// Libère la mémoire allouée pour compagnies.
+void free_compagnies(compagnies* cs);

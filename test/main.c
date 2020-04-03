@@ -4,6 +4,7 @@
 #include <sys/stat.h>
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 
@@ -51,46 +52,24 @@ int main()
         TEST(access(nom_journal, F_OK) == 0);
     }
 
-    // Tests pour la création d'une BD.
+    // Tests pour la lecture d'une BD non-existante.
     {
-#define chemin_creation_bd "./bd-creation-test"
-#define nom_table_compagnie "compagnie.csv"
-#define nom_table_poste "poste.csv"
-#define nom_table_employe "employe.csv"
-#define nom_table_chercheur "chercheur.csv"
-        
-        remove(chemin_creation_bd);
+#define chemin_nonexistant_bd "../nonexistant"
 
-        TEST(bd_ouvrir(chemin_creation_bd));
-        TEST(access(chemin_creation_bd "/" nom_table_compagnie, F_OK) == 0);
-        TEST(access(chemin_creation_bd "/" nom_table_poste, F_OK) == 0);
-        TEST(access(chemin_creation_bd "/" nom_table_employe, F_OK) == 0);
-        TEST(access(chemin_creation_bd "/" nom_table_chercheur, F_OK) == 0);
+        compagnies *cs;
 
-        bd_fermer();
-        TEST(access(chemin_creation_bd "/" nom_table_compagnie, F_OK) == 0);
-        TEST(access(chemin_creation_bd "/" nom_table_poste, F_OK) == 0);
-        TEST(access(chemin_creation_bd "/" nom_table_employe, F_OK) == 0);
-        TEST(access(chemin_creation_bd "/" nom_table_chercheur, F_OK) == 0);
-
-        remove(chemin_creation_bd);
+        bd_lecture(chemin_nonexistant_bd, &cs);
+        TEST(cs == NULL);
     }
 
-    // Tests pour l'ouverture d'un BD existante.
+    // Tests pour la lecture d'une BD existante.
     {
 #define chemin_test_bd "../test"
 
-        TEST(bd_ouvrir(chemin_test_bd));
+        compagnies *cs;
 
-        bd_fermer();
-    }
-
-    // Tests pour la lecture des compagnies dans la BD.
-    {
-        bd_ouvrir(chemin_test_bd);
-
-        compagnies *cs = bd_lecture_compagnies();
-        TEST(cs);
+        bd_lecture(chemin_test_bd, &cs);
+        TEST(cs != NULL);
 
         compagnie *disney = (compagnie*)(cs->tete->data);
         TEST(disney->id == 1);
@@ -103,6 +82,8 @@ int main()
         TEST(strcmp(google->nom, "Google") == 0);
         TEST(strncmp(google->code_postal, "75009", 5) == 0);
         TEST(strcmp(google->mail, "emplois@google.com") == 0);
+
+        free_compagnies(cs);
     }
 
     printf("%d/%d\n", tests_reussis, tests_executes);

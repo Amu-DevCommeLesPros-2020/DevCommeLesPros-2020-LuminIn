@@ -15,23 +15,38 @@ char const* const nom_table_poste = "poste";
 char const* const nom_table_employe = "employe";
 char const* const nom_table_chercheur = "chercheur";
 
-FILE *table_compagnie;
 FILE *table_poste;
 FILE *table_employe;
 FILE *table_chercheur;
 
-bool bd_ouvrir(char const* const chemin_bd)
+void bd_lecture(char const* const chemin_bd, compagnies** cs)
 {
-    j_ecrire("Ouverture BD.");
-
-    // Création du dossier.
-    mkdir(chemin_bd, 0700);
+    j_ecrire("Lecture de la BD.");
 
     char chemin_table[PATH_MAX];
 
-    // Création des tables.
+    // Lecture des tables.
+    *cs = NULL;
     sprintf(chemin_table, "%s/%s.csv", chemin_bd, nom_table_compagnie);
-    table_compagnie = fopen(chemin_table, "r");
+    FILE *table_compagnie = fopen(chemin_table, "r");
+    if(table_compagnie)
+    {
+        *cs = malloc(sizeof(compagnies));
+
+        char *line = NULL;
+        size_t length = 0;
+        getline(&line, &length, table_compagnie);
+        free(line);
+
+        compagnie c;
+        while(fscanf(table_compagnie, "%zu,%127[^,],%5c,%s", &c.id, c.nom, c.code_postal, c.mail) == 4)
+        {
+            compagnie *data = malloc(sizeof(compagnie));
+            *data = c;
+            l_append(&((*cs)->tete), l_make_node(data));
+        }
+    }
+    fclose(table_compagnie);
 
     sprintf(chemin_table, "%s/%s.csv", chemin_bd, nom_table_poste);
     table_poste = fopen(chemin_table, "r");
@@ -41,37 +56,18 @@ bool bd_ouvrir(char const* const chemin_bd)
 
     sprintf(chemin_table, "%s/%s.csv", chemin_bd, nom_table_chercheur);
     table_chercheur = fopen(chemin_table, "r");
-
-    return table_compagnie && table_poste && table_employe && table_chercheur;
 }
 
-void bd_fermer()
+void bd_ecriture(char const* const chemin_bd, compagnie const* const c)
 {
-    j_ecrire("Fermeture BD.");
 
-    // Fermeture des tables.
-    fclose(table_compagnie);
-    fclose(table_poste);
-    fclose(table_employe);
-    fclose(table_chercheur);
 }
 
-compagnies* bd_lecture_compagnies()
+void free_compagnies(compagnies* cs)
 {
-    char *line = NULL;
-    size_t length = 0;
-    getline(&line, &length, table_compagnie);
-    free(line);
-
-    compagnies *cs = malloc(sizeof(compagnies));
-
-    compagnie c;
-    while(fscanf(table_compagnie, "%zu,%127[^,],%5c,%s", &c.id, c.nom, c.code_postal, c.mail) == 4)
+    if(cs)
     {
-        compagnie *data = malloc(sizeof(compagnie));
-        *data = c;
-        l_append(&(cs->tete), l_make_node(data));
+        l_free_list(cs->tete);
     }
-
-    return cs;
+    free(cs);
 }
