@@ -19,19 +19,19 @@ FILE *table_poste;
 FILE *table_employe;
 FILE *table_chercheur;
 
-void bd_lecture(char const* const chemin_bd, compagnies** cs)
+void bd_lecture(char const* const chemin_bd, compagnies** cos)
 {
     j_ecrire("Lecture de la BD.");
 
     // Lecture des tables.
-    bd_lecture_compagnies(chemin_bd, cs);
+    bd_lecture_compagnies(chemin_bd, cos);
 }
 
-void bd_lecture_compagnies(char const* const chemin_bd, compagnies** cs)
+void bd_lecture_compagnies(char const* const chemin_bd, compagnies** cos)
 {
     j_ecrire("Lecture de la table compagnie.");
 
-    *cs = NULL; // Valeur par défault.
+    *cos = NULL; // Valeur par défault.
 
     // Création du chemin complet pour la table compagnie.csv.
     char chemin_table[PATH_MAX];
@@ -47,50 +47,50 @@ void bd_lecture_compagnies(char const* const chemin_bd, compagnies** cs)
         free(line);
 
         // Allocation de mémoire pour compagnies.
-        *cs = malloc(sizeof(compagnies));
+        *cos = malloc(sizeof(compagnies));
 
         // Lecture des tuples.
-        compagnie c;
-        while(fscanf(table_compagnie, "%zu,%127[^,],%5c,%s", &c.id, c.nom, c.code_postal, c.mail) == 4)
+        compagnie co;
+        while(fscanf(table_compagnie, "%zu,%127[^,],%5c,%s", &co.id, co.nom, co.code_postal, co.mail) == 4)
         {
             compagnie *data = malloc(sizeof(compagnie));
-            *data = c;
-            l_append(&((*cs)->tete), l_make_node(data));
+            *data = co;
+            l_append(&((*cos)->tete), l_make_node(data));
         }
     }
 
     fclose(table_compagnie);
 }
 
-void bd_ecriture(char const* const chemin_bd, compagnies const* const cs)
+void bd_ecriture(char const* const chemin_bd, compagnies const* const cos)
 {
-    bd_ecriture_compagnies(chemin_bd, cs);
+    bd_ecriture_compagnies(chemin_bd, cos);
 }
 
-void bd_ecriture_compagnies(char const* const chemin_bd, compagnies const* const cs)
+void bd_ecriture_compagnies(char const* const chemin_bd, compagnies const* const cos)
 {
     char chemin_table[PATH_MAX];
     sprintf(chemin_table, "%s/%s.csv", chemin_bd, nom_table_compagnie);
     FILE *table_compagnie = fopen(chemin_table, "w");
 
     fprintf(table_compagnie, "id,nom,code postal,mail\n");
-    if(cs)
+    if(cos)
     {
-        for(node const* n = cs->tete; n; n = n->next)
+        for(node const* n = cos->tete; n; n = n->next)
         {
-            compagnie *c = (compagnie*)(n->data);
-            fprintf(table_compagnie, "%zu,%s,%.5s,%s\n", c->id, c->nom, c->code_postal, c->mail);
+            compagnie *co = (compagnie*)(n->data);
+            fprintf(table_compagnie, "%zu,%s,%.5s,%s\n", co->id, co->nom, co->code_postal, c->mail);
         }
     }
     
     fclose(table_compagnie);
 }
 
-void free_compagnies(compagnies* cs)
+void free_compagnies(compagnies* cos)
 {
-    if(cs)
+    if(cos)
     {
-        l_free_list(cs->tete);
+        l_free_list(cos->tete);
     }
-    free(cs);
+    free(cos);
 }
