@@ -5,6 +5,7 @@
 #include <sys/stat.h>
 
 #include <limits.h>
+#include <stdbool.h>
 #include <stdio.h>
 
 char const* const nom_table_compagnie = "compagnie.csv";
@@ -17,7 +18,7 @@ FILE *table_poste;
 FILE *table_employe;
 FILE *table_chercheur;
 
-void bd_ouvrir(char const* const chemin_bd)
+bool bd_ouvrir(char const* const chemin_bd)
 {
     j_ecrire("Ouverture BD.");
 
@@ -38,6 +39,8 @@ void bd_ouvrir(char const* const chemin_bd)
 
     sprintf(chemin_table, "%s/%s", chemin_bd, nom_table_chercheur);
     table_chercheur = fopen(chemin_table, "w");
+
+    return table_compagnie && table_poste && table_employe && table_chercheur;
 }
 
 void bd_fermer()
