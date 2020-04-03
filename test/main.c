@@ -54,7 +54,7 @@ int main()
 
     // Tests pour la lecture d'une BD non-existante.
     {
-#define chemin_nonexistant_bd "../nonexistant"
+#define chemin_nonexistant_bd "./nonexistant"
 
         compagnies *cs;
 
@@ -68,7 +68,8 @@ int main()
 
         compagnies *cs;
 
-        bd_lecture(chemin_test_bd, &cs);
+        // Lecture d'une liste de compagnies d'une BD dont les valeurs sont connues.
+        bd_lecture_compagnies(chemin_test_bd, &cs);
         TEST(cs != NULL);
 
         compagnie *disney = (compagnie*)(cs->tete->data);
@@ -82,6 +83,37 @@ int main()
         TEST(strcmp(google->nom, "Google") == 0);
         TEST(strncmp(google->code_postal, "75009", 5) == 0);
         TEST(strcmp(google->mail, "emplois@google.com") == 0);
+
+        free_compagnies(cs);
+    }
+
+    // Test pour écriture d'une structure compagnies dans la BD.
+    {
+#define chemin_test_ecriture_bd "./bd-test-ecriture"
+        mkdir(chemin_test_ecriture_bd, 0700);
+
+        // Creation d'une liste de compagnies fictive (avec une seule compagnie).
+        compagnies *cs = malloc(sizeof(compagnies));
+        cs->tete = NULL;
+
+        compagnie *c = malloc(sizeof(compagnie));
+        c->id = 100;
+        strcpy(c->nom, "Fictive");
+        strncpy(c->code_postal, "99000", 5);
+        strcpy(c->mail, "nobody@bowhere.com");
+        l_append(&(cs->tete), l_make_node(c));
+
+        // Écriture de ces compagnies dans la BD.
+        bd_ecriture_compagnies(chemin_test_ecriture_bd, cs);
+        free_compagnies(cs);
+
+        // Lecture des compagnies de cette BD et test que les valeurs sont les mêmes.
+        bd_lecture_compagnies(chemin_test_ecriture_bd, &cs);
+        c = (compagnie*)(cs->tete->data);
+        TEST(c->id == 100);
+        TEST(strcmp(c->nom, "Fictive") == 0);
+        TEST(strncmp(c->code_postal, "99000", 5) == 0);
+        TEST(strcmp(c->mail, "nobody@bowhere.com") == 0);
 
         free_compagnies(cs);
     }
