@@ -1,8 +1,10 @@
 #include "bd.h"
 #include "journal.h"
 
-#include <stdio.h>
 #include <sys/stat.h>
+
+#include <stdio.h>
+#include <string.h>
 #include <unistd.h>
 
 // Nombre total de tests exécutés. 
@@ -81,6 +83,26 @@ int main()
         TEST(bd_ouvrir(chemin_test_bd));
 
         bd_fermer();
+    }
+
+    // Tests pour la lecture des compagnies dans la BD.
+    {
+        bd_ouvrir(chemin_test_bd);
+
+        compagnies *cs = bd_lecture_compagnies();
+        TEST(cs);
+
+        compagnie *disney = (compagnie*)(cs->tete->data);
+        TEST(disney->id == 1);
+        TEST(strcmp(disney->nom, "Disney") == 0);
+        TEST(strncmp(disney->code_postal, "77700", 5) == 0);
+        TEST(strcmp(disney->mail, "walt@disney.com") == 0);
+
+        compagnie *google = (compagnie*)(l_skip(cs->tete, 1)->data);
+        TEST(google->id == 2);
+        TEST(strcmp(google->nom, "Google") == 0);
+        TEST(strncmp(google->code_postal, "75009", 5) == 0);
+        TEST(strcmp(google->mail, "emplois@google.com") == 0);
     }
 
     printf("%d/%d\n", tests_reussis, tests_executes);
