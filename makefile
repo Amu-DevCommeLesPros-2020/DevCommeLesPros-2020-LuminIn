@@ -8,9 +8,10 @@ clean:
 build:
 	mkdir -p build
 
-liblumi: lib/journal.h lib/journal.c | build
+liblumi: lib/bd.c lib/bd.h lib/journal.c lib/journal.h | build
+	gcc -Wall -Werror -pedantic -g -c lib/bd.c -o build/bd.o
 	gcc -Wall -Werror -pedantic -g -c lib/journal.c -o build/journal.o
-	ar crs build/liblumi.a build/journal.o
+	ar crs build/liblumi.a build/bd.o build/journal.o
 
 luminin: | build
 
