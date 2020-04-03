@@ -8,7 +8,7 @@ FILE *journal;
 // Ouvre un fichier de journal.
 void j_ouvrir(char const* const chemin)
 {
-    journal = fopen(chemin, "w");
+    journal = fopen(chemin, "a");
 }
 
 // Ajoute un évènement au journal.

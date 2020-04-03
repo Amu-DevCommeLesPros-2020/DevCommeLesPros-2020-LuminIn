@@ -43,13 +43,20 @@ int main()
         j_ouvrir(nom_journal);
         TEST(access(nom_journal, F_OK) == 0);
 
-        j_ecrire("test 1");
-        struct stat s;
-        stat(nom_journal, &s);
-        TEST(s.st_size > 0);
-
+        j_ecrire("test");
         j_fermer();
         TEST(access(nom_journal, F_OK) == 0);
+
+        struct stat s1;
+        stat(nom_journal, &s1);
+        TEST(s1.st_size > 0);
+
+        j_ouvrir(nom_journal);
+        j_ecrire("test");
+        j_fermer();
+        struct stat s2;
+        stat(nom_journal, &s2);
+        TEST(s2.st_size > s1.st_size);
     }
 
     // Tests pour la lecture d'une BD non-existante.
