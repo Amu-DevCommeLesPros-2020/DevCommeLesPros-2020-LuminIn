@@ -11,7 +11,7 @@
 
 compagnies *cos_ = NULL;
 
-node** recherche(size_t const id)
+static node** recherche(size_t const id)
 {
     node** n;
     for(n = &cos_->tete; (*n) && ((compagnie*)((*n)->data))->id != id && (*n)->next; (*n) = (*n)->next);
@@ -24,6 +24,8 @@ void co_init()
 
     cos_ = malloc(sizeof(compagnies));
     cos_->tete = NULL;
+
+    bd_lecture_compagnies(&cos_);
 }
 
 void co_destroy()

@@ -2,6 +2,7 @@
 #include "compagnie.h"
 #include "journal.h"
 #include "types.h"
+#include "poste.h"
 
 #include <sys/stat.h>
 #include <unistd.h>
@@ -31,7 +32,7 @@ int tests_reussis = 0;
                 {                       \
                     printf("[ECHEC ] ");\
                 }                       \
-                printf(STRINGIZE(__FILE__) ", " STRINGIZE(__LINE__) ": " STRINGIZE(x) "\n");
+                printf(__FILE__ ":" STRINGIZE(__LINE__) ":0"  " : " STRINGIZE(x) "\n");
 
 int main()
 {
@@ -68,7 +69,8 @@ int main()
         bd_init(chemin_nonexistant_bd);
 
         compagnies *cos;
-        bd_lecture(&cos);
+        postes *pos;
+        bd_lecture(&cos, &pos);
 
         TEST(cos == NULL);
     }
@@ -98,6 +100,31 @@ int main()
         TEST(strcmp(google->mail, "emplois@google.com") == 0);
 
         free_compagnies(cos);
+
+        // Lecture d'une liste de postes d'une BD dont les valeurs sont connues.
+        postes *pos;
+        bd_lecture_postes(&pos);
+
+        TEST(pos != NULL);
+        poste *acteur = (poste*)(pos->tete->data);
+        TEST(acteur->id == 1);
+        TEST(strcmp(acteur->titre, "acteur") == 0);
+        TEST(strcmp(acteur->competences[0], "comedie") == 0);
+        TEST(strcmp(acteur->competences[1], "gag") == 0);
+        TEST(strcmp(acteur->competences[2], "") == 0);
+        TEST(strcmp(acteur->competences[3], "") == 0);
+        TEST(strcmp(acteur->competences[4], "") == 0);
+        TEST(acteur->id_compagnie == 1);
+
+        poste *developpeur = (poste*)(l_skip(pos->tete, 1)->data);
+        TEST(developpeur->id == 2);
+        TEST(strcmp(developpeur->titre, "developpeur") == 0);
+        TEST(strcmp(developpeur->competences[0], "C") == 0);
+        TEST(strcmp(developpeur->competences[1], "SQL") == 0);
+        TEST(strcmp(developpeur->competences[2], "Python") == 0);
+        TEST(strcmp(developpeur->competences[3], "") == 0);
+        TEST(strcmp(developpeur->competences[4], "") == 0);
+        TEST(developpeur->id_compagnie == 2);
     }
 
     // Test pour écriture d'une structure compagnies dans la BD.
@@ -175,6 +202,83 @@ int main()
         TEST(strcmp(co->nom, "Reelle") == 0);
         TEST(strncmp(co->code_postal, "13010", 5) == 0);
         TEST(strcmp(co->mail, "president@luminy.com") == 0);
+    }
+
+    // Test pour écriture d'une structure postes dans la BD.
+    {
+        mkdir(chemin_test_ecriture_bd, 0700);
+        bd_init(chemin_test_ecriture_bd);
+
+        // Creation d'une liste de postes fictifs.
+        postes *pos = malloc(sizeof(postes));
+        pos->tete = NULL;
+
+        poste *po = malloc(sizeof(poste));
+        po->id = 100;
+        strcpy(po->titre, "Professeur");
+        strcpy(po->competences[0], "experience");
+        strcpy(po->competences[1], "bagou");
+        strcpy(po->competences[2], "patience");
+        strcpy(po->competences[3], "");
+        strcpy(po->competences[4], "");
+        po->id_compagnie = 1;
+        l_append(&(pos->tete), l_make_node(po));
+
+        // Écriture de ces compagnies dans la BD.
+        bd_ecriture_postes(pos);
+        free_postes(pos);
+
+        // Lecture des postes de cette BD et test que les valeurs sont les mêmes.
+        bd_lecture_postes(&pos);
+        po = (poste*)(pos->tete->data);
+        TEST(po->id == 100);
+        TEST(strcmp(po->titre, "Professeur") == 0);
+        TEST(strcmp(po->competences[0], "experience") == 0);
+        TEST(strcmp(po->competences[1], "bagou") == 0);
+        TEST(strcmp(po->competences[2], "patience") == 0);
+        TEST(strcmp(po->competences[3], "") == 0);
+        TEST(strcmp(po->competences[4], "") == 0);
+        TEST(po->id_compagnie == 1);
+
+        free_postes(pos);
+    }
+
+    // Test pour créer un profil de poste.
+    {
+        po_init();
+
+        char const competences[5][128] = {"experience", "bagou", "patience", "", ""};
+        size_t const id = po_creer_poste("Professeur", competences, 1);
+        TEST(id != 0);
+    }
+
+    // Test pour supprimer un poste.
+    {
+        po_init();
+
+        char const competences[5][128] = {"experience", "bagou", "patience", "", ""};
+        size_t const id = po_creer_poste("Professeur", competences, 1);
+        po_supprimer_poste(id);
+        
+        TEST(po_recherche(id) == NULL);
+    }
+
+    // Test pour rechercher un poste.
+    {
+        po_init();
+
+        char const competences[5][128] = {"experience", "bagou", "patience", "", ""};
+        size_t const id = po_creer_poste("Professeur", competences, 1);
+        poste *po = po_recherche(id);
+
+        TEST(po != NULL);
+        TEST(strcmp(po->titre, "Professeur") == 0);
+        TEST(strcmp(po->competences[0], "experience") == 0);
+        TEST(strcmp(po->competences[1], "bagou") == 0);
+        TEST(strcmp(po->competences[2], "patience") == 0);
+        TEST(strcmp(po->competences[3], "") == 0);
+        TEST(strcmp(po->competences[4], "") == 0);
+        TEST(po->id_compagnie == 1);
     }
 
     printf("%d/%d\n", tests_reussis, tests_executes);

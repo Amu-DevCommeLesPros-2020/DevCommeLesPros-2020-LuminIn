@@ -16,3 +16,16 @@ typedef struct compagnies
 {
     node *tete;
 } compagnies;
+
+typedef struct poste
+{
+    size_t id;
+    char titre[128];
+    char competences[5][128];
+    size_t id_compagnie;
+} poste;
+
+typedef struct postes
+{
+    node *tete;
+} postes;
