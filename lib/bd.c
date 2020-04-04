@@ -5,10 +5,12 @@
 
 #include <sys/stat.h>
 
+#include <assert.h>
 #include <limits.h>
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 char const* const nom_table_compagnie = "compagnie";
 char const* const nom_table_poste = "poste";
@@ -19,15 +21,24 @@ FILE *table_poste;
 FILE *table_employe;
 FILE *table_chercheur;
 
-void bd_lecture(char const* const chemin_bd, compagnies** cos)
+char chemin_bd_[PATH_MAX];
+
+void bd_init(char const* const chemin_bd)
+{
+    assert(chemin_bd);
+
+    strcpy(chemin_bd_, chemin_bd);
+}
+
+void bd_lecture(compagnies** cos)
 {
     j_ecrire("Lecture de la BD.");
 
     // Lecture des tables.
-    bd_lecture_compagnies(chemin_bd, cos);
+    bd_lecture_compagnies(cos);
 }
 
-void bd_lecture_compagnies(char const* const chemin_bd, compagnies** cos)
+void bd_lecture_compagnies(compagnies** cos)
 {
     j_ecrire("Lecture de la table compagnie.");
 
@@ -35,7 +46,7 @@ void bd_lecture_compagnies(char const* const chemin_bd, compagnies** cos)
 
     // Création du chemin complet pour la table compagnie.csv.
     char chemin_table[PATH_MAX];
-    sprintf(chemin_table, "%s/%s.csv", chemin_bd, nom_table_compagnie);
+    sprintf(chemin_table, "%s/%s.csv", chemin_bd_, nom_table_compagnie);
     
     FILE *table_compagnie = fopen(chemin_table, "r");
     if(table_compagnie)
@@ -62,15 +73,15 @@ void bd_lecture_compagnies(char const* const chemin_bd, compagnies** cos)
     fclose(table_compagnie);
 }
 
-void bd_ecriture(char const* const chemin_bd, compagnies const* const cos)
+void bd_ecriture(compagnies const* const cos)
 {
-    bd_ecriture_compagnies(chemin_bd, cos);
+    bd_ecriture_compagnies(cos);
 }
 
-void bd_ecriture_compagnies(char const* const chemin_bd, compagnies const* const cos)
+void bd_ecriture_compagnies(compagnies const* const cos)
 {
     char chemin_table[PATH_MAX];
-    sprintf(chemin_table, "%s/%s.csv", chemin_bd, nom_table_compagnie);
+    sprintf(chemin_table, "%s/%s.csv", chemin_bd_, nom_table_compagnie);
     FILE *table_compagnie = fopen(chemin_table, "w");
 
     fprintf(table_compagnie, "id,nom,code postal,mail\n");

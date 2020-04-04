@@ -65,9 +65,11 @@ int main()
     {
 #define chemin_nonexistant_bd "./nonexistant"
 
-        compagnies *cos;
+        bd_init(chemin_nonexistant_bd);
 
-        bd_lecture(chemin_nonexistant_bd, &cos);
+        compagnies *cos;
+        bd_lecture(&cos);
+
         TEST(cos == NULL);
     }
 
@@ -75,10 +77,12 @@ int main()
     {
 #define chemin_test_bd "../test"
 
-        compagnies *cos;
+        bd_init(chemin_test_bd);
 
         // Lecture d'une liste de compagnies d'une BD dont les valeurs sont connues.
-        bd_lecture_compagnies(chemin_test_bd, &cos);
+        compagnies *cos;
+        bd_lecture_compagnies(&cos);
+
         TEST(cos != NULL);
 
         compagnie *disney = (compagnie*)(cos->tete->data);
@@ -100,6 +104,7 @@ int main()
     {
 #define chemin_test_ecriture_bd "./bd-test-ecriture"
         mkdir(chemin_test_ecriture_bd, 0700);
+        bd_init(chemin_test_ecriture_bd);
 
         // Creation d'une liste de compagnies fictive (avec une seule compagnie).
         compagnies *cos = malloc(sizeof(compagnies));
@@ -113,11 +118,11 @@ int main()
         l_append(&(cos->tete), l_make_node(co));
 
         // Écriture de ces compagnies dans la BD.
-        bd_ecriture_compagnies(chemin_test_ecriture_bd, cos);
+        bd_ecriture_compagnies(cos);
         free_compagnies(cos);
 
         // Lecture des compagnies de cette BD et test que les valeurs sont les mêmes.
-        bd_lecture_compagnies(chemin_test_ecriture_bd, &cos);
+        bd_lecture_compagnies(&cos);
         co = (compagnie*)(cos->tete->data);
         TEST(co->id == 100);
         TEST(strcmp(co->nom, "Fictive") == 0);
@@ -129,11 +134,47 @@ int main()
 
     // Test pour créer un profil de compagnie.
     {
-        compagnies *cos = malloc(sizeof(compagnies));
-        cos->tete = NULL;
+        co_init();
 
-        size_t const id = co_creer_profil(cos, "Fictive", "99000", "nobody@nowhere.com");
-        TEST(id == 1);
+        size_t const id = co_creer_profil("Fictive", "99000", "nobody@nowhere.com");
+        TEST(id != 0);
+    }
+
+    // Test pour rechercher un profil de compagnie.
+    {
+        co_init();
+
+        size_t const id = co_creer_profil("Fictive", "99000", "nobody@nowhere.com");
+        compagnie *co = co_recherche(id);
+
+        TEST(co != NULL);
+        TEST(strcmp(co->nom, "Fictive") == 0);
+        TEST(strncmp(co->code_postal, "99000", 5) == 0);
+        TEST(strcmp(co->mail, "nobody@nowhere.com") == 0);
+    }
+
+    // Test pour supprimer un profil de compagnie.
+    {
+        co_init();
+
+        size_t const id = co_creer_profil("Fictive", "99000", "nobody@nowhere.com");
+        co_supprimer_profil(id);
+        
+        TEST(co_recherche(id) == NULL);
+    }
+
+    // Test pour modifier un profil de compagnie.
+    {
+        co_init();
+
+        size_t const id = co_creer_profil("Fictive", "99000", "nobody@nowhere.com");
+        co_modifier_profil(id, "Reelle", "13010", "president@luminy.com");
+
+        compagnie *co = co_recherche(id);
+        TEST(co->id == id);
+        TEST(strcmp(co->nom, "Reelle") == 0);
+        TEST(strncmp(co->code_postal, "13010", 5) == 0);
+        TEST(strcmp(co->mail, "president@luminy.com") == 0);
     }
 
     printf("%d/%d\n", tests_reussis, tests_executes);

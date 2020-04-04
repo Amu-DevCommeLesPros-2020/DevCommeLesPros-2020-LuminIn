@@ -133,21 +133,22 @@ node* l_insert(node** p, node* body)
     return body;
 }
 
-node* l_remove(node* n)
+node* l_remove(node** n)
 {
-    node *next = n ? n->next : NULL;
+    node *next = (*n) ? (*n)->next : NULL;
 
-    if(n && n->previous)
+    if(*n && (*n)->previous)
     {
-        n->previous->next = n->next;
+        (*n)->previous->next = (*n)->next;
     }
 
-    if(n && n->next)
+    if((*n) && (*n)->next)
     {
-        n->next->previous = n->previous;
+        (*n)->next->previous = (*n)->previous;
     }
 
-    l_free_node(n);
+    l_free_node(*n);
+    (*n) = NULL;
     
     return next;
 }

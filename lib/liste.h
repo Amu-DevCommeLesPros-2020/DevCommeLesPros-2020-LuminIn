@@ -76,4 +76,4 @@ node* l_insert(node** p, node* body);
 // 5. {a->b->c->NULL}, l_remove(b) => c {a->c->NULL}
 // 6. {a->b->c->NULL}, l_remove(c) => NULL {a->b->NULL}
 // 7. {a->b->c->NULL}, l_remove(l_remove(a)) => c {c->NULL}
-node* l_remove(node* n);
+node* l_remove(node** n);

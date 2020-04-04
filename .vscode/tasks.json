@@ -20,7 +20,7 @@
         {
             "label": "make test",
             "type": "shell",
-            "command": "make test",
+            "command": "make build/test",
             "group": {
                 "kind": "test",
                 "isDefault": true
