@@ -118,6 +118,60 @@ void bd_lecture_postes(postes** pos)
     fclose(table_poste);
 }
 
+void bd_lecture_employes(employes** ems)
+{
+    j_ecrire("Lecture de la table employe.");
+
+    *ems = NULL; // Valeur par défault.
+
+    // Création du chemin complet pour la table employe.csv.
+    char chemin_table[PATH_MAX];
+    sprintf(chemin_table, "%s/%s.csv", chemin_bd_, nom_table_employe);
+    
+    FILE *table_employe = fopen(chemin_table, "r");
+    if(table_employe)
+    {
+        // Ignorance de la première ligne.
+        char *line = NULL;
+        size_t length = 0;
+        getline(&line, &length, table_employe);
+        free(line);
+
+        // Allocation de mémoire pour compagnies.
+        *ems = malloc(sizeof(employes));
+
+        // Lecture des tuples.
+        employe em;
+        memset(&em, 0, sizeof(employe));
+        char competences[128 * 5];
+        char id_collegues[3 * 5];
+        // J'ai mis le champ id_collegues à la toute fin parce que lorsqu'il est vide, il ne peut être capturé par [^,] car ce champ de capture *doit* capturer au moins un caractère.
+        while(fscanf(table_employe, "%zu,%127[^,],%127[^,],%127[^,],%5c,%639[^,],%zu,%14[^\n]", &em.id, em.nom, em.prenom, em.mail, em.code_postal, competences, &em.id_entreprise, id_collegues) >= 7)
+        {
+            employe *data = malloc(sizeof(employe));
+            *data = em;
+            
+            char *competence = strtok(competences, ";");
+            for(int i = 0; i != 5; ++i)
+            {
+                strcpy(data->competences[i], competence ? competence : "");
+                competence = strtok(NULL, ";");
+            }
+
+            char *id_collegue = strtok(id_collegues, ";");
+            for(int i = 0; i != 5; ++i)
+            {
+                data->id_collegues[i] = id_collegue ? atoi(id_collegue) : 0;
+                id_collegue = strtok(NULL, ";");
+            }
+
+            l_append(&((*ems)->tete), l_make_node(data));
+        }
+    }
+
+    fclose(table_employe);
+}
+
 void bd_ecriture(compagnies const* const cos)
 {
     j_ecrire("Écriture de la BD.");
@@ -176,6 +230,45 @@ void bd_ecriture_postes(postes const* const pos)
     fclose(table_poste);
 }
 
+void bd_ecriture_employes(employes const* const ems)
+{
+    j_ecrire("Écriture de la table employe.");
+
+    char chemin_table[PATH_MAX];
+    sprintf(chemin_table, "%s/%s.csv", chemin_bd_, nom_table_employe);
+    FILE *table_employe = fopen(chemin_table, "w");
+
+    fprintf(table_employe, "id,nom,prenom,mail,code postal,competences,entreprise,collegues\n");
+    if(ems)
+    {
+        for(node const* n = ems->tete; n; n = n->next)
+        {
+            employe *em = (employe*)(n->data);
+            fprintf(table_employe, "%zu,%s,%s,%s,%.5s,", em->id, em->nom, em->prenom, em->mail, em->code_postal);
+            for(int i = 0; i != 5 && strlen(em->competences[i]) != 0; ++i)
+            {
+                if(i != 0)
+                {
+                    fprintf(table_employe, ";");
+                }
+                fprintf(table_employe, "%s", em->competences[i]);
+            }
+            fprintf(table_employe, ",%zu,", em->id_entreprise);
+            for(int i = 0; i != 5 && em->id_collegues[i] != 0; ++i)
+            {
+                if(i != 0)
+                {
+                    fprintf(table_employe, ";");
+                }
+                fprintf(table_employe, "%zu", em->id_collegues[i]);
+            }
+            fprintf(table_employe, "\n");
+        }
+    }
+    
+    fclose(table_employe);
+}
+
 void free_compagnies(compagnies* cos)
 {
     if(cos)
@@ -192,4 +285,13 @@ void free_postes(postes* pos)
         l_free_list(pos->tete);
     }
     free(pos);
+}
+
+void free_employes(employes* ems)
+{
+    if(ems)
+    {
+        l_free_list(ems->tete);
+    }
+    free(ems);
 }

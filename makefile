@@ -8,13 +8,14 @@ clean:
 build:
 	mkdir -p build
 
-build/liblumi.a: lib/bd.c lib/bd.h lib/compagnie.h lib/compagnie.c lib/journal.c lib/journal.h lib/liste.h lib/liste.c lib/types.h lib/poste.c lib/poste.h | build
+build/liblumi.a: lib/bd.c lib/bd.h lib/compagnie.h lib/compagnie.c lib/employe.h lib/employe.c lib/journal.c lib/journal.h lib/liste.h lib/liste.c lib/types.h lib/poste.c lib/poste.h | build
 	gcc -Wall -Werror -pedantic -g -c lib/bd.c -o build/bd.o
 	gcc -Wall -Werror -pedantic -g -c lib/compagnie.c -o build/compagnie.o
+	gcc -Wall -Werror -pedantic -g -c lib/employe.c -o build/employe.o
 	gcc -Wall -Werror -pedantic -g -c lib/liste.c -o build/liste.o
 	gcc -Wall -Werror -pedantic -g -c lib/journal.c -o build/journal.o
 	gcc -Wall -Werror -pedantic -g -c lib/poste.c -o build/poste.o
-	ar crs build/liblumi.a build/bd.o build/compagnie.o build/liste.o build/journal.o build/poste.o
+	ar crs build/liblumi.a build/bd.o build/compagnie.o build/employe.o build/liste.o build/journal.o build/poste.o
 
 build/luminin: | build
 

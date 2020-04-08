@@ -1,5 +1,6 @@
 #include "bd.h"
 #include "compagnie.h"
+#include "employe.h"
 #include "journal.h"
 #include "types.h"
 #include "poste.h"
@@ -125,6 +126,47 @@ int main()
         TEST(strcmp(developpeur->competences[3], "") == 0);
         TEST(strcmp(developpeur->competences[4], "") == 0);
         TEST(developpeur->id_compagnie == 2);
+
+        // Lecture d'une liste d'employés d'une BD dont les valeurs sont connues.
+        employes *ems;
+        bd_lecture_employes(&ems);
+
+        TEST(ems != NULL);
+        employe *em = (employe*)(ems->tete->data);
+        TEST(em->id == 1);
+        TEST(strcmp(em->nom, "Untel") == 0);
+        TEST(strcmp(em->prenom, "Michel") == 0);
+        TEST(strcmp(em->mail, "m_untel@google.com") == 0);
+        TEST(strncmp(em->code_postal, "13010", 5) == 0);
+        TEST(strcmp(em->competences[0], "C++") == 0);
+        TEST(strcmp(em->competences[1], "Python") == 0);
+        TEST(strcmp(em->competences[2], "") == 0);
+        TEST(strcmp(em->competences[3], "") == 0);
+        TEST(strcmp(em->competences[4], "") == 0);
+        TEST(em->id_entreprise == 2);
+        TEST(em->id_collegues[0] == 0);
+        TEST(em->id_collegues[1] == 0);
+        TEST(em->id_collegues[2] == 0);
+        TEST(em->id_collegues[3] == 0);
+        TEST(em->id_collegues[4] == 0);
+
+        em = (employe*)(l_skip(ems->tete, 1)->data);
+        TEST(em->id == 2);
+        TEST(strcmp(em->nom, "Mouse") == 0);
+        TEST(strcmp(em->prenom, "Mickey") == 0);
+        TEST(strcmp(em->mail, "mickey@mickeyville.gov") == 0);
+        TEST(strncmp(em->code_postal, "77700", 5) == 0);
+        TEST(strcmp(em->competences[0], "comedie") == 0);
+        TEST(strcmp(em->competences[1], "") == 0);
+        TEST(strcmp(em->competences[2], "") == 0);
+        TEST(strcmp(em->competences[3], "") == 0);
+        TEST(strcmp(em->competences[4], "") == 0);
+        TEST(em->id_entreprise == 1);
+        TEST(em->id_collegues[0] == 3);
+        TEST(em->id_collegues[1] == 0);
+        TEST(em->id_collegues[2] == 0);
+        TEST(em->id_collegues[3] == 0);
+        TEST(em->id_collegues[4] == 0);
     }
 
     // Test pour écriture d'une structure compagnies dans la BD.
@@ -224,7 +266,7 @@ int main()
         po->id_compagnie = 1;
         l_append(&(pos->tete), l_make_node(po));
 
-        // Écriture de ces compagnies dans la BD.
+        // Écriture de ces postes dans la BD.
         bd_ecriture_postes(pos);
         free_postes(pos);
 
@@ -279,6 +321,113 @@ int main()
         TEST(strcmp(po->competences[3], "") == 0);
         TEST(strcmp(po->competences[4], "") == 0);
         TEST(po->id_compagnie == 1);
+    }
+
+    // Test pour écriture d'une structure employes dans la BD.
+    {
+        mkdir(chemin_test_ecriture_bd, 0700);
+        bd_init(chemin_test_ecriture_bd);
+
+        // Creation d'une liste dd'employes fictifs.
+        employes *ems = malloc(sizeof(employes));
+        ems->tete = NULL;
+
+        employe *em = malloc(sizeof(employe));
+        em->id = 100;
+        strcpy(em->nom, "Gladu");
+        strcpy(em->prenom, "Gaston");
+        strcpy(em->mail, "gg@gladu.name");
+        strncpy(em->code_postal, "00000", 5);
+        strcpy(em->competences[0], "ennuyeux");
+        strcpy(em->competences[1], "maladroit");
+        strcpy(em->competences[2], "empote");
+        strcpy(em->competences[3], "pompeur d'air");
+        strcpy(em->competences[4], "emmerdeur");
+        em->id_entreprise = 100;
+        em->id_collegues[0] = 66;
+        em->id_collegues[1] = 67;
+        em->id_collegues[2] = 68;
+        em->id_collegues[3] = 69;
+        em->id_collegues[4] = 70;
+        l_append(&(ems->tete), l_make_node(em));
+
+        // Écriture de ces employes dans la BD.
+        bd_ecriture_employes(ems);
+        free_employes(ems);
+
+        // Lecture des employes de cette BD et test que les valeurs sont les mêmes.
+        bd_lecture_employes(&ems);
+        em = (employe*)(ems->tete->data);
+        TEST(em->id == 100);
+        TEST(strcmp(em->nom, "Gladu") == 0);
+        TEST(strcmp(em->prenom, "Gaston") == 0);
+        TEST(strcmp(em->mail, "gg@gladu.name") == 0);
+        TEST(strncmp(em->code_postal, "00000", 5) == 0);
+        TEST(strcmp(em->competences[0], "ennuyeux") == 0);
+        TEST(strcmp(em->competences[1], "maladroit") == 0);
+        TEST(strcmp(em->competences[2], "empote") == 0);
+        TEST(strcmp(em->competences[3], "pompeur d'air") == 0);
+        TEST(strcmp(em->competences[4], "emmerdeur") == 0);
+        TEST(em->id_entreprise == 100);
+        TEST(em->id_collegues[0] == 66);
+        TEST(em->id_collegues[1] == 67);
+        TEST(em->id_collegues[2] == 68);
+        TEST(em->id_collegues[3] == 69);
+        TEST(em->id_collegues[4] == 70);
+
+        free_employes(ems);
+    }
+
+    // Test pour créer un profil d'employé.
+    {
+        em_init();
+
+        char const competences[5][128] = {"ennuyeux", "maladroit", "empote", "pompeur d'air", "emmerdeur"};
+        size_t const id_collegues[5] = {66, 67, 68, 69, 70};
+
+        size_t const id = em_creer_profil("Gladu", "Gaston", "gg@gaston.name", "00000", competences, 100, id_collegues);
+        TEST(id != 0);
+    }
+
+    // Test pour rechercher un profil d'employe.
+    {
+        em_init();
+
+        char const competences[5][128] = {"ennuyeux", "maladroit", "empote", "pompeur d'air", "emmerdeur"};
+        size_t const id_collegues[5] = {66, 67, 68, 69, 70};
+        size_t const id = em_creer_profil("Gladu", "Gaston", "gg@gaston.name", "00000", competences, 100, id_collegues);
+
+        employe *em = em_recherche(id);
+
+        TEST(em != NULL);
+        TEST(strcmp(em->nom, "Gladu") == 0);
+        TEST(strncmp(em->code_postal, "00000", 5) == 0);
+        TEST(strcmp(em->mail, "gg@gaston.name") == 0);
+    }
+
+    // Test pour modifier un profil d'employe.
+    {
+        co_init();
+
+        char incompetences[5][128] = {"ennuyeux", "maladroit", "empote", "pompeur d'air", "emmerdeur"};
+        size_t const id_collegues[5] = {66, 67, 68, 69, 70};
+        size_t const id = em_creer_profil("Gladu", "Gaston", "gg@gaston.name", "00000", incompetences, 100, id_collegues);
+
+        char const competences[5][128] = {"charmant", "adroit", "gracieux", "amusant", "charmeur"};
+        em_modifier_profil(id, "Gogol", "Gaston", "gg@gogol.name", "11111", competences, 100, id_collegues);
+
+        employe *em = em_recherche(id);
+
+        TEST(em->id == id);
+        TEST(strcmp(em->nom, "Gogol") == 0);
+        TEST(strcmp(em->prenom, "Gaston") == 0);
+        TEST(strcmp(em->mail, "gg@gogol.name") == 0);
+        TEST(strncmp(em->code_postal, "11111", 5) == 0);
+        TEST(strcmp(em->competences[0], "charmant") == 0);
+        TEST(strcmp(em->competences[1], "adroit") == 0);
+        TEST(strcmp(em->competences[2], "gracieux") == 0);
+        TEST(strcmp(em->competences[3], "amusant") == 0);
+        TEST(strcmp(em->competences[4], "charmeur") == 0);
     }
 
     printf("%d/%d\n", tests_reussis, tests_executes);
