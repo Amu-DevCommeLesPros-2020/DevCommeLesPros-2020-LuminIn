@@ -4,25 +4,25 @@
 
 #include <stddef.h>
 
-typedef struct compagnie
+typedef struct entreprise
 {
     size_t id;
     char nom[128];
     char code_postal[5];
     char mail[128];
-} compagnie;
+} entreprise;
 
-typedef struct compagnies
+typedef struct entreprises
 {
     node *tete;
-} compagnies;
+} entreprises;
 
 typedef struct poste
 {
     size_t id;
     char titre[128];
     char competences[5][128];
-    size_t id_compagnie;
+    size_t id_entreprise;
 } poste;
 
 typedef struct postes

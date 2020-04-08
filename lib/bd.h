@@ -6,10 +6,10 @@
 void bd_init(char const* const chemin_bd);
 
 // Lit la BD et rempli les structures données.
-void bd_lecture(compagnies** cos, postes** pos);
+void bd_lecture(entreprises** cos, postes** pos);
 
-// Lit la table compagnie dans la structure donnée.
-void bd_lecture_compagnies(compagnies** cos);
+// Lit la table entreprise dans la structure donnée.
+void bd_lecture_entreprises(entreprises** cos);
 
 // Lit la table poste dans la structure donnée.
 void bd_lecture_postes(postes** pos);
@@ -18,10 +18,10 @@ void bd_lecture_postes(postes** pos);
 void bd_lecture_employes(employes** ems);
 
 // Écrit la BD avec les structures données.
-void bd_ecriture(compagnies const* const cos);
+void bd_ecriture(entreprises const* const cos);
 
-// Écrit la structure compagnies dans la BD.
-void bd_ecriture_compagnies(compagnies const* const cos);
+// Écrit la structure entreprises dans la BD.
+void bd_ecriture_entreprises(entreprises const* const cos);
 
 // Écrit la structure postes dans la BD.
 void bd_ecriture_postes(postes const* const pos);
@@ -29,8 +29,8 @@ void bd_ecriture_postes(postes const* const pos);
 // Écrit la structure employes dans la BD.
 void bd_ecriture_employes(employes const* const ems);
 
-// Libère la mémoire allouée pour compagnies.
-void free_compagnies(compagnies* cos);
+// Libère la mémoire allouée pour entreprises.
+void free_entreprises(entreprises* cos);
 
 // Libère la mémoire allouée pour postes.
 void free_postes(postes* pos);

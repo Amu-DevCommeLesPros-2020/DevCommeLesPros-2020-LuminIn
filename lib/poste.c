@@ -42,7 +42,7 @@ size_t po_creer_poste(char const* const titre, char const competences[5][128], s
     {
         strcpy(po->competences[i], competences[i]);
     }
-    po->id_compagnie = id_compagnie;
+    po->id_entreprise = id_compagnie;
 
     l_append(&(pos_->tete), l_make_node(po));
 

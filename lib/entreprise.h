@@ -20,4 +20,4 @@ void co_supprimer_profil(size_t const id);
 void co_modifier_profil(size_t const id, char const* const nom, char const code_postal[5], char const* const mail);
 
 // Rechercher une compagnie par id.
-compagnie* co_recherche(size_t const id);
+entreprise* co_recherche(size_t const id);
