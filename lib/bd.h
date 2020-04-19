@@ -17,6 +17,9 @@ void bd_lecture_postes(postes** pos);
 // Lit la table employe dans la structure donnée.
 void bd_lecture_employes(employes** ems);
 
+// Lit la table chercheur dans la structure donnée.
+void bd_lecture_chercheurs(chercheurs** chs);
+
 // Écrit la BD avec les structures données.
 void bd_ecriture(entreprises const* const cos);
 
@@ -29,6 +32,9 @@ void bd_ecriture_postes(postes const* const pos);
 // Écrit la structure employes dans la BD.
 void bd_ecriture_employes(employes const* const ems);
 
+// Écrit la structure chercheurs dans la BD.
+void bd_ecriture_chercheurs(chercheurs const* const chs);
+
 // Libère la mémoire allouée pour entreprises.
 void free_entreprises(entreprises* cos);
 
@@ -37,3 +43,6 @@ void free_postes(postes* pos);
 
 // Libère la mémoire allouée pour employes.
 void free_employes(employes* ems);
+
+// Libère la mémoire allouée pour chercheurs.
+void free_chercheurs(chercheurs* chs);

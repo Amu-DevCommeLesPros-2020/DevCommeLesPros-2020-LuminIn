@@ -1,4 +1,5 @@
 #include "bd.h"
+#include "chercheur.h"
 #include "employe.h"
 #include "entreprise.h"
 #include "journal.h"
@@ -82,7 +83,7 @@ int main()
 
         bd_init(chemin_test_bd);
 
-        // Lecture d'une liste d' entreprises d'une BD dont les valeurs sont connues.
+        // Lecture d'une liste d'entreprises d'une BD dont les valeurs sont connues.
         entreprises *cos;
         bd_lecture_entreprises(&cos);
 
@@ -167,6 +168,45 @@ int main()
         TEST(em->id_collegues[2] == 0);
         TEST(em->id_collegues[3] == 0);
         TEST(em->id_collegues[4] == 0);
+
+        // Lecture d'une liste de chercheurs d'une BD dont les valeurs sont connues.
+        chercheurs *chs;
+        bd_lecture_chercheurs(&chs);
+
+        TEST(chs != NULL);
+        chercheur *ch = (chercheur*)(chs->tete->data);
+        TEST(ch->id == 1);
+        TEST(strcmp(ch->nom, "Duck") == 0);
+        TEST(strcmp(ch->prenom, "Donald") == 0);
+        TEST(strcmp(ch->mail, "donal.duck@canardville.gov") == 0);
+        TEST(strncmp(ch->code_postal, "77700", 5) == 0);
+        TEST(strcmp(ch->competences[0], "comedie") == 0);
+        TEST(strcmp(ch->competences[1], "gag") == 0);
+        TEST(strcmp(ch->competences[2], "") == 0);
+        TEST(strcmp(ch->competences[3], "") == 0);
+        TEST(strcmp(ch->competences[4], "") == 0);
+        TEST(ch->id_collegues[0] == 2);
+        TEST(ch->id_collegues[1] == 0);
+        TEST(ch->id_collegues[2] == 0);
+        TEST(ch->id_collegues[3] == 0);
+        TEST(ch->id_collegues[4] == 0);
+
+        ch = (chercheur*)(l_skip(chs->tete, 1)->data);
+        TEST(ch->id == 2);
+        TEST(strcmp(ch->nom, "Pignon") == 0);
+        TEST(strcmp(ch->prenom, "Francois") == 0);
+        TEST(strcmp(ch->mail, "pignouf@gmail.com") == 0);
+        TEST(strncmp(ch->code_postal, "75020", 5) == 0);
+        TEST(strcmp(ch->competences[0], "C") == 0);
+        TEST(strcmp(ch->competences[1], "SQL") == 0);
+        TEST(strcmp(ch->competences[2], "Python") == 0);
+        TEST(strcmp(ch->competences[3], "") == 0);
+        TEST(strcmp(ch->competences[4], "") == 0);
+        TEST(ch->id_collegues[0] == 0);
+        TEST(ch->id_collegues[1] == 0);
+        TEST(ch->id_collegues[2] == 0);
+        TEST(ch->id_collegues[3] == 0);
+        TEST(ch->id_collegues[4] == 0);
     }
 
     // Test pour écriture d'une structure entreprises dans la BD.
@@ -385,7 +425,7 @@ int main()
         char const competences[5][128] = {"ennuyeux", "maladroit", "empote", "pompeur d'air", "emmerdeur"};
         size_t const id_collegues[5] = {66, 67, 68, 69, 70};
 
-        size_t const id = em_creer_profil("Gladu", "Gaston", "gg@gaston.name", "00000", competences, 100, id_collegues);
+        size_t const id = em_creer_profil("Gladu", "Gaston", "gg@gladu.name", "00000", competences, 100, id_collegues);
         TEST(id != 0);
     }
 
@@ -395,19 +435,19 @@ int main()
 
         char const competences[5][128] = {"ennuyeux", "maladroit", "empote", "pompeur d'air", "emmerdeur"};
         size_t const id_collegues[5] = {66, 67, 68, 69, 70};
-        size_t const id = em_creer_profil("Gladu", "Gaston", "gg@gaston.name", "00000", competences, 100, id_collegues);
+        size_t const id = em_creer_profil("Gladu", "Gaston", "gg@gladu.name", "00000", competences, 100, id_collegues);
 
         employe *em = em_recherche(id);
 
         TEST(em != NULL);
         TEST(strcmp(em->nom, "Gladu") == 0);
         TEST(strncmp(em->code_postal, "00000", 5) == 0);
-        TEST(strcmp(em->mail, "gg@gaston.name") == 0);
+        TEST(strcmp(em->mail, "gg@gladu.name") == 0);
     }
 
     // Test pour modifier un profil d'employe.
     {
-        co_init();
+        em_init();
 
         char incompetences[5][128] = {"ennuyeux", "maladroit", "empote", "pompeur d'air", "emmerdeur"};
         size_t const id_collegues[5] = {66, 67, 68, 69, 70};
@@ -428,6 +468,111 @@ int main()
         TEST(strcmp(em->competences[2], "gracieux") == 0);
         TEST(strcmp(em->competences[3], "amusant") == 0);
         TEST(strcmp(em->competences[4], "charmeur") == 0);
+    }
+
+    // Test pour écriture d'une structure chercheurs dans la BD.
+    {
+        mkdir(chemin_test_ecriture_bd, 0700);
+        bd_init(chemin_test_ecriture_bd);
+
+        // Creation d'une liste de chercheurs fictifs.
+        chercheurs *chs = malloc(sizeof(chercheurs));
+        chs->tete = NULL;
+
+        chercheur *ch = malloc(sizeof(chercheur));
+        ch->id = 100;
+        strcpy(ch->nom, "Glandu");
+        strcpy(ch->prenom, "Germaine");
+        strcpy(ch->mail, "gg@glandu.name");
+        strncpy(ch->code_postal, "00000", 5);
+        strcpy(ch->competences[0], "etourdie");
+        strcpy(ch->competences[1], "tete-en-l'air");
+        strcpy(ch->competences[2], "paresseuse");
+        strcpy(ch->competences[3], "maladroite");
+        strcpy(ch->competences[4], "");
+        ch->id_collegues[0] = 86;
+        ch->id_collegues[1] = 87;
+        ch->id_collegues[2] = 88;
+        ch->id_collegues[3] = 89;
+        ch->id_collegues[4] = 90;
+        l_append(&(chs->tete), l_make_node(ch));
+
+        // Écriture de ces chercheurs dans la BD.
+        bd_ecriture_chercheurs(chs);
+        free_chercheurs(chs);
+
+        // Lecture des chercheurs de cette BD et test que les valeurs sont les mêmes.
+        bd_lecture_chercheurs(&chs);
+        ch = (chercheur*)(chs->tete->data);
+        TEST(ch->id == 100);
+        TEST(strcmp(ch->nom, "Glandu") == 0);
+        TEST(strcmp(ch->prenom, "Germaine") == 0);
+        TEST(strcmp(ch->mail, "gg@glandu.name") == 0);
+        TEST(strncmp(ch->code_postal, "00000", 5) == 0);
+        TEST(strcmp(ch->competences[0], "etourdie") == 0);
+        TEST(strcmp(ch->competences[1], "tete-en-l'air") == 0);
+        TEST(strcmp(ch->competences[2], "paresseuse") == 0);
+        TEST(strcmp(ch->competences[3], "maladroite") == 0);
+        TEST(strcmp(ch->competences[4], "") == 0);
+        TEST(ch->id_collegues[0] == 86);
+        TEST(ch->id_collegues[1] == 87);
+        TEST(ch->id_collegues[2] == 88);
+        TEST(ch->id_collegues[3] == 89);
+        TEST(ch->id_collegues[4] == 90);
+
+        free_chercheurs(chs);
+    }
+
+    // Test pour créer un profil de chercheur.
+    {
+        ch_init();
+
+        char const competences[5][128] = {"etourdie", "tete-en-l'air", "paresseuse", "maladroite", ""};
+        size_t const id_collegues[5] = {86, 87, 88, 89, 90};
+
+        size_t const id = ch_creer_profil("Gladu", "Germaine", "gg@glandu.name", "00000", competences, id_collegues);
+        TEST(id != 0);
+    }
+
+    // Test pour rechercher un profil de chercheur.
+    {
+        ch_init();
+
+        char const competences[5][128] = {"etourdie", "tete-en-l'air", "paresseuse", "maladroite", ""};
+        size_t const id_collegues[5] = {86, 87, 88, 89, 90};
+        size_t const id = ch_creer_profil("Glandu", "Germaine", "gg@glandu.name", "00000", competences, id_collegues);
+
+        chercheur *ch = ch_recherche(id);
+
+        TEST(ch != NULL);
+        TEST(strcmp(ch->nom, "Glandu") == 0);
+        TEST(strncmp(ch->code_postal, "00000", 5) == 0);
+        TEST(strcmp(ch->mail, "gg@glandu.name") == 0);
+    }
+
+    // Test pour modifier un profil de chercheur.
+    {
+        ch_init();
+
+        char incompetences[5][128] = {"etourdie", "tete-en-l'air", "paresseuse", "maladroite", ""};
+        size_t const id_collegues[5] = {86, 87, 88, 89, 90};
+        size_t const id = ch_creer_profil("Glandu", "Germaine", "gg@glandu.name", "00000", incompetences, id_collegues);
+
+        char const competences[5][128] = {"futee", "adroite", "assidue", "rigolote", ""};
+        ch_modifier_profil(id, "Gogol", "Germaine", "gg@gogol.name", "11111", competences, id_collegues);
+
+        chercheur *ch = ch_recherche(id);
+
+        TEST(ch->id == id);
+        TEST(strcmp(ch->nom, "Gogol") == 0);
+        TEST(strcmp(ch->prenom, "Germaine") == 0);
+        TEST(strcmp(ch->mail, "gg@gogol.name") == 0);
+        TEST(strncmp(ch->code_postal, "11111", 5) == 0);
+        TEST(strcmp(ch->competences[0], "futee") == 0);
+        TEST(strcmp(ch->competences[1], "adroite") == 0);
+        TEST(strcmp(ch->competences[2], "assidue") == 0);
+        TEST(strcmp(ch->competences[3], "rigolote") == 0);
+        TEST(strcmp(ch->competences[4], "") == 0);
     }
 
     printf("%d/%d\n", tests_reussis, tests_executes);

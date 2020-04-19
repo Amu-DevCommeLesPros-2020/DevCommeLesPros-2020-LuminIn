@@ -79,6 +79,7 @@
         "cinttypes": "c",
         "cstdbool": "c",
         "typeindex": "c",
-        "unistd.h": "c"
+        "unistd.h": "c",
+        "employe.h": "c"
     }
 }

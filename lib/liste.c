@@ -16,8 +16,13 @@ node* l_make_node(void* data)
 
 void l_free_node(node* n)
 {
-    if(n) free(n->data);
+    if(n)
+    {
+        free(n->data);
+        n->data = NULL;
+    }
     free(n);
+    n = NULL;
 
     return;
 }
