@@ -1,6 +1,8 @@
 #pragma once
 
-#include "types.h"
+#include <stddef.h>
+
+struct poste;
 
 // Initialise la liste des postes.
 void po_init();
@@ -15,4 +17,4 @@ size_t po_creer_poste(char const* const titre, char const competences[5][128], s
 void po_supprimer_poste(size_t const id);
 
 // Cherche un poste par id.
-poste* po_recherche(size_t const id);
+struct poste* po_recherche(size_t const id);

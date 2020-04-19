@@ -1,8 +1,8 @@
 #pragma once
 
-#include "liste.h"
-
 #include <stddef.h>
+
+struct node;
 
 typedef struct entreprise
 {
@@ -14,7 +14,7 @@ typedef struct entreprise
 
 typedef struct entreprises
 {
-    node *tete;
+    struct node *tete;
 } entreprises;
 
 typedef struct poste
@@ -27,7 +27,7 @@ typedef struct poste
 
 typedef struct postes
 {
-    node *tete;
+    struct node *tete;
 } postes;
 
 typedef struct employe
@@ -44,7 +44,7 @@ typedef struct employe
 
 typedef struct employes
 {
-    node *tete;
+    struct node *tete;
 } employes;
 
 typedef struct chercheur
@@ -60,5 +60,5 @@ typedef struct chercheur
 
 typedef struct chercheurs
 {
-    node *tete;
+    struct node *tete;
 } chercheurs;

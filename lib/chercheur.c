@@ -2,6 +2,7 @@
 
 #include "bd.h"
 #include "journal.h"
+#include "liste.h"
 #include "types.h"
 
 #include <stddef.h>

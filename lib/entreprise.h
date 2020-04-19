@@ -1,8 +1,8 @@
 #pragma once
 
-#include "types.h"
-
 #include <stddef.h>
+
+struct entreprise;
 
 // Initialise la liste des compagnies.
 void co_init();
@@ -20,4 +20,4 @@ void co_supprimer_profil(size_t const id);
 void co_modifier_profil(size_t const id, char const* const nom, char const code_postal[5], char const* const mail);
 
 // Rechercher une compagnie par id.
-entreprise* co_recherche(size_t const id);
+struct entreprise* co_recherche(size_t const id);

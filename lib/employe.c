@@ -1,6 +1,7 @@
 #include "employe.h"
 
 #include "bd.h"
+#include "liste.h"
 #include "journal.h"
 #include "types.h"
 

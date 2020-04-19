@@ -3,6 +3,7 @@
 #include "employe.h"
 #include "entreprise.h"
 #include "journal.h"
+#include "liste.h"
 #include "types.h"
 #include "poste.h"
 

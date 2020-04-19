@@ -80,6 +80,7 @@
         "cstdbool": "c",
         "typeindex": "c",
         "unistd.h": "c",
-        "employe.h": "c"
+        "employe.h": "c",
+        "__node_handle": "cpp"
     }
 }
