@@ -6,10 +6,10 @@
 void bd_init(char const* const chemin_bd);
 
 // Lit la BD et rempli les structures données.
-void bd_lecture(entreprises** cos, postes** pos);
+void bd_lecture(chercheurs** chs, employes** ems, entreprises** ens, postes** pos);
 
 // Lit la table entreprise dans la structure donnée.
-void bd_lecture_entreprises(entreprises** cos);
+void bd_lecture_entreprises(entreprises** ens);
 
 // Lit la table poste dans la structure donnée.
 void bd_lecture_postes(postes** pos);
@@ -21,7 +21,7 @@ void bd_lecture_employes(employes** ems);
 void bd_lecture_chercheurs(chercheurs** chs);
 
 // Écrit la BD avec les structures données.
-void bd_ecriture(entreprises const* const cos);
+void bd_ecriture(chercheurs const* const chs, employes const* const ems, entreprises const* const ens, postes const* const pos);
 
 // Écrit la structure entreprises dans la BD.
 void bd_ecriture_entreprises(entreprises const* const cos);

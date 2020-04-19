@@ -31,20 +31,22 @@ void bd_init(char const* const chemin_bd)
     strcpy(chemin_bd_, chemin_bd);
 }
 
-void bd_lecture(entreprises** cos, postes** pos)
+void bd_lecture(chercheurs** chs, employes** ems, entreprises** ens, postes** pos)
 {
     j_ecrire("Lecture de la BD.");
 
     // Lecture des tables.
-    bd_lecture_entreprises(cos);
+    bd_lecture_chercheurs(chs);
+    bd_lecture_employes(ems);
+    bd_lecture_entreprises(ens);
     bd_lecture_postes(pos);
 }
 
-void bd_lecture_entreprises(entreprises** cos)
+void bd_lecture_entreprises(entreprises** ens)
 {
     j_ecrire("Lecture de la table entreprise.");
 
-    *cos = NULL; // Valeur par défault.
+    *ens = NULL; // Valeur par défault.
 
     // Création du chemin complet pour la table entreprise.csv.
     char chemin_table[PATH_MAX];
@@ -57,8 +59,8 @@ void bd_lecture_entreprises(entreprises** cos)
         fscanf(table_entreprise, "%*[^\n]\n");
 
         // Allocation de mémoire pour entreprises.
-        *cos = malloc(sizeof(entreprises));
-        (*cos)->tete = NULL;
+        *ens = malloc(sizeof(entreprises));
+        (*ens)->tete = NULL;
 
         // Lecture des tuples.
         entreprise co;
@@ -66,7 +68,7 @@ void bd_lecture_entreprises(entreprises** cos)
         {
             entreprise *data = malloc(sizeof(entreprise));
             *data = co;
-            l_append(&((*cos)->tete), l_make_node(data));
+            l_append(&((*ens)->tete), l_make_node(data));
         }
     }
 
@@ -221,11 +223,14 @@ void bd_lecture_chercheurs(chercheurs** chs)
     fclose(table_chercheur);
 }
 
-void bd_ecriture(entreprises const* const cos)
+void bd_ecriture(chercheurs const* const chs, employes const* const ems, entreprises const* const ens, postes const* const pos)
 {
     j_ecrire("Écriture de la BD.");
 
-    bd_ecriture_entreprises(cos);
+    bd_ecriture_chercheurs(chs);
+    bd_ecriture_employes(ems);
+    bd_ecriture_entreprises(ens);
+    bd_ecriture_postes(pos);
 }
 
 void bd_ecriture_entreprises(entreprises const* const cos)

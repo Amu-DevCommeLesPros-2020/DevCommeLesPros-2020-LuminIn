@@ -70,11 +70,16 @@ int main()
 
         bd_init(chemin_nonexistant_bd);
 
-        entreprises *cos;
+        chercheurs *chs;
+        employes *ems;
+        entreprises *ens;
         postes *pos;
-        bd_lecture(&cos, &pos);
+        bd_lecture(&chs, &ems, &ens, &pos);
 
-        TEST(cos == NULL);
+        TEST(chs == NULL);
+        TEST(ems == NULL);
+        TEST(ens == NULL);
+        TEST(pos == NULL);
     }
 
     // Tests pour la lecture d'une BD existante.
