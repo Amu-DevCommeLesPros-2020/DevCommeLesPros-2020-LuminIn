@@ -8,19 +8,28 @@ clean:
 build:
 	mkdir -p build
 
-build/liblumi.a: lib/bd.c lib/bd.h lib/chercheur.h lib/chercheur.c lib/employe.h lib/employe.c lib/journal.c lib/entreprise.h lib/entreprise.c lib/journal.h lib/liste.h lib/liste.c lib/types.h lib/poste.c lib/poste.h | build
-	gcc -Wall -Werror -pedantic -g -c lib/bd.c -o build/bd.o
-	gcc -Wall -Werror -pedantic -g -c lib/chercheur.c -o build/chercheur.o
-	gcc -Wall -Werror -pedantic -g -c lib/employe.c -o build/employe.o
-	gcc -Wall -Werror -pedantic -g -c lib/entreprise.c -o build/entreprise.o
-	gcc -Wall -Werror -pedantic -g -c lib/liste.c -o build/liste.o
-	gcc -Wall -Werror -pedantic -g -c lib/journal.c -o build/journal.o
-	gcc -Wall -Werror -pedantic -g -c lib/poste.c -o build/poste.o
-	ar crs build/liblumi.a build/bd.o build/chercheur.o build/employe.o build/entreprise.o build/liste.o build/journal.o build/poste.o
+build/libjournal.a: lib/journal/journal.c lib/journal/journal.h | build
+	mkdir -p build/journal
+	gcc -Wall -Werror -pedantic -g -c lib/journal/journal.c -o build/journal/journal.o
+	ar crs build/libjournal.a build/journal/journal.o
+
+build/libliste.a: lib/liste/liste.c lib/liste/liste.h | build
+	mkdir -p build/liste
+	gcc -Wall -Werror -pedantic -g -c lib/liste/liste.c -o build/liste/liste.o
+	ar crs build/libliste.a build/liste/liste.o
+
+build/libluminin.a: lib/luminin/bd.c lib/luminin/bd.h lib/luminin/chercheur.c lib/luminin/chercheur.h lib/luminin/employe.c lib/luminin/employe.h lib/luminin/entreprise.c lib/luminin/entreprise.h lib/luminin/poste.c lib/luminin/poste.h lib/luminin/types.h | build
+	mkdir -p build/luminin
+	gcc -Wall -Werror -pedantic -g -I lib -c lib/luminin/bd.c -o build/luminin/bd.o
+	gcc -Wall -Werror -pedantic -g -I lib -c lib/luminin/chercheur.c -o build/luminin/chercheur.o
+	gcc -Wall -Werror -pedantic -g -I lib -c lib/luminin/employe.c -o build/luminin/employe.o
+	gcc -Wall -Werror -pedantic -g -I lib -c lib/luminin/entreprise.c -o build/luminin/entreprise.o
+	gcc -Wall -Werror -pedantic -g -I lib -c lib/luminin/poste.c -o build/luminin/poste.o
+	ar crs build/libluminin.a build/luminin/bd.o build/luminin/chercheur.o build/luminin/employe.o build/luminin/entreprise.o build/luminin/poste.o
 
 build/luminin: | build
 
-build/test: build/liblumi.a test/main.c | build
-	gcc -Wall -Werror -pedantic -g -I lib -L build -l lumi test/main.c -o build/test
+build/test: build/libjournal.a build/libliste.a build/libluminin.a test/main.c | build
+	gcc -Wall -Werror -pedantic -g -I lib -L build -l luminin -l liste -l journal test/main.c -o build/test
 
 all: build/luminin build/test

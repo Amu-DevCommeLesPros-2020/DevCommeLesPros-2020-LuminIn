@@ -1,9 +1,10 @@
 #include "employe.h"
 
 #include "bd.h"
-#include "liste.h"
-#include "journal.h"
 #include "types.h"
+
+#include "journal/journal.h"
+#include "liste/liste.h"
 
 #include <stddef.h>
 #include <stdlib.h>

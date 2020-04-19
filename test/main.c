@@ -1,11 +1,11 @@
-#include "bd.h"
-#include "chercheur.h"
-#include "employe.h"
-#include "entreprise.h"
-#include "journal.h"
-#include "liste.h"
-#include "types.h"
-#include "poste.h"
+#include "journal/journal.h"
+#include "liste/liste.h"
+#include "luminin/bd.h"
+#include "luminin/chercheur.h"
+#include "luminin/employe.h"
+#include "luminin/entreprise.h"
+#include "luminin/poste.h"
+#include "luminin/types.h"
 
 #include <sys/stat.h>
 #include <unistd.h>
@@ -41,7 +41,7 @@ int main()
 {
     // Tests pour la bilbiothèques de journal.
     {
-        char const* const nom_journal = "./luminin-test.log";
+        char const* const nom_journal = "./lumininnin-test.log";
 
         remove(nom_journal);
         TEST(access(nom_journal, F_OK) == -1);
@@ -278,13 +278,13 @@ int main()
         co_init();
 
         size_t const id = co_creer_profil("Fictive", "99000", "nobody@nowhere.com");
-        co_modifier_profil(id, "Reelle", "13010", "president@luminy.com");
+        co_modifier_profil(id, "Reelle", "13010", "president@lumininny.com");
 
         entreprise *co = co_recherche(id);
         TEST(co->id == id);
         TEST(strcmp(co->nom, "Reelle") == 0);
         TEST(strncmp(co->code_postal, "13010", 5) == 0);
-        TEST(strcmp(co->mail, "president@luminy.com") == 0);
+        TEST(strcmp(co->mail, "president@lumininny.com") == 0);
     }
 
     // Test pour écriture d'une structure postes dans la BD.

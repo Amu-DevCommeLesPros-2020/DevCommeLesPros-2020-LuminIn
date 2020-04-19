@@ -1,8 +1,9 @@
 #include "poste.h"
 
 #include "bd.h"
-#include "journal.h"
-#include "liste.h"
+
+#include "journal/journal.h"
+#include "liste/liste.h"
 
 #include <stdlib.h>
 #include <string.h>

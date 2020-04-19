@@ -1,9 +1,10 @@
 #include "entreprise.h"
 
 #include "bd.h"
-#include "journal.h"
-#include "liste.h"
 #include "types.h"
+
+#include "journal/journal.h"
+#include "liste/liste.h"
 
 #include <stdbool.h>
 #include <stddef.h>

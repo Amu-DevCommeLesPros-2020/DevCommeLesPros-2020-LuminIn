@@ -1,7 +1,7 @@
 #include "bd.h"
 
-#include "journal.h"
-#include "liste.h"
+#include "journal/journal.h"
+#include "liste/liste.h"
 #include "types.h"
 
 #include <sys/stat.h>
