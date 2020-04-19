@@ -27,5 +27,8 @@ size_t po_creer_poste(char const* const titre, char const competences[5][128], s
 // Supprimer un poste.
 void po_supprimer_poste(size_t const id);
 
+// Liste des postes existants.
+void po_ids(size_t ids[10]);
+
 // Cherche un poste par id.
-struct poste* po_recherche(size_t const id);
+poste* po_recherche(size_t const id);

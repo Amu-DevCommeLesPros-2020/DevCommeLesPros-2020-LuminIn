@@ -62,6 +62,15 @@ void po_supprimer_poste(size_t const id)
     bd_ecriture_postes(pos_);
 }
 
+void po_ids(size_t ids[10])
+{
+    int i = 0;
+    for(node *n = pos_->tete; n; n = n->next)
+    {
+        ids[i++] = ((poste*)(n->data))->id;
+    }
+}
+
 poste* po_recherche(size_t const id)
 {
     j_ecrire("Recherche poste.");

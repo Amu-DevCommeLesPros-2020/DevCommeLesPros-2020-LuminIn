@@ -337,6 +337,8 @@ int main()
         char const competences[5][128] = {"experience", "bagou", "patience", "", ""};
         size_t const id = po_creer_poste("Professeur", competences, 1);
         TEST(id != 0);
+
+        po_destroy();
     }
 
     // Test pour supprimer un poste.
@@ -348,6 +350,25 @@ int main()
         po_supprimer_poste(id);
         
         TEST(po_recherche(id) == NULL);
+
+        po_destroy();
+    }
+
+    // Test pour la liste des postes.
+    {
+        bd_init(chemin_test_bd);
+        po_init();
+
+        size_t ids[10] = {0};
+        po_ids(ids);
+
+        TEST(ids[0] == 1);
+        TEST(ids[1] == 2);
+        TEST(ids[2] == 3);
+        TEST(ids[3] == 0);
+        TEST(ids[4] == 0);
+
+        po_destroy();
     }
 
     // Test pour rechercher un poste.
@@ -366,7 +387,9 @@ int main()
         TEST(strcmp(po->competences[3], "") == 0);
         TEST(strcmp(po->competences[4], "") == 0);
         TEST(po->id_entreprise == 1);
-    }
+ 
+        po_destroy();
+   }
 
     // Test pour écriture d'une structure employes dans la BD.
     {
