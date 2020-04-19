@@ -14,16 +14,13 @@ chercheurs *chs_ = NULL;
 static node** recherche(size_t const id)
 {
     node** n;
-    for(n = &chs_->tete; (*n) && ((chercheur*)((*n)->data))->id != id && (*n)->next; (*n) = (*n)->next);
+    for(n = &chs_->tete; (*n) && ((chercheur*)((*n)->data))->id != id; n = &((*n)->next));
     return n;
 }
 
 void ch_init()
 {
     ch_destroy();
-
-    chs_ = malloc(sizeof(chercheur));
-    chs_->tete = NULL;
 
     bd_lecture_chercheurs(&chs_);
 }
@@ -80,9 +77,17 @@ void ch_modifier_profil(size_t const id, char const* const nom, char const* cons
             ch->id_collegues[i] = id_collegues[i];
         }
 
-        l_append(&(chs_->tete), l_make_node(ch));
-
         bd_ecriture_chercheurs(chs_);
+    }
+}
+
+void ch_ids(size_t ids[10])
+{
+    memset(ids, 0, 10 * sizeof(size_t));
+    int i = 0;
+    for(node const* n = chs_->tete; n; n = n->next)
+    {
+        ids[i++] = ((chercheur*)(n->data))->id;
     }
 }
 

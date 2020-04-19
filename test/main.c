@@ -5,10 +5,12 @@
 #include "luminin/employe.h"
 #include "luminin/entreprise.h"
 #include "luminin/poste.h"
+#include "luminin/recherche.h"
 
 #include <sys/stat.h>
 #include <unistd.h>
 
+#include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -40,7 +42,7 @@ int main()
 {
     // Tests pour la bilbiothèques de journal.
     {
-        char const* const nom_journal = "./lumininnin-test.log";
+        char const* const nom_journal = "./luminin-test.log";
 
         remove(nom_journal);
         TEST(access(nom_journal, F_OK) == -1);
@@ -76,10 +78,10 @@ int main()
         postes *pos;
         bd_lecture(&chs, &ems, &ens, &pos);
 
-        TEST(chs == NULL);
-        TEST(ems == NULL);
-        TEST(ens == NULL);
-        TEST(pos == NULL);
+        TEST(chs->tete == NULL);
+        TEST(ems->tete == NULL);
+        TEST(ens->tete == NULL);
+        TEST(pos->tete == NULL);
     }
 
     // Tests pour la lecture d'une BD existante.
@@ -205,7 +207,7 @@ int main()
         TEST(strcmp(ch->competences[0], "C") == 0);
         TEST(strcmp(ch->competences[1], "SQL") == 0);
         TEST(strcmp(ch->competences[2], "Python") == 0);
-        TEST(strcmp(ch->competences[3], "") == 0);
+        TEST(strcmp(ch->competences[3], "patience") == 0);
         TEST(strcmp(ch->competences[4], "") == 0);
         TEST(ch->id_collegues[0] == 0);
         TEST(ch->id_collegues[1] == 0);
@@ -217,6 +219,7 @@ int main()
     // Test pour écriture d'une structure entreprises dans la BD.
     {
 #define chemin_test_ecriture_bd "./bd-test-ecriture"
+        system("rm -rf " chemin_test_ecriture_bd "/*");
         mkdir(chemin_test_ecriture_bd, 0700);
         bd_init(chemin_test_ecriture_bd);
 
@@ -248,6 +251,8 @@ int main()
 
     // Test pour créer un profil d'entreprise.
     {
+        system("rm -rf " chemin_test_ecriture_bd "/*");
+        bd_init(chemin_test_ecriture_bd);
         co_init();
 
         size_t const id = co_creer_profil("Fictive", "99000", "nobody@nowhere.com");
@@ -256,6 +261,8 @@ int main()
 
     // Test pour rechercher un profil d'entreprise.
     {
+        system("rm -rf " chemin_test_ecriture_bd "/*");
+        bd_init(chemin_test_ecriture_bd);
         co_init();
 
         size_t const id = co_creer_profil("Fictive", "99000", "nobody@nowhere.com");
@@ -269,6 +276,8 @@ int main()
 
     // Test pour supprimer un profil d'entreprise.
     {
+        system("rm -rf " chemin_test_ecriture_bd "/*");
+        bd_init(chemin_test_ecriture_bd);
         co_init();
 
         size_t const id = co_creer_profil("Fictive", "99000", "nobody@nowhere.com");
@@ -279,21 +288,23 @@ int main()
 
     // Test pour modifier un profil d'entreprise.
     {
+        system("rm -rf " chemin_test_ecriture_bd "/*");
+        bd_init(chemin_test_ecriture_bd);
         co_init();
 
         size_t const id = co_creer_profil("Fictive", "99000", "nobody@nowhere.com");
-        co_modifier_profil(id, "Reelle", "13010", "president@lumininny.com");
+        co_modifier_profil(id, "Reelle", "13010", "president@luminy.com");
 
         entreprise *co = co_recherche(id);
         TEST(co->id == id);
         TEST(strcmp(co->nom, "Reelle") == 0);
         TEST(strncmp(co->code_postal, "13010", 5) == 0);
-        TEST(strcmp(co->mail, "president@lumininny.com") == 0);
+        TEST(strcmp(co->mail, "president@luminy.com") == 0);
     }
 
     // Test pour écriture d'une structure postes dans la BD.
     {
-        mkdir(chemin_test_ecriture_bd, 0700);
+        system("rm -rf " chemin_test_ecriture_bd "/*");
         bd_init(chemin_test_ecriture_bd);
 
         // Creation d'une liste de postes fictifs.
@@ -332,6 +343,8 @@ int main()
 
     // Test pour créer un profil de poste.
     {
+        system("rm -rf " chemin_test_ecriture_bd "/*");
+        bd_init(chemin_test_ecriture_bd);
         po_init();
 
         char const competences[5][128] = {"experience", "bagou", "patience", "", ""};
@@ -343,6 +356,8 @@ int main()
 
     // Test pour supprimer un poste.
     {
+        system("rm -rf " chemin_test_ecriture_bd "/*");
+        bd_init(chemin_test_ecriture_bd);
         po_init();
 
         char const competences[5][128] = {"experience", "bagou", "patience", "", ""};
@@ -373,6 +388,8 @@ int main()
 
     // Test pour rechercher un poste.
     {
+        system("rm -rf " chemin_test_ecriture_bd "/*");
+        bd_init(chemin_test_ecriture_bd);
         po_init();
 
         char const competences[5][128] = {"experience", "bagou", "patience", "", ""};
@@ -393,7 +410,7 @@ int main()
 
     // Test pour écriture d'une structure employes dans la BD.
     {
-        mkdir(chemin_test_ecriture_bd, 0700);
+        system("rm -rf " chemin_test_ecriture_bd "/*");
         bd_init(chemin_test_ecriture_bd);
 
         // Creation d'une liste dd'employes fictifs.
@@ -448,6 +465,8 @@ int main()
 
     // Test pour créer un profil d'employé.
     {
+        system("rm -rf " chemin_test_ecriture_bd "/*");
+        bd_init(chemin_test_ecriture_bd);
         em_init();
 
         char const competences[5][128] = {"ennuyeux", "maladroit", "empote", "pompeur d'air", "emmerdeur"};
@@ -459,6 +478,8 @@ int main()
 
     // Test pour rechercher un profil d'employe.
     {
+        system("rm -rf " chemin_test_ecriture_bd "/*");
+        bd_init(chemin_test_ecriture_bd);
         em_init();
 
         char const competences[5][128] = {"ennuyeux", "maladroit", "empote", "pompeur d'air", "emmerdeur"};
@@ -475,6 +496,8 @@ int main()
 
     // Test pour modifier un profil d'employe.
     {
+        system("rm -rf " chemin_test_ecriture_bd "/*");
+        bd_init(chemin_test_ecriture_bd);
         em_init();
 
         char incompetences[5][128] = {"ennuyeux", "maladroit", "empote", "pompeur d'air", "emmerdeur"};
@@ -500,7 +523,7 @@ int main()
 
     // Test pour écriture d'une structure chercheurs dans la BD.
     {
-        mkdir(chemin_test_ecriture_bd, 0700);
+        system("rm -rf " chemin_test_ecriture_bd "/*");
         bd_init(chemin_test_ecriture_bd);
 
         // Creation d'une liste de chercheurs fictifs.
@@ -553,6 +576,8 @@ int main()
 
     // Test pour créer un profil de chercheur.
     {
+        system("rm -rf " chemin_test_ecriture_bd "/*");
+        bd_init(chemin_test_ecriture_bd);
         ch_init();
 
         char const competences[5][128] = {"etourdie", "tete-en-l'air", "paresseuse", "maladroite", ""};
@@ -560,10 +585,14 @@ int main()
 
         size_t const id = ch_creer_profil("Gladu", "Germaine", "gg@glandu.name", "00000", competences, id_collegues);
         TEST(id != 0);
+
+        ch_destroy();
     }
 
     // Test pour rechercher un profil de chercheur.
     {
+        system("rm -rf " chemin_test_ecriture_bd "/*");
+        bd_init(chemin_test_ecriture_bd);
         ch_init();
 
         char const competences[5][128] = {"etourdie", "tete-en-l'air", "paresseuse", "maladroite", ""};
@@ -576,10 +605,14 @@ int main()
         TEST(strcmp(ch->nom, "Glandu") == 0);
         TEST(strncmp(ch->code_postal, "00000", 5) == 0);
         TEST(strcmp(ch->mail, "gg@glandu.name") == 0);
+
+        ch_destroy();
     }
 
     // Test pour modifier un profil de chercheur.
     {
+        system("rm -rf " chemin_test_ecriture_bd "/*");
+        bd_init(chemin_test_ecriture_bd);
         ch_init();
 
         char incompetences[5][128] = {"etourdie", "tete-en-l'air", "paresseuse", "maladroite", ""};
@@ -601,8 +634,44 @@ int main()
         TEST(strcmp(ch->competences[2], "assidue") == 0);
         TEST(strcmp(ch->competences[3], "rigolote") == 0);
         TEST(strcmp(ch->competences[4], "") == 0);
+
+        ch_destroy();
     }
 
+    // Test pour la liste des chercheurs.
+    {
+        bd_init(chemin_test_bd);
+        ch_init();
+
+        size_t ids[10] = {0};
+        ch_ids(ids);
+
+        TEST(ids[0] == 1);
+        TEST(ids[1] == 2);
+        TEST(ids[2] == 0);
+        TEST(ids[3] == 0);
+        TEST(ids[4] == 0);
+    }
+
+    // Test pour recherche de postes pour lesquels un chercheur est qualifié.
+    {
+        bd_init(chemin_test_bd);
+        po_init();
+        ch_init();
+
+        size_t ids_poste[10];
+        
+        recherche_poste_par_competences(1, ids_poste);
+        TEST(ids_poste[0] == 1);
+        TEST(ids_poste[1] == 0);
+        TEST(ids_poste[2] == 0);
+
+        recherche_poste_par_competences(2, ids_poste);
+        TEST(ids_poste[0] == 2);
+        TEST(ids_poste[1] == 3);
+        TEST(ids_poste[2] == 0);
+
+    }
     printf("%d/%d\n", tests_reussis, tests_executes);
 
     return tests_executes - tests_reussis;

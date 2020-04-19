@@ -15,16 +15,13 @@ entreprises *cos_ = NULL;
 static node** recherche(size_t const id)
 {
     node** n;
-    for(n = &cos_->tete; (*n) && ((entreprise*)((*n)->data))->id != id && (*n)->next; (*n) = (*n)->next);
+    for(n = &cos_->tete; (*n) && ((entreprise*)((*n)->data))->id != id; n = &((*n)->next));
     return n;
 }
 
 void co_init()
 {
     co_destroy();
-
-    cos_ = malloc(sizeof(entreprises));
-    cos_->tete = NULL;
 
     bd_lecture_entreprises(&cos_);
 }
@@ -71,6 +68,8 @@ void co_modifier_profil(size_t const id, char const* const nom, char const code_
         strcpy(co->nom, nom);
         strncpy(co->code_postal, code_postal, 5);
         strcpy(co->mail, mail);
+
+        bd_ecriture_entreprises(cos_);
     }
 }
 

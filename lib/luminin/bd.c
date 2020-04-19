@@ -46,7 +46,9 @@ void bd_lecture_entreprises(entreprises** ens)
 {
     j_ecrire("Lecture de la table entreprise.");
 
-    *ens = NULL; // Valeur par défault.
+    // Allocation de mémoire pour entreprises.
+    *ens = malloc(sizeof(entreprises));
+    (*ens)->tete = NULL;
 
     // Création du chemin complet pour la table entreprise.csv.
     char chemin_table[PATH_MAX];
@@ -57,10 +59,6 @@ void bd_lecture_entreprises(entreprises** ens)
     {
         // Ignorance de la première ligne.
         fscanf(table_entreprise, "%*[^\n]\n");
-
-        // Allocation de mémoire pour entreprises.
-        *ens = malloc(sizeof(entreprises));
-        (*ens)->tete = NULL;
 
         // Lecture des tuples.
         entreprise co;
@@ -79,7 +77,9 @@ void bd_lecture_postes(postes** pos)
 {
     j_ecrire("Lecture de la table poste.");
 
-    *pos = NULL; // Valeur par défault.
+    // Allocation de mémoire pour postes.
+    *pos = malloc(sizeof(postes));
+    (*pos)->tete = NULL;
 
     // Création du chemin complet pour la table poste.csv.
     char chemin_table[PATH_MAX];
@@ -90,10 +90,6 @@ void bd_lecture_postes(postes** pos)
     {
         // Ignorance de la première ligne.
         fscanf(table_poste, "%*[^\n]\n");
-
-        // Allocation de mémoire pour postes.
-        *pos = malloc(sizeof(postes));
-        (*pos)->tete = NULL;
 
         // Lecture des tuples.
         poste po;
@@ -121,7 +117,9 @@ void bd_lecture_employes(employes** ems)
 {
     j_ecrire("Lecture de la table employe.");
 
-    *ems = NULL; // Valeur par défault.
+    // Allocation de mémoire pour employes.
+    *ems = malloc(sizeof(employes));
+    (*ems)->tete = NULL;
 
     // Création du chemin complet pour la table employe.csv.
     char chemin_table[PATH_MAX];
@@ -132,10 +130,6 @@ void bd_lecture_employes(employes** ems)
     {
         // Ignorance de la première ligne.
         fscanf(table_employe, "%*[^\n]\n");
-
-        // Allocation de mémoire pour employes.
-        *ems = malloc(sizeof(employes));
-        (*ems)->tete = NULL;
 
         // Lecture des tuples.
         employe em;
@@ -174,7 +168,9 @@ void bd_lecture_chercheurs(chercheurs** chs)
 {
     j_ecrire("Lecture de la table chercheur.");
 
-    *chs = NULL; // Valeur par défault.
+    // Allocation de mémoire pour chercheurs.
+    *chs = malloc(sizeof(chercheurs));
+    (*chs)->tete = NULL;
 
     // Création du chemin complet pour la table chercheur.csv.
     char chemin_table[PATH_MAX];
@@ -185,10 +181,6 @@ void bd_lecture_chercheurs(chercheurs** chs)
     {
         // Ignorance de la première ligne.
         fscanf(table_chercheur, "%*[^\n]\n");
-
-        // Allocation de mémoire pour chercheurs.
-        *chs = malloc(sizeof(chercheurs));
-        (*chs)->tete = NULL;
 
         // Lecture des tuples.
         chercheur ch;
@@ -369,7 +361,6 @@ void free_entreprises(entreprises* cos)
         l_free_list(cos->tete);
     }
     free(cos);
-    cos = NULL;
 }
 
 void free_postes(postes* pos)
@@ -379,7 +370,6 @@ void free_postes(postes* pos)
         l_free_list(pos->tete);
     }
     free(pos);
-    pos = NULL;
 }
 
 void free_employes(employes* ems)
@@ -389,7 +379,6 @@ void free_employes(employes* ems)
         l_free_list(ems->tete);
     }
     free(ems);
-    ems = NULL;
 }
 
 void free_chercheurs(chercheurs* chs)
@@ -399,5 +388,4 @@ void free_chercheurs(chercheurs* chs)
         l_free_list(chs->tete);
     }
     free(chs);
-    chs = NULL;
 }

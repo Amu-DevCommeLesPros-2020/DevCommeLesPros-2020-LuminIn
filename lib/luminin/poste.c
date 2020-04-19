@@ -13,16 +13,13 @@ postes *pos_ = NULL;
 static node** recherche(size_t const id)
 {
     node** n;
-    for(n = &pos_->tete; (*n) && ((poste*)((*n)->data))->id != id && (*n)->next; (*n) = (*n)->next);
+    for(n = &pos_->tete; (*n) && ((poste*)((*n)->data))->id != id; n = &((*n)->next));
     return n;
 }
 
 void po_init()
 {
     po_destroy();
-
-    pos_ = malloc(sizeof(postes));
-    pos_->tete = NULL;
 
     bd_lecture_postes(&pos_);
 }
@@ -64,8 +61,9 @@ void po_supprimer_poste(size_t const id)
 
 void po_ids(size_t ids[10])
 {
+    memset(ids, 0, 10 * sizeof(size_t));
     int i = 0;
-    for(node *n = pos_->tete; n; n = n->next)
+    for(node const* n = pos_->tete; n; n = n->next)
     {
         ids[i++] = ((poste*)(n->data))->id;
     }

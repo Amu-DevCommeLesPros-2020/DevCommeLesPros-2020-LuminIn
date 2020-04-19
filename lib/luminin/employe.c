@@ -14,16 +14,13 @@ employes *ems_ = NULL;
 static node** recherche(size_t const id)
 {
     node** n;
-    for(n = &ems_->tete; (*n) && ((employe*)((*n)->data))->id != id && (*n)->next; (*n) = (*n)->next);
+    for(n = &ems_->tete; (*n) && ((employe*)((*n)->data))->id != id; n = &((*n)->next));
     return n;
 }
 
 void em_init()
 {
     em_destroy();
-
-    ems_ = malloc(sizeof(employes));
-    ems_->tete = NULL;
 
     bd_lecture_employes(&ems_);
 }
@@ -81,8 +78,6 @@ void em_modifier_profil(size_t const id, char const* const nom, char const* cons
         {
             em->id_collegues[i] = id_collegues[i];
         }
-
-        l_append(&(ems_->tete), l_make_node(em));
 
         bd_ecriture_employes(ems_);
     }
