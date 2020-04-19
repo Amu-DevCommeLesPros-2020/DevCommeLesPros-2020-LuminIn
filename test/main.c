@@ -5,7 +5,6 @@
 #include "luminin/employe.h"
 #include "luminin/entreprise.h"
 #include "luminin/poste.h"
-#include "luminin/types.h"
 
 #include <sys/stat.h>
 #include <unistd.h>

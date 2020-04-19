@@ -2,7 +2,21 @@
 
 #include <stddef.h>
 
-struct chercheur;
+typedef struct chercheur
+{
+    size_t id;
+    char nom[128];
+    char prenom[128];
+    char mail[128];
+    char code_postal[5];
+    char competences[5][128];
+    size_t id_collegues[5];
+} chercheur;
+
+typedef struct chercheurs
+{
+    struct node *tete;
+} chercheurs;
 
 // Initialise la liste des chercheurs.
 void ch_init();

@@ -81,6 +81,7 @@
         "typeindex": "c",
         "unistd.h": "c",
         "employe.h": "c",
-        "__node_handle": "cpp"
+        "__node_handle": "cpp",
+        "poste.h": "c"
     }
 }

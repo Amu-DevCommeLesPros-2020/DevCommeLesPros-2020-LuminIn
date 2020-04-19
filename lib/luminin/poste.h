@@ -2,7 +2,18 @@
 
 #include <stddef.h>
 
-struct poste;
+typedef struct poste
+{
+    size_t id;
+    char titre[128];
+    char competences[5][128];
+    size_t id_entreprise;
+} poste;
+
+typedef struct postes
+{
+    struct node *tete;
+} postes;
 
 // Initialise la liste des postes.
 void po_init();

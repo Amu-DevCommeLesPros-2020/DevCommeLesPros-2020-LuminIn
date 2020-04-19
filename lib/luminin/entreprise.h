@@ -2,7 +2,18 @@
 
 #include <stddef.h>
 
-struct entreprise;
+typedef struct entreprise
+{
+    size_t id;
+    char nom[128];
+    char code_postal[5];
+    char mail[128];
+} entreprise;
+
+typedef struct entreprises
+{
+    struct node *tete;
+} entreprises;
 
 // Initialise la liste des compagnies.
 void co_init();

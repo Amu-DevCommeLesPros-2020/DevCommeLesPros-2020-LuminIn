@@ -1,6 +1,6 @@
 #pragma once
 
-#include "types.h"
+#include "fwd.h"
 
 // Donne le chemin de la BD.
 void bd_init(char const* const chemin_bd);

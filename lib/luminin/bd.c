@@ -1,8 +1,12 @@
 #include "bd.h"
 
+#include "chercheur.h"
+#include "employe.h"
+#include "entreprise.h"
+#include "poste.h"
+
 #include "journal/journal.h"
 #include "liste/liste.h"
-#include "types.h"
 
 #include <sys/stat.h>
 

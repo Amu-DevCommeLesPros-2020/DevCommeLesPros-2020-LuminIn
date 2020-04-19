@@ -1,7 +1,6 @@
 #include "entreprise.h"
 
 #include "bd.h"
-#include "types.h"
 
 #include "journal/journal.h"
 #include "liste/liste.h"

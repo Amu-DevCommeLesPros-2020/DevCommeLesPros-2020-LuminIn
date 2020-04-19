@@ -1,7 +1,6 @@
 #include "chercheur.h"
 
 #include "bd.h"
-#include "types.h"
 
 #include "journal/journal.h"
 #include "liste/liste.h"
@@ -40,7 +39,7 @@ size_t ch_creer_profil(char const* const nom, char const* const prenom, char con
     j_ecrire("Creation profil de chercheur.");
 
     chercheur *ch = malloc(sizeof(chercheur));
-    ch->id = chs_->tete ? ((poste*)(l_tail(chs_->tete)->data))->id + 1 : 1;
+    ch->id = chs_->tete ? ((chercheur*)(l_tail(chs_->tete)->data))->id + 1 : 1;
     strcpy(ch->nom, nom);
     strcpy(ch->prenom, prenom);
     strcpy(ch->mail, mail);

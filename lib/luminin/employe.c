@@ -1,7 +1,6 @@
 #include "employe.h"
 
 #include "bd.h"
-#include "types.h"
 
 #include "journal/journal.h"
 #include "liste/liste.h"
@@ -40,7 +39,7 @@ size_t em_creer_profil(char const* const nom, char const* const prenom, char con
     j_ecrire("Creation profil d'employe.");
 
     employe *em = malloc(sizeof(employe));
-    em->id = ems_->tete ? ((poste*)(l_tail(ems_->tete)->data))->id + 1 : 1;
+    em->id = ems_->tete ? ((employe*)(l_tail(ems_->tete)->data))->id + 1 : 1;
     strcpy(em->nom, nom);
     strcpy(em->prenom, prenom);
     strcpy(em->mail, mail);

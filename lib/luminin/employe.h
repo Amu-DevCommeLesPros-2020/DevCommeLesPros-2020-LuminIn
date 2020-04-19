@@ -2,7 +2,22 @@
 
 #include <stddef.h>
 
-struct employe;
+typedef struct employe
+{
+    size_t id;
+    char nom[128];
+    char prenom[128];
+    char mail[128];
+    char code_postal[5];
+    char competences[5][128];
+    size_t id_entreprise;
+    size_t id_collegues[5];
+} employe;
+
+typedef struct employes
+{
+    struct node *tete;
+} employes;
 
 // Initialise la liste des employes.
 void em_init();
