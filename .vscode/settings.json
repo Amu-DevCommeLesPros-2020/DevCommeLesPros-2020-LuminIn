@@ -82,6 +82,8 @@
         "unistd.h": "c",
         "employe.h": "c",
         "__node_handle": "cpp",
-        "poste.h": "c"
+        "poste.h": "c",
+        "memory.h": "c",
+        "errno.h": "c"
     }
 }
