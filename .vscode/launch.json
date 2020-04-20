@@ -18,16 +18,16 @@
             },
             "miDebuggerArgs": "--quiet",
             "targetArchitecture": "x64",
-            "preLaunchTask": "make test"
+            "preLaunchTask": "make all"
         },
         {
             "name": "test (MacOS)",
             "type": "lldb",
             "request": "launch",
-            "program": "${workspaceFolder}/build/test",
+            "program": "${workspaceFolder}/build/luminin",
             "args": [],
             "cwd": "${workspaceFolder}/build",
-            "preLaunchTask": "make test",
+            "preLaunchTask": "make all",
             "env": {
                 "DYLD_INSERT_LIBRARIES": "/usr/lib/libgmalloc.dylib",
                 "MallocStackLoggingNoCompact": "1",
