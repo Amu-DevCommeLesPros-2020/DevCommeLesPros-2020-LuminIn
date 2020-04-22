@@ -34,7 +34,7 @@ void co_destroy()
 
 size_t co_creer_profil(char const* const nom, char const code_postal[5], char const* const mail)
 {
-    j_ecrire("Creation profil compagnie.");
+    j_ecrire("Creation profil compagnie. [nom=%s,code_postal=%5c,mail=%s]", nom, code_postal, mail);
 
     entreprise *co = malloc(sizeof(entreprise));
     co->id = cos_->tete ? ((entreprise*)(l_tail(cos_->tete)->data))->id + 1 : 1;
@@ -46,12 +46,14 @@ size_t co_creer_profil(char const* const nom, char const code_postal[5], char co
 
     bd_ecriture_entreprises(cos_);
 
+    j_ecrire("Compagnie créée. [identifiant=%zu]", co->id);
+
     return co->id;
 }
 
 void co_supprimer_profil(size_t const id)
 {
-    j_ecrire("Suppression profil compagnie.");
+    j_ecrire("Suppression profil compagnie. [identifiant=%zu]", id);
 
     // Si la tête est supprimée, la tête est décalée à la deuxième node.
     node** n = recherche(id);
@@ -64,7 +66,7 @@ void co_supprimer_profil(size_t const id)
 
 void co_modifier_profil(size_t const id, char const* const nom, char const code_postal[5], char const* const mail)
 {
-    j_ecrire("Modification profil compagnie.");
+    j_ecrire("Modification profil compagnie. [identifiant=%zu,nom=%s,code_postal=%5s,mail=%s]", id, nom, code_postal, mail);
 
     entreprise *co = co_recherche(id);
     if(co)
@@ -79,9 +81,11 @@ void co_modifier_profil(size_t const id, char const* const nom, char const code_
 
 entreprise* co_recherche(size_t const id)
 {
-    j_ecrire("Recherche profil compagnie.");
+    j_ecrire("Recherche profil compagnie. [identifiant=%zu]", id);
 
     node **n = recherche(id);
+
+    j_ecrire("Recherche %sfructueuse.", *n ? "" : "in");
 
     return *n ? (entreprise*)((*n)->data) : NULL;
 }

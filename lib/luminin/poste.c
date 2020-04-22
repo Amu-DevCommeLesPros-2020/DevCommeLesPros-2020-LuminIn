@@ -32,7 +32,7 @@ void po_destroy()
 
 size_t po_creer_poste(char const* const titre, char const competences[5][128], size_t const id_compagnie)
 {
-    j_ecrire("Creation poste.");
+    j_ecrire("Creation poste. [titre=%s,competence[0]=%s,competence[1]=%s,competence[2]=%s,competence[3]=%s,competence[4]=%s,id_entreprise=%zu]", titre, competences[0], competences[1], competences[2], competences[3], competences[4], id_compagnie);
 
     poste *po = malloc(sizeof(poste));
     po->id = pos_->tete ? ((poste*)(l_tail(pos_->tete)->data))->id + 1 : 1;
@@ -47,12 +47,14 @@ size_t po_creer_poste(char const* const titre, char const competences[5][128], s
 
     bd_ecriture_postes(pos_);
 
+    j_ecrire("Poste créé. [identifiant=%zu]", po->id);
+    
     return po->id;
 }
 
 void po_supprimer_poste(size_t const id)
 {
-    j_ecrire("Suppression poste.");
+    j_ecrire("Suppression poste. [identifiant=%zu]", id);
 
     // Si la tête est supprimée, la tête est décalée à la deuxième node.
     node** n = recherche(id);
@@ -75,9 +77,11 @@ void po_ids(size_t ids[10])
 
 poste* po_recherche(size_t const id)
 {
-    j_ecrire("Recherche poste.");
+    j_ecrire("Recherche poste. [identifiant=%zu]", id);
 
     node **n = recherche(id);
+
+    j_ecrire("Recherche %sfructueuse.", *n ? "" : "in");
 
     return *n ? (poste*)((*n)->data) : NULL;
 }
