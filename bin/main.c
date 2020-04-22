@@ -67,7 +67,7 @@ Vous êtes :\n\
 
 action menu_entreprise()
 {
-    printf("  *Menu entreprise *\n\n\
+    printf("  * Menu entreprise *\n\n\
 Vous voulez :\n\
 1. Créer le profil de votre entreprise\n\
 2. Modifier le profil de votre entreprise\n\

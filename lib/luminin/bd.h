@@ -1,6 +1,9 @@
 #pragma once
 
-#include "fwd.h"
+typedef struct chercheurs chercheurs;
+typedef struct employes employes;
+typedef struct entreprises entreprises;
+typedef struct postes postes;
 
 // Donne le chemin de la BD.
 void bd_init(char const* const chemin_bd);
