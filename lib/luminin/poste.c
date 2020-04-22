@@ -54,7 +54,11 @@ void po_supprimer_poste(size_t const id)
 {
     j_ecrire("Suppression poste.");
 
-    l_remove(recherche(id));
+    // Si la tête est supprimée, la tête est décalée à la deuxième node.
+    node** n = recherche(id);
+    node* const next = n == &pos_->tete ? (*n)->next : pos_->tete;
+    l_remove(n);
+    pos_->tete = next;
 
     bd_ecriture_postes(pos_);
 }

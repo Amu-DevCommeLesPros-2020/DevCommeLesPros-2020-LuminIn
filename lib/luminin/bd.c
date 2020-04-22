@@ -29,6 +29,7 @@ void bd_init(char const* const chemin_bd)
     assert(chemin_bd);
 
     strcpy(chemin_bd_, chemin_bd);
+    mkdir(chemin_bd_, 0700);
 }
 
 void bd_lecture(chercheurs** chs, employes** ems, entreprises** ens, postes** pos)

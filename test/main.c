@@ -284,6 +284,15 @@ int main()
         co_supprimer_profil(id);
         
         TEST(co_recherche(id) == NULL);
+
+        size_t const id_1 = co_creer_profil("Fictive", "99000", "fictive@nullepart.com");
+        size_t const id_2 = co_creer_profil("Irrelle", "99000", "irrelle@nullepart.com");
+        co_supprimer_profil(id_1);
+        TEST(co_recherche(id_1) == NULL);
+        TEST(co_recherche(id_2) != NULL);
+
+        co_supprimer_profil(id_2);
+        TEST(co_recherche(id_2) == NULL);
     }
 
     // Test pour modifier un profil d'entreprise.

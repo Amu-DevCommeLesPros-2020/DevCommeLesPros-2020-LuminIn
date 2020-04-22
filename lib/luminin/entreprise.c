@@ -53,7 +53,11 @@ void co_supprimer_profil(size_t const id)
 {
     j_ecrire("Suppression profil compagnie.");
 
-    l_remove(recherche(id));
+    // Si la tête est supprimée, la tête est décalée à la deuxième node.
+    node** n = recherche(id);
+    node* const next = n == &cos_->tete ? (*n)->next : cos_->tete;
+    l_remove(n);
+    cos_->tete = next;
 
     bd_ecriture_entreprises(cos_);
 }
