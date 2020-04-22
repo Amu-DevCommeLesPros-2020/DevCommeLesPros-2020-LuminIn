@@ -69,9 +69,9 @@ void co_modifier_profil(size_t const id, char const* const nom, char const code_
     entreprise *co = co_recherche(id);
     if(co)
     {
-        strcpy(co->nom, nom);
-        strncpy(co->code_postal, code_postal, 5);
-        strcpy(co->mail, mail);
+        memmove(co->nom, nom, 128);
+        memmove(co->code_postal, code_postal, 5);
+        memmove(co->mail, mail, 128);
 
         bd_ecriture_entreprises(cos_);
     }

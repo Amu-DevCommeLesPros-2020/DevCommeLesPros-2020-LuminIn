@@ -6,6 +6,8 @@
 #include "entreprise.h"
 #include "poste.h"
 
+#include <string.h>
+
 void lu_init(char const* const chemin_bd)
 {
     bd_init(chemin_bd);
@@ -36,4 +38,10 @@ void lu_supprimer_profil_entreprise(size_t const id)
     }
 
     co_supprimer_profil(id);
+}
+
+void lu_modifier_profil_entreprise(size_t const id, char const* const nom, char const code_postal[5], char const* const mail)
+{
+    entreprise *e = co_recherche(id);
+    co_modifier_profil(id, strlen(nom) ? nom : e->nom, strlen(code_postal) ? code_postal : e->code_postal, strlen(mail) ? mail : e->mail);
 }

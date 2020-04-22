@@ -3,6 +3,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 char const* const chemin_journal = "./luminin.log";
 char const* const chemin_bd = "./bd";
@@ -15,6 +16,7 @@ typedef enum action
     MENU_EMPLOYE,
     MENU_CHERCHEUR,
     CREER_ENTREPRISE,
+    MODIFIER_ENTREPRISE,
     SUPPRIMER_ENTREPRISE,
     CREER_POSTE,
     SUPPRIMER_POSTE,
@@ -68,10 +70,11 @@ action menu_entreprise()
     printf("  *Menu entreprise *\n\n\
 Vous voulez :\n\
 1. Créer le profil de votre entreprise\n\
-2. Créer le profil d'un poste à pourvoir\n\
-3. Supprimer le profil d'un poste maintenant pourvu\n\
-4. Faire une recherche parmi les chercheurs d'emploi\n\
-5. Supprimer le profil de votre entreprise\n\n");
+2. Modifier le profil de votre entreprise\n\
+3. Supprimer le profil de votre entreprise\n\
+4. Créer le profil d'un poste à pourvoir\n\
+5. Supprimer le profil d'un poste maintenant pourvu\n\
+6. Faire une recherche parmi les chercheurs d'emploi\n\n");
 
     switch(choix())
     {
@@ -79,16 +82,19 @@ Vous voulez :\n\
             return CREER_ENTREPRISE;
             break;
         case '2':
-            return CREER_POSTE;
+            return MODIFIER_ENTREPRISE;
             break;
         case '3':
-            return SUPPRIMER_POSTE;
+            return SUPPRIMER_ENTREPRISE;
             break;
         case '4':
-            return RECHERCHE_CHERCHEUR;
+            return CREER_POSTE;
             break;
         case '5':
-            return SUPPRIMER_ENTREPRISE;
+            return SUPPRIMER_POSTE;
+            break;
+        case '6':
+            return RECHERCHE_CHERCHEUR;
             break;
         case QUITTER:
             return QUITTER;
@@ -116,6 +122,32 @@ void creer_entreprise()
 
     size_t const identifiant = lu_creer_profil_entreprise(nom, code_postal, mail);
     printf("Votre identifiant : %zu\n\n", identifiant);
+}
+void modifier_entreprise()
+{
+    printf("  * Menu entreprise *\n\n");
+
+    printf("Identifiant : ");
+    size_t identifiant;
+    scanf(" %zu%*c", &identifiant);
+
+    printf("Nom : ");
+    char nom[128];
+    fgets(nom, 128, stdin);
+    nom[strcspn(nom, "\n")] = '\0';
+
+    printf("Code postal : ");
+    char code_postal[7];
+    fgets(code_postal, 7, stdin);
+    code_postal[strcspn(code_postal, "\n")] = '\0';
+
+    printf("Mail : ");
+    char mail[128];
+    fgets(mail, 128, stdin);
+    mail[strcspn(mail, "\n")] = '\0';
+
+    lu_modifier_profil_entreprise(identifiant, nom, code_postal, mail);
+
 }
 
 void supprimer_entreprise()
@@ -149,6 +181,10 @@ int main()
                 break;
             case CREER_ENTREPRISE:
                 creer_entreprise();
+                a = MENU_PRINCIPAL;
+                break;
+            case MODIFIER_ENTREPRISE:
+                modifier_entreprise();
                 a = MENU_PRINCIPAL;
                 break;
             case SUPPRIMER_ENTREPRISE:
