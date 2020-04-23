@@ -5,7 +5,9 @@
 #include "employe.h"
 #include "entreprise.h"
 #include "poste.h"
+#include "recherche.h"
 
+#include <stddef.h>
 #include <string.h>
 
 void lu_init(char const* const chemin_bd)
@@ -44,4 +46,9 @@ void lu_modifier_profil_entreprise(size_t const id, char const* const nom, char 
 {
     entreprise *e = co_recherche(id);
     co_modifier_profil(id, strlen(nom) ? nom : e->nom, strlen(code_postal) ? code_postal : e->code_postal, strlen(mail) ? mail : e->mail);
+}
+
+void lu_recherche_poste_par_competences(size_t const id_chercheur, size_t ids_poste[10])
+{
+    recherche_poste_par_competences(id_chercheur, ids_poste);
 }
