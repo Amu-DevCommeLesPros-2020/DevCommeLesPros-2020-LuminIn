@@ -10,11 +10,13 @@ char const* const chemin_bd = "./bd";
 
 typedef enum action
 {
+    INVALIDE,
+    NAVIGUER_MENU_PRINCIPAL = 'p',
     QUITTER = 'q',
-    MENU_PRINCIPAL,
-    MENU_ENTREPRISE,
-    MENU_EMPLOYE,
-    MENU_CHERCHEUR,
+    NAVIGUER_MENU_PRECEDENT = 'r',
+    NAVIGUER_MENU_ENTREPRISE,
+    NAVIGUER_MENU_EMPLOYE,
+    NAVIGUER_MENU_CHERCHEUR,
     CREER_ENTREPRISE,
     MODIFIER_ENTREPRISE,
     SUPPRIMER_ENTREPRISE,
@@ -23,17 +25,56 @@ typedef enum action
     RECHERCHE_CHERCHEUR
 } action;
 
+// actions doit être de taille n + 1 et actions[n] doit décrire l'action à appliquer pour 'r' (menu précédent).
+action choix(size_t const n, action const actions[])
+{
+    char c;
+    action a = INVALIDE;
+    while(a == INVALIDE)
+    {    
+        printf("Votre choix [1-%zu],menu [p]rincipal,menu p[r]écédent,[q]uitter : ", n);
+        scanf(" %c", &c);
+
+        switch(c)
+        {
+            case '1':
+                a = actions[0];
+                break;
+            case '2':
+                a = n < 2 ? INVALIDE : actions[1];
+                break;
+            case '3':
+                a = n < 3 ? INVALIDE : actions[2];
+                break;
+            case '4':
+                a = n < 4 ? INVALIDE : actions[3];
+                break;
+            case '5':
+                a = n < 5 ? INVALIDE : actions[4];
+                break;
+            case '6':
+                a = n < 6 ? INVALIDE : actions[5];
+                break;
+            case NAVIGUER_MENU_PRINCIPAL:
+                a = NAVIGUER_MENU_PRINCIPAL;
+                break;
+            case NAVIGUER_MENU_PRECEDENT:
+                a = actions[n];
+                break;
+            case QUITTER:
+                return QUITTER;
+                break;
+            default:
+                break;
+        }
+    }
+
+    return a;
+}
+
 void en_tete()
 {
     printf("*** Bienvenu sur LuminIn, le site des pros ***\n");
-}
-
-char choix()
-{
-    printf("Votre choix ('q' pour quitter) : ");
-    char c;
-    scanf(" %c", &c);
-    return c;
 }
 
 action menu_principal()
@@ -44,25 +85,7 @@ Vous êtes :\n\
 2. Un employé\n\
 3. À la recherche d'un emploi\n\n");
 
-    switch(choix())
-    {
-        case '1':
-            return MENU_ENTREPRISE;
-            break;
-        case '2':
-            return MENU_EMPLOYE;
-            break;
-        case '3':
-            return MENU_CHERCHEUR;
-            break;
-        case QUITTER:
-            return QUITTER;
-            break;
-        default:
-            break;
-    }
-
-    return MENU_PRINCIPAL;
+    return choix(3, (action[]){NAVIGUER_MENU_ENTREPRISE, NAVIGUER_MENU_EMPLOYE, NAVIGUER_MENU_CHERCHEUR, NAVIGUER_MENU_PRINCIPAL});
 }
 
 action menu_entreprise()
@@ -76,32 +99,7 @@ Vous voulez :\n\
 5. Supprimer le profil d'un poste maintenant pourvu\n\
 6. Faire une recherche parmi les chercheurs d'emploi\n\n");
 
-    switch(choix())
-    {
-        case '1':
-            return CREER_ENTREPRISE;
-            break;
-        case '2':
-            return MODIFIER_ENTREPRISE;
-            break;
-        case '3':
-            return SUPPRIMER_ENTREPRISE;
-            break;
-        case '4':
-            return CREER_POSTE;
-            break;
-        case '5':
-            return SUPPRIMER_POSTE;
-            break;
-        case '6':
-            return RECHERCHE_CHERCHEUR;
-            break;
-        case QUITTER:
-            return QUITTER;
-            break;
-    }
-
-    return MENU_ENTREPRISE;
+    return choix(6, (action []){CREER_ENTREPRISE, MODIFIER_ENTREPRISE, SUPPRIMER_ENTREPRISE, CREER_POSTE, SUPPRIMER_POSTE, RECHERCHE_CHERCHEUR, NAVIGUER_MENU_PRINCIPAL});
 }
 
 void creer_entreprise()
@@ -123,6 +121,7 @@ void creer_entreprise()
     size_t const identifiant = lu_creer_profil_entreprise(nom, code_postal, mail);
     printf("Votre identifiant : %zu\n\n", identifiant);
 }
+
 void modifier_entreprise()
 {
     printf("  * Menu entreprise *\n\n");
@@ -166,30 +165,30 @@ int main()
     j_ouvrir(chemin_journal);
     lu_init(chemin_bd);
 
-    action a = MENU_PRINCIPAL;
+    action a = NAVIGUER_MENU_PRINCIPAL;
     while(a != QUITTER)
     {
         en_tete();
 
         switch(a)
         {
-            case MENU_PRINCIPAL:
+            case NAVIGUER_MENU_PRINCIPAL:
                 a = menu_principal();
                 break;
-            case MENU_ENTREPRISE:
+            case NAVIGUER_MENU_ENTREPRISE:
                 a = menu_entreprise();
                 break;
             case CREER_ENTREPRISE:
                 creer_entreprise();
-                a = MENU_PRINCIPAL;
+                a = NAVIGUER_MENU_PRINCIPAL;
                 break;
             case MODIFIER_ENTREPRISE:
                 modifier_entreprise();
-                a = MENU_PRINCIPAL;
+                a = NAVIGUER_MENU_PRINCIPAL;
                 break;
             case SUPPRIMER_ENTREPRISE:
                 supprimer_entreprise();
-                a = MENU_PRINCIPAL;
+                a = NAVIGUER_MENU_PRINCIPAL;
             case QUITTER:
             default:
                 break;
