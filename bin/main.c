@@ -5,6 +5,9 @@
 #include <stdio.h>
 #include <string.h>
 
+#define STRINGIZE_(x) #x
+#define STRINGIZE(x) STRINGIZE_(x)
+
 char const* const chemin_journal = "./luminin.log";
 char const* const chemin_bd = "./bd";
 
@@ -107,16 +110,16 @@ void creer_entreprise()
     printf("  * Menu entreprise *\n\n");
     
     printf("Nom : ");
-    char nom[128];
-    scanf(" %127[^\n]%*c", nom);
+    char nom[L_NOM];
+    scanf(" %" STRINGIZE(L_NOM) "[^\n]%*c", nom);
 
     printf("Code postal : ");
-    char code_postal[6];
-    scanf("%5c%*c", code_postal);
+    char code_postal[L_CP + 1];
+    scanf("%" STRINGIZE(L_CP) "c%*c", code_postal);
 
     printf("Mail : ");
-    char mail[128];
-    scanf(" %127[^\n]%*c", mail);
+    char mail[L_MAIL];
+    scanf(" %" STRINGIZE(L_MAIL) "[^\n]%*c", mail);
 
     size_t const identifiant = lu_creer_profil_entreprise(nom, code_postal, mail);
     printf("Votre identifiant : %zu\n\n", identifiant);
@@ -131,18 +134,18 @@ void modifier_entreprise()
     scanf(" %zu%*c", &identifiant);
 
     printf("Nom : ");
-    char nom[128];
-    fgets(nom, 128, stdin);
+    char nom[L_NOM];
+    fgets(nom, L_NOM, stdin);
     nom[strcspn(nom, "\n")] = '\0';
 
     printf("Code postal : ");
-    char code_postal[7];
-    fgets(code_postal, 7, stdin);
+    char code_postal[L_CP + 1 + 1];
+    fgets(code_postal, L_CP + 1 + 1, stdin);
     code_postal[strcspn(code_postal, "\n")] = '\0';
 
     printf("Mail : ");
-    char mail[128];
-    fgets(mail, 128, stdin);
+    char mail[L_MAIL];
+    fgets(mail, L_MAIL, stdin);
     mail[strcspn(mail, "\n")] = '\0';
 
     lu_modifier_profil_entreprise(identifiant, nom, code_postal, mail);

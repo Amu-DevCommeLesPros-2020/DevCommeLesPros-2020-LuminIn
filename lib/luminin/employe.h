@@ -1,17 +1,19 @@
 #pragma once
 
+#include "constantes.h"
+
 #include <stddef.h>
 
 typedef struct employe
 {
     size_t id;
-    char nom[128];
-    char prenom[128];
-    char mail[128];
-    char code_postal[5];
-    char competences[5][128];
+    char nom[L_NOM];
+    char prenom[L_PRENOM];
+    char mail[L_MAIL];
+    char code_postal[L_CP];
+    char competences[N_COMPETENCES][L_COMPETENCE];
     size_t id_entreprise;
-    size_t id_collegues[5];
+    size_t id_collegues[N_COLLEGUES];
 } employe;
 
 typedef struct employes
@@ -26,10 +28,10 @@ void em_init();
 void em_destroy();
 
 // Crée un nouveau profil d'employé.
-size_t em_creer_profil(char const* const nom, char const* const prenom, char const* const mail, char const code_postal[5], char const competences[5][128], size_t const id_entreprise, size_t const id_collegues[5]);
+size_t em_creer_profil(char const nom[L_NOM], char const prenom[L_PRENOM], char const mail[L_MAIL], char const code_postal[L_CP], char const competences[N_COMPETENCES][L_COMPETENCE], size_t const id_entreprise, size_t const id_collegues[N_COLLEGUES]);
 
 // Modifier un profil, donné un index.
-void em_modifier_profil(size_t const id, char const* const nom, char const* const prenom, char const* const mail, char const code_postal[5], char const competences[5][128], size_t const id_entreprise, size_t const id_collegues[5]);
+void em_modifier_profil(size_t const id, char const nom[L_NOM], char const prenom[L_PRENOM], char const mail[L_MAIL], char const code_postal[L_CP], char const competences[N_COMPETENCES][L_COMPETENCE], size_t const id_entreprise, size_t const id_collegues[N_COLLEGUES]);
 
 // Rechercher un employé par id.
 struct employe* em_recherche(size_t const id);

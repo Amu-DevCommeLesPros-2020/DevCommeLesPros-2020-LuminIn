@@ -2,6 +2,7 @@
 #include "liste/liste.h"
 #include "luminin/bd.h"
 #include "luminin/chercheur.h"
+#include "luminin/constantes.h"
 #include "luminin/employe.h"
 #include "luminin/entreprise.h"
 #include "luminin/poste.h"
@@ -99,13 +100,13 @@ int main()
         entreprise *disney = (entreprise*)(cos->tete->data);
         TEST(disney->id == 1);
         TEST(strcmp(disney->nom, "Disney") == 0);
-        TEST(strncmp(disney->code_postal, "77700", 5) == 0);
+        TEST(strncmp(disney->code_postal, "77700", L_CP) == 0);
         TEST(strcmp(disney->mail, "walt@disney.com") == 0);
 
         entreprise *google = (entreprise*)(l_skip(cos->tete, 1)->data);
         TEST(google->id == 2);
         TEST(strcmp(google->nom, "Google") == 0);
-        TEST(strncmp(google->code_postal, "75009", 5) == 0);
+        TEST(strncmp(google->code_postal, "75009", L_CP) == 0);
         TEST(strcmp(google->mail, "emplois@google.com") == 0);
 
         free_entreprises(cos);
@@ -145,7 +146,7 @@ int main()
         TEST(strcmp(em->nom, "Untel") == 0);
         TEST(strcmp(em->prenom, "Michel") == 0);
         TEST(strcmp(em->mail, "m_untel@google.com") == 0);
-        TEST(strncmp(em->code_postal, "13010", 5) == 0);
+        TEST(strncmp(em->code_postal, "13010", L_CP) == 0);
         TEST(strcmp(em->competences[0], "C++") == 0);
         TEST(strcmp(em->competences[1], "Python") == 0);
         TEST(strcmp(em->competences[2], "") == 0);
@@ -163,7 +164,7 @@ int main()
         TEST(strcmp(em->nom, "Mouse") == 0);
         TEST(strcmp(em->prenom, "Mickey") == 0);
         TEST(strcmp(em->mail, "mickey@mickeyville.gov") == 0);
-        TEST(strncmp(em->code_postal, "77700", 5) == 0);
+        TEST(strncmp(em->code_postal, "77700", L_CP) == 0);
         TEST(strcmp(em->competences[0], "comedie") == 0);
         TEST(strcmp(em->competences[1], "") == 0);
         TEST(strcmp(em->competences[2], "") == 0);
@@ -186,7 +187,7 @@ int main()
         TEST(strcmp(ch->nom, "Duck") == 0);
         TEST(strcmp(ch->prenom, "Donald") == 0);
         TEST(strcmp(ch->mail, "donal.duck@canardville.gov") == 0);
-        TEST(strncmp(ch->code_postal, "77700", 5) == 0);
+        TEST(strncmp(ch->code_postal, "77700", L_CP) == 0);
         TEST(strcmp(ch->competences[0], "comedie") == 0);
         TEST(strcmp(ch->competences[1], "gag") == 0);
         TEST(strcmp(ch->competences[2], "") == 0);
@@ -203,7 +204,7 @@ int main()
         TEST(strcmp(ch->nom, "Pignon") == 0);
         TEST(strcmp(ch->prenom, "Francois") == 0);
         TEST(strcmp(ch->mail, "pignouf@gmail.com") == 0);
-        TEST(strncmp(ch->code_postal, "75020", 5) == 0);
+        TEST(strncmp(ch->code_postal, "75020", L_CP) == 0);
         TEST(strcmp(ch->competences[0], "C") == 0);
         TEST(strcmp(ch->competences[1], "SQL") == 0);
         TEST(strcmp(ch->competences[2], "Python") == 0);
@@ -230,7 +231,7 @@ int main()
         entreprise *co = malloc(sizeof(entreprise));
         co->id = 100;
         strcpy(co->nom, "Fictive");
-        strncpy(co->code_postal, "99000", 5);
+        strncpy(co->code_postal, "99000", L_CP);
         strcpy(co->mail, "nobody@bowhere.com");
         l_append(&(cos->tete), l_make_node(co));
 
@@ -243,7 +244,7 @@ int main()
         co = (entreprise*)(cos->tete->data);
         TEST(co->id == 100);
         TEST(strcmp(co->nom, "Fictive") == 0);
-        TEST(strncmp(co->code_postal, "99000", 5) == 0);
+        TEST(strncmp(co->code_postal, "99000", L_CP) == 0);
         TEST(strcmp(co->mail, "nobody@bowhere.com") == 0);
 
         free_entreprises(cos);
@@ -270,7 +271,7 @@ int main()
 
         TEST(co != NULL);
         TEST(strcmp(co->nom, "Fictive") == 0);
-        TEST(strncmp(co->code_postal, "99000", 5) == 0);
+        TEST(strncmp(co->code_postal, "99000", L_CP) == 0);
         TEST(strcmp(co->mail, "nobody@nowhere.com") == 0);
     }
 
@@ -307,7 +308,7 @@ int main()
         entreprise *co = co_recherche(id);
         TEST(co->id == id);
         TEST(strcmp(co->nom, "Reelle") == 0);
-        TEST(strncmp(co->code_postal, "13010", 5) == 0);
+        TEST(strncmp(co->code_postal, "13010", L_CP) == 0);
         TEST(strcmp(co->mail, "president@luminy.com") == 0);
     }
 
@@ -356,7 +357,7 @@ int main()
         bd_init(chemin_test_ecriture_bd);
         po_init();
 
-        char const competences[5][128] = {"experience", "bagou", "patience", "", ""};
+        char const competences[N_COMPETENCES][L_COMPETENCE] = {"experience", "bagou", "patience", "", ""};
         size_t const id = po_creer_poste("Professeur", competences, 1);
         TEST(id != 0);
 
@@ -369,7 +370,7 @@ int main()
         bd_init(chemin_test_ecriture_bd);
         po_init();
 
-        char const competences[5][128] = {"experience", "bagou", "patience", "", ""};
+        char const competences[N_COMPETENCES][L_COMPETENCE] = {"experience", "bagou", "patience", "", ""};
         size_t const id = po_creer_poste("Professeur", competences, 1);
         po_supprimer_poste(id);
         
@@ -383,7 +384,7 @@ int main()
         bd_init(chemin_test_bd);
         po_init();
 
-        size_t ids[10] = {0};
+        size_t ids[N_POSTES] = {0};
         po_ids(ids);
 
         TEST(ids[0] == 1);
@@ -401,7 +402,7 @@ int main()
         bd_init(chemin_test_ecriture_bd);
         po_init();
 
-        char const competences[5][128] = {"experience", "bagou", "patience", "", ""};
+        char const competences[N_COMPETENCES][L_COMPETENCE] = {"experience", "bagou", "patience", "", ""};
         size_t const id = po_creer_poste("Professeur", competences, 1);
         poste *po = po_recherche(id);
 
@@ -431,7 +432,7 @@ int main()
         strcpy(em->nom, "Gladu");
         strcpy(em->prenom, "Gaston");
         strcpy(em->mail, "gg@gladu.name");
-        strncpy(em->code_postal, "00000", 5);
+        strncpy(em->code_postal, "00000", L_CP);
         strcpy(em->competences[0], "ennuyeux");
         strcpy(em->competences[1], "maladroit");
         strcpy(em->competences[2], "empote");
@@ -456,7 +457,7 @@ int main()
         TEST(strcmp(em->nom, "Gladu") == 0);
         TEST(strcmp(em->prenom, "Gaston") == 0);
         TEST(strcmp(em->mail, "gg@gladu.name") == 0);
-        TEST(strncmp(em->code_postal, "00000", 5) == 0);
+        TEST(strncmp(em->code_postal, "00000", L_CP) == 0);
         TEST(strcmp(em->competences[0], "ennuyeux") == 0);
         TEST(strcmp(em->competences[1], "maladroit") == 0);
         TEST(strcmp(em->competences[2], "empote") == 0);
@@ -478,8 +479,8 @@ int main()
         bd_init(chemin_test_ecriture_bd);
         em_init();
 
-        char const competences[5][128] = {"ennuyeux", "maladroit", "empote", "pompeur d'air", "emmerdeur"};
-        size_t const id_collegues[5] = {66, 67, 68, 69, 70};
+        char const competences[N_COMPETENCES][L_COMPETENCE] = {"ennuyeux", "maladroit", "empote", "pompeur d'air", "emmerdeur"};
+        size_t const id_collegues[N_COLLEGUES] = {66, 67, 68, 69, 70};
 
         size_t const id = em_creer_profil("Gladu", "Gaston", "gg@gladu.name", "00000", competences, 100, id_collegues);
         TEST(id != 0);
@@ -491,15 +492,15 @@ int main()
         bd_init(chemin_test_ecriture_bd);
         em_init();
 
-        char const competences[5][128] = {"ennuyeux", "maladroit", "empote", "pompeur d'air", "emmerdeur"};
-        size_t const id_collegues[5] = {66, 67, 68, 69, 70};
+        char const competences[N_COMPETENCES][L_COMPETENCE] = {"ennuyeux", "maladroit", "empote", "pompeur d'air", "emmerdeur"};
+        size_t const id_collegues[N_COLLEGUES] = {66, 67, 68, 69, 70};
         size_t const id = em_creer_profil("Gladu", "Gaston", "gg@gladu.name", "00000", competences, 100, id_collegues);
 
         employe *em = em_recherche(id);
 
         TEST(em != NULL);
         TEST(strcmp(em->nom, "Gladu") == 0);
-        TEST(strncmp(em->code_postal, "00000", 5) == 0);
+        TEST(strncmp(em->code_postal, "00000", L_CP) == 0);
         TEST(strcmp(em->mail, "gg@gladu.name") == 0);
     }
 
@@ -509,11 +510,11 @@ int main()
         bd_init(chemin_test_ecriture_bd);
         em_init();
 
-        char incompetences[5][128] = {"ennuyeux", "maladroit", "empote", "pompeur d'air", "emmerdeur"};
-        size_t const id_collegues[5] = {66, 67, 68, 69, 70};
+        char incompetences[N_COMPETENCES][L_COMPETENCE] = {"ennuyeux", "maladroit", "empote", "pompeur d'air", "emmerdeur"};
+        size_t const id_collegues[N_COLLEGUES] = {66, 67, 68, 69, 70};
         size_t const id = em_creer_profil("Gladu", "Gaston", "gg@gaston.name", "00000", incompetences, 100, id_collegues);
 
-        char const competences[5][128] = {"charmant", "adroit", "gracieux", "amusant", "charmeur"};
+        char const competences[N_COMPETENCES][L_COMPETENCE] = {"charmant", "adroit", "gracieux", "amusant", "charmeur"};
         em_modifier_profil(id, "Gogol", "Gaston", "gg@gogol.name", "11111", competences, 100, id_collegues);
 
         employe *em = em_recherche(id);
@@ -522,7 +523,7 @@ int main()
         TEST(strcmp(em->nom, "Gogol") == 0);
         TEST(strcmp(em->prenom, "Gaston") == 0);
         TEST(strcmp(em->mail, "gg@gogol.name") == 0);
-        TEST(strncmp(em->code_postal, "11111", 5) == 0);
+        TEST(strncmp(em->code_postal, "11111", L_CP) == 0);
         TEST(strcmp(em->competences[0], "charmant") == 0);
         TEST(strcmp(em->competences[1], "adroit") == 0);
         TEST(strcmp(em->competences[2], "gracieux") == 0);
@@ -544,7 +545,7 @@ int main()
         strcpy(ch->nom, "Glandu");
         strcpy(ch->prenom, "Germaine");
         strcpy(ch->mail, "gg@glandu.name");
-        strncpy(ch->code_postal, "00000", 5);
+        strncpy(ch->code_postal, "00000", L_CP);
         strcpy(ch->competences[0], "etourdie");
         strcpy(ch->competences[1], "tete-en-l'air");
         strcpy(ch->competences[2], "paresseuse");
@@ -568,7 +569,7 @@ int main()
         TEST(strcmp(ch->nom, "Glandu") == 0);
         TEST(strcmp(ch->prenom, "Germaine") == 0);
         TEST(strcmp(ch->mail, "gg@glandu.name") == 0);
-        TEST(strncmp(ch->code_postal, "00000", 5) == 0);
+        TEST(strncmp(ch->code_postal, "00000", L_CP) == 0);
         TEST(strcmp(ch->competences[0], "etourdie") == 0);
         TEST(strcmp(ch->competences[1], "tete-en-l'air") == 0);
         TEST(strcmp(ch->competences[2], "paresseuse") == 0);
@@ -589,8 +590,8 @@ int main()
         bd_init(chemin_test_ecriture_bd);
         ch_init();
 
-        char const competences[5][128] = {"etourdie", "tete-en-l'air", "paresseuse", "maladroite", ""};
-        size_t const id_collegues[5] = {86, 87, 88, 89, 90};
+        char const competences[N_COMPETENCES][L_COMPETENCE] = {"etourdie", "tete-en-l'air", "paresseuse", "maladroite", ""};
+        size_t const id_collegues[N_COLLEGUES] = {86, 87, 88, 89, 90};
 
         size_t const id = ch_creer_profil("Gladu", "Germaine", "gg@glandu.name", "00000", competences, id_collegues);
         TEST(id != 0);
@@ -604,15 +605,15 @@ int main()
         bd_init(chemin_test_ecriture_bd);
         ch_init();
 
-        char const competences[5][128] = {"etourdie", "tete-en-l'air", "paresseuse", "maladroite", ""};
-        size_t const id_collegues[5] = {86, 87, 88, 89, 90};
+        char const competences[N_COMPETENCES][L_COMPETENCE] = {"etourdie", "tete-en-l'air", "paresseuse", "maladroite", ""};
+        size_t const id_collegues[N_COLLEGUES] = {86, 87, 88, 89, 90};
         size_t const id = ch_creer_profil("Glandu", "Germaine", "gg@glandu.name", "00000", competences, id_collegues);
 
         chercheur *ch = ch_recherche(id);
 
         TEST(ch != NULL);
         TEST(strcmp(ch->nom, "Glandu") == 0);
-        TEST(strncmp(ch->code_postal, "00000", 5) == 0);
+        TEST(strncmp(ch->code_postal, "00000", L_CP) == 0);
         TEST(strcmp(ch->mail, "gg@glandu.name") == 0);
 
         ch_destroy();
@@ -624,11 +625,11 @@ int main()
         bd_init(chemin_test_ecriture_bd);
         ch_init();
 
-        char incompetences[5][128] = {"etourdie", "tete-en-l'air", "paresseuse", "maladroite", ""};
-        size_t const id_collegues[5] = {86, 87, 88, 89, 90};
+        char incompetences[N_COMPETENCES][L_COMPETENCE] = {"etourdie", "tete-en-l'air", "paresseuse", "maladroite", ""};
+        size_t const id_collegues[N_COLLEGUES] = {86, 87, 88, 89, 90};
         size_t const id = ch_creer_profil("Glandu", "Germaine", "gg@glandu.name", "00000", incompetences, id_collegues);
 
-        char const competences[5][128] = {"futee", "adroite", "assidue", "rigolote", ""};
+        char const competences[N_COMPETENCES][L_COMPETENCE] = {"futee", "adroite", "assidue", "rigolote", ""};
         ch_modifier_profil(id, "Gogol", "Germaine", "gg@gogol.name", "11111", competences, id_collegues);
 
         chercheur *ch = ch_recherche(id);
@@ -637,7 +638,7 @@ int main()
         TEST(strcmp(ch->nom, "Gogol") == 0);
         TEST(strcmp(ch->prenom, "Germaine") == 0);
         TEST(strcmp(ch->mail, "gg@gogol.name") == 0);
-        TEST(strncmp(ch->code_postal, "11111", 5) == 0);
+        TEST(strncmp(ch->code_postal, "11111", L_CP) == 0);
         TEST(strcmp(ch->competences[0], "futee") == 0);
         TEST(strcmp(ch->competences[1], "adroite") == 0);
         TEST(strcmp(ch->competences[2], "assidue") == 0);
@@ -652,7 +653,7 @@ int main()
         bd_init(chemin_test_bd);
         ch_init();
 
-        size_t ids[10] = {0};
+        size_t ids[N_CHERCHEURS] = {0};
         ch_ids(ids);
 
         TEST(ids[0] == 1);
@@ -668,7 +669,7 @@ int main()
         po_init();
         ch_init();
 
-        size_t ids_poste[10];
+        size_t ids_poste[N_POSTES];
         
         recherche_poste_par_competences(1, ids_poste);
         TEST(ids_poste[0] == 1);

@@ -20,7 +20,7 @@ void lu_init(char const* const chemin_bd)
     po_init();
 }
 
-size_t lu_creer_profil_entreprise(char const* const nom, char const code_postal[5], char const* const mail)
+size_t lu_creer_profil_entreprise(char const nom[L_NOM], char const code_postal[L_CP], char const mail[L_MAIL])
 {
     return co_creer_profil(nom, code_postal, mail);
 }
@@ -28,9 +28,9 @@ size_t lu_creer_profil_entreprise(char const* const nom, char const code_postal[
 void lu_supprimer_profil_entreprise(size_t const id)
 {
     // Supprime tout les postes ouverts en lien avec cette entreprise.
-    size_t ids_poste[10];
+    size_t ids_poste[N_POSTES];
     po_ids(ids_poste);
-    for(size_t i = 0; i != 10 && ids_poste[i] != 0; ++i)
+    for(size_t i = 0; i != N_POSTES && ids_poste[i] != 0; ++i)
     {
         poste *p = po_recherche(ids_poste[i]);
         if(p && p->id_entreprise == id)
@@ -42,13 +42,13 @@ void lu_supprimer_profil_entreprise(size_t const id)
     co_supprimer_profil(id);
 }
 
-void lu_modifier_profil_entreprise(size_t const id, char const* const nom, char const code_postal[5], char const* const mail)
+void lu_modifier_profil_entreprise(size_t const id, char const nom[L_NOM], char const code_postal[L_CP], char const mail[L_MAIL])
 {
     entreprise *e = co_recherche(id);
     co_modifier_profil(id, strlen(nom) ? nom : e->nom, strlen(code_postal) ? code_postal : e->code_postal, strlen(mail) ? mail : e->mail);
 }
 
-void lu_recherche_poste_par_competences(size_t const id_chercheur, size_t ids_poste[10])
+void lu_recherche_poste_par_competences(size_t const id_chercheur, size_t ids_poste[N_POSTES])
 {
     recherche_poste_par_competences(id_chercheur, ids_poste);
 }

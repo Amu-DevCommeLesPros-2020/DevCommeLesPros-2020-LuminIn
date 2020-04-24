@@ -1,9 +1,11 @@
 #include "entreprise.h"
 
 #include "bd.h"
+#include "constantes.h"
 
 #include "journal/journal.h"
 #include "liste/liste.h"
+#include "utilite/stringize.h"
 
 #include <stdbool.h>
 #include <stddef.h>
@@ -32,14 +34,14 @@ void co_destroy()
     cos_ = NULL;
 }
 
-size_t co_creer_profil(char const* const nom, char const code_postal[5], char const* const mail)
+size_t co_creer_profil(char const nom[L_NOM], char const code_postal[L_CP], char const mail[L_MAIL])
 {
-    j_ecrire("Creation profil compagnie. [nom=%s,code_postal=%5c,mail=%s]", nom, code_postal, mail);
+    j_ecrire("Creation profil compagnie. [nom=%s,code_postal=%" STRINGIZE(L_CP) "c,mail=%s]", nom, code_postal, mail);
 
     entreprise *co = malloc(sizeof(entreprise));
     co->id = cos_->tete ? ((entreprise*)(l_tail(cos_->tete)->data))->id + 1 : 1;
     strcpy(co->nom, nom);
-    strncpy(co->code_postal, code_postal, 5);
+    strncpy(co->code_postal, code_postal, L_CP);
     strcpy(co->mail, mail);
 
     l_append(&(cos_->tete), l_make_node(co));
@@ -64,16 +66,16 @@ void co_supprimer_profil(size_t const id)
     bd_ecriture_entreprises(cos_);
 }
 
-void co_modifier_profil(size_t const id, char const* const nom, char const code_postal[5], char const* const mail)
+void co_modifier_profil(size_t const id, char const nom[L_NOM], char const code_postal[L_CP], char const mail[L_MAIL])
 {
-    j_ecrire("Modification profil compagnie. [identifiant=%zu,nom=%s,code_postal=%5s,mail=%s]", id, nom, code_postal, mail);
+    j_ecrire("Modification profil compagnie. [identifiant=%zu,nom=%s,code_postal=%" STRINGIZE(L_CP) "s,mail=%s]", id, nom, code_postal, mail);
 
     entreprise *co = co_recherche(id);
     if(co)
     {
-        memmove(co->nom, nom, 128);
-        memmove(co->code_postal, code_postal, 5);
-        memmove(co->mail, mail, 128);
+        memmove(co->nom, nom, L_NOM);
+        memmove(co->code_postal, code_postal, L_CP);
+        memmove(co->mail, mail, L_MAIL);
 
         bd_ecriture_entreprises(cos_);
     }

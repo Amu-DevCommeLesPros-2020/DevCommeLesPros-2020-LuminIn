@@ -1,6 +1,7 @@
 #include "poste.h"
 
 #include "bd.h"
+#include "constantes.h"
 
 #include "journal/journal.h"
 #include "liste/liste.h"
@@ -30,14 +31,14 @@ void po_destroy()
     pos_ = NULL;
 }
 
-size_t po_creer_poste(char const* const titre, char const competences[5][128], size_t const id_compagnie)
+size_t po_creer_poste(char const titre[L_TITRE], char const competences[N_COMPETENCES][L_COMPETENCE], size_t const id_compagnie)
 {
     j_ecrire("Creation poste. [titre=%s,competence[0]=%s,competence[1]=%s,competence[2]=%s,competence[3]=%s,competence[4]=%s,id_entreprise=%zu]", titre, competences[0], competences[1], competences[2], competences[3], competences[4], id_compagnie);
 
     poste *po = malloc(sizeof(poste));
     po->id = pos_->tete ? ((poste*)(l_tail(pos_->tete)->data))->id + 1 : 1;
     strcpy(po->titre, titre);
-    for(int i = 0; i != 5; ++i)
+    for(int i = 0; i != N_COMPETENCES; ++i)
     {
         strcpy(po->competences[i], competences[i]);
     }
@@ -65,9 +66,9 @@ void po_supprimer_poste(size_t const id)
     bd_ecriture_postes(pos_);
 }
 
-void po_ids(size_t ids[10])
+void po_ids(size_t ids[N_POSTES])
 {
-    memset(ids, 0, 10 * sizeof(size_t));
+    memset(ids, 0, N_POSTES * sizeof(size_t));
     int i = 0;
     for(node const* n = pos_->tete; n; n = n->next)
     {

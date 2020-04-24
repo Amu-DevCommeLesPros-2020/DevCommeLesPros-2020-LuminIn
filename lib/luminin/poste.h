@@ -1,12 +1,14 @@
 #pragma once
 
+#include "constantes.h"
+
 #include <stddef.h>
 
 typedef struct poste
 {
     size_t id;
-    char titre[128];
-    char competences[5][128];
+    char titre[L_TITRE];
+    char competences[N_COMPETENCES][L_COMPETENCE];
     size_t id_entreprise;
 } poste;
 
@@ -22,13 +24,13 @@ void po_init();
 void po_destroy();
 
 // Créer un poste.
-size_t po_creer_poste(char const* const titre, char const competences[5][128], size_t const id_compagnie);
+size_t po_creer_poste(char const titre[L_TITRE], char const competences[N_COMPETENCES][L_COMPETENCE], size_t const id_compagnie);
 
 // Supprimer un poste.
 void po_supprimer_poste(size_t const id);
 
 // Liste des postes existants.
-void po_ids(size_t ids[10]);
+void po_ids(size_t ids[N_POSTES]);
 
 // Cherche un poste par id.
 poste* po_recherche(size_t const id);

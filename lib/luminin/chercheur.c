@@ -4,6 +4,7 @@
 
 #include "journal/journal.h"
 #include "liste/liste.h"
+#include "utilite/stringize.h"
 
 #include <stddef.h>
 #include <stdlib.h>
@@ -31,9 +32,9 @@ void ch_destroy()
     chs_ = NULL;
 }
 
-size_t ch_creer_profil(char const* const nom, char const* const prenom, char const* const mail, char const code_postal[5], char const competences[5][128], size_t const id_collegues[5])
+size_t ch_creer_profil(char const nom[L_NOM], char const prenom[L_PRENOM], char const mail[L_MAIL], char const code_postal[L_CP], char const competences[N_COMPETENCES][L_COMPETENCE], size_t const id_collegues[N_COLLEGUES])
 {
-    j_ecrire("Création profil de chercheur. [nom=%s,prenom=%s,mail=%s,code_postal=%5s,\
+    j_ecrire("Création profil de chercheur. [nom=%s,prenom=%s,mail=%s,code_postal=%" STRINGIZE(L_CP) "s,\
               competence[0]=%s,competence[1]=%s,competence[2]=%s,competence[3]=%s,competence[4]=%s,\
               collegues[0]=%zu,collegues[1]=%zu,collegues[2]=%zu,collegues[3]=%zu,collegues[4]=%zu", nom, prenom, mail, code_postal, competences[0], competences[1], competences[2], competences[3], competences[4], id_collegues[0], id_collegues[1], id_collegues[2], id_collegues[3], id_collegues[4]);
 
@@ -42,12 +43,12 @@ size_t ch_creer_profil(char const* const nom, char const* const prenom, char con
     strcpy(ch->nom, nom);
     strcpy(ch->prenom, prenom);
     strcpy(ch->mail, mail);
-    strncpy(ch->code_postal, code_postal, 5);
-    for(int i = 0; i != 5; ++i)
+    strncpy(ch->code_postal, code_postal, L_CP);
+    for(int i = 0; i != N_COMPETENCES; ++i)
     {
         strcpy(ch->competences[i], competences[i]);
     }
-    for(int i = 0; i != 5; ++i)
+    for(int i = 0; i != N_COLLEGUES; ++i)
     {
         ch->id_collegues[i] = id_collegues[i];
     }
@@ -61,9 +62,9 @@ size_t ch_creer_profil(char const* const nom, char const* const prenom, char con
     return ch->id;
 }
 
-void ch_modifier_profil(size_t const id, char const* const nom, char const* const prenom, char const* const mail, char const code_postal[5], char const competences[5][128], size_t const id_collegues[5])
+void ch_modifier_profil(size_t const id, char const nom[L_NOM], char const prenom[L_PRENOM], char const mail[L_MAIL], char const code_postal[L_CP], char const competences[N_COMPETENCES][L_COMPETENCE], size_t const id_collegues[N_COLLEGUES])
 {
-    j_ecrire("Modification profil de chercheur. [identifiant=%zu,nom=%s,prenom=%s,mail=%s,code_postal=%5s,\
+    j_ecrire("Modification profil de chercheur. [identifiant=%zu,nom=%s,prenom=%s,mail=%s,code_postal=%" STRINGIZE(L_CP) "s,\
               competence[0]=%s,competence[1]=%s,competence[2]=%s,competence[3]=%s,competence[4]=%s,\
               collegues[0]=%zu,collegues[1]=%zu,collegues[2]=%zu,collegues[3]=%zu,collegues[4]=%zu", id, nom, prenom, mail, code_postal, competences[0], competences[1], competences[2], competences[3], competences[4], id_collegues[0], id_collegues[1], id_collegues[2], id_collegues[3], id_collegues[4]);
 
@@ -73,12 +74,12 @@ void ch_modifier_profil(size_t const id, char const* const nom, char const* cons
         strcpy(ch->nom, nom);
         strcpy(ch->prenom, prenom);
         strcpy(ch->mail, mail);
-        strncpy(ch->code_postal, code_postal, 5);
-        for(int i = 0; i != 5; ++i)
+        strncpy(ch->code_postal, code_postal, L_CP);
+        for(int i = 0; i != N_COMPETENCES; ++i)
         {
             strcpy(ch->competences[i], competences[i]);
         }
-        for(int i = 0; i != 5; ++i)
+        for(int i = 0; i != N_COLLEGUES; ++i)
         {
             ch->id_collegues[i] = id_collegues[i];
         }
@@ -87,9 +88,9 @@ void ch_modifier_profil(size_t const id, char const* const nom, char const* cons
     }
 }
 
-void ch_ids(size_t ids[10])
+void ch_ids(size_t ids[N_CHERCHEURS])
 {
-    memset(ids, 0, 10 * sizeof(size_t));
+    memset(ids, 0, N_CHERCHEURS * sizeof(size_t));
     int i = 0;
     for(node const* n = chs_->tete; n; n = n->next)
     {
