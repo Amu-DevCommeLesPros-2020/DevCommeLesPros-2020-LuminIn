@@ -1,6 +1,7 @@
 #include "journal/journal.h"
 #include "luminin/luminin.h"
 
+#include <stdbool.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -163,6 +164,52 @@ void supprimer_entreprise()
     lu_supprimer_profil_entreprise(identifiant);
 }
 
+void creer_poste()
+{
+    printf("  * Menu entreprise *\n\n");
+    
+    printf("Titre : ");
+    char titre[L_TITRE];
+    scanf(" %" STRINGIZE(L_TITRE) "[^\n]%*c", titre);
+
+    char competences[N_COMPETENCES][L_COMPETENCE];
+    for(int i = 0; i != N_COMPETENCES; ++i)
+    {
+        competences[i][0] = '\0';
+    }
+
+    bool derniere = false;
+    for(int i = 0; i != N_COMPETENCES && !derniere; ++i)
+    {
+        printf("Compétence %d : ", i + 1);
+        fgets(competences[i], L_COMPETENCE, stdin);
+
+        competences[i][strcspn(competences[i], "\n")] = '\0';
+        if(competences[i][0] == '\0')
+        {
+            derniere = true;
+        }
+    }
+
+    printf("Identifiant d'entreprise : ");
+    size_t id_entreprise;
+    scanf(" %zu[^\n]%*c", &id_entreprise);
+
+    size_t const identifiant = lu_creer_poste(titre, competences, id_entreprise);
+    printf("Identifiant de ce poste : %zu\n\n", identifiant);
+}
+
+void supprimer_poste()
+{
+    printf("  * Menu entreprise *\n\n");
+
+    printf("Identifiant : ");
+    size_t identifiant;
+    scanf(" %zu%*c", &identifiant);
+
+    lu_supprimer_poste(identifiant);
+}
+
 int main()
 {
     j_ouvrir(chemin_journal);
@@ -192,6 +239,12 @@ int main()
             case SUPPRIMER_ENTREPRISE:
                 supprimer_entreprise();
                 a = NAVIGUER_MENU_PRINCIPAL;
+            case CREER_POSTE:
+                creer_poste();
+                a = NAVIGUER_MENU_ENTREPRISE;
+            case SUPPRIMER_POSTE:
+                supprimer_poste();
+                a = NAVIGUER_MENU_ENTREPRISE;
             case QUITTER:
             default:
                 break;

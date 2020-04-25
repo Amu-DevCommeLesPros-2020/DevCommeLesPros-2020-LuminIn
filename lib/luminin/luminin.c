@@ -48,6 +48,16 @@ void lu_modifier_profil_entreprise(size_t const id, char const nom[L_NOM], char 
     co_modifier_profil(id, strlen(nom) ? nom : e->nom, strlen(code_postal) ? code_postal : e->code_postal, strlen(mail) ? mail : e->mail);
 }
 
+size_t lu_creer_poste(char const titre[L_TITRE], char const competences[N_COMPETENCES][L_COMPETENCE], size_t const id_compagnie)
+{
+    return po_creer_poste(titre, competences, id_compagnie);
+}
+
+void lu_supprimer_poste(size_t const id)
+{
+    po_supprimer_poste(id);
+}
+
 void lu_recherche_poste_par_competences(size_t const id_chercheur, size_t ids_poste[N_POSTES])
 {
     memset(ids_poste, 0, N_POSTES * sizeof(size_t));
