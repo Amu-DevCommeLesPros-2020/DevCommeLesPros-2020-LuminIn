@@ -18,7 +18,7 @@ build/libliste.a: lib/liste/liste.c lib/liste/liste.h | build
 	gcc -Wall -Werror -pedantic -g -c lib/liste/liste.c -o build/lib/liste.o
 	ar crs build/libliste.a build/lib/liste.o
 
-build/libluminin.a: lib/luminin/bd.c lib/luminin/bd.h lib/luminin/constantes.h lib/luminin/chercheur.c lib/luminin/chercheur.h lib/luminin/employe.c lib/luminin/employe.h lib/luminin/entreprise.c lib/luminin/entreprise.h lib/luminin/luminin.c lib/luminin/luminin.h lib/luminin/poste.c lib/luminin/poste.h lib/luminin/recherche.c lib/luminin/recherche.h lib/utilite/stringize.h | build
+build/libluminin.a: lib/luminin/bd.c lib/luminin/bd.h lib/luminin/constantes.h lib/luminin/chercheur.c lib/luminin/chercheur.h lib/luminin/employe.c lib/luminin/employe.h lib/luminin/entreprise.c lib/luminin/entreprise.h lib/luminin/luminin.c lib/luminin/luminin.h lib/luminin/poste.c lib/luminin/poste.h lib/utilite/stringize.h | build
 	mkdir -p build/lib
 	gcc -Wall -Werror -pedantic -g -Wno-gnu-folding-constant -I lib -c lib/luminin/bd.c -o build/lib/bd.o
 	gcc -Wall -Werror -pedantic -g -Wno-gnu-folding-constant -I lib -c lib/luminin/chercheur.c -o build/lib/chercheur.o
@@ -26,7 +26,6 @@ build/libluminin.a: lib/luminin/bd.c lib/luminin/bd.h lib/luminin/constantes.h l
 	gcc -Wall -Werror -pedantic -g -Wno-gnu-folding-constant -I lib -c lib/luminin/entreprise.c -o build/lib/entreprise.o
 	gcc -Wall -Werror -pedantic -g -Wno-gnu-folding-constant -I lib -c lib/luminin/luminin.c -o build/lib/luminin.o
 	gcc -Wall -Werror -pedantic -g -Wno-gnu-folding-constant -I lib -c lib/luminin/poste.c -o build/lib/poste.o
-	gcc -Wall -Werror -pedantic -g -Wno-gnu-folding-constant -I lib -c lib/luminin/recherche.c -o build/lib/recherche.o
 	ar crs build/libluminin.a build/lib/bd.o build/lib/chercheur.o build/lib/employe.o build/lib/entreprise.o build/lib/luminin.o build/lib/poste.o build/lib/recherche.o
 
 build/luminin: build/libjournal.a build/libliste.a build/libluminin.a bin/main.c | build

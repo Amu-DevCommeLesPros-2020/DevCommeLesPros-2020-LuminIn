@@ -5,8 +5,8 @@
 #include "luminin/constantes.h"
 #include "luminin/employe.h"
 #include "luminin/entreprise.h"
+#include "luminin/luminin.h"
 #include "luminin/poste.h"
-#include "luminin/recherche.h"
 
 #include <sys/stat.h>
 #include <unistd.h>
@@ -665,18 +665,16 @@ int main()
 
     // Test pour recherche de postes pour lesquels un chercheur est qualifié.
     {
-        bd_init(chemin_test_bd);
-        po_init();
-        ch_init();
+        lu_init(chemin_test_bd);
 
         size_t ids_poste[N_POSTES];
         
-        recherche_poste_par_competences(1, ids_poste);
+        lu_recherche_poste_par_competences(1, ids_poste);
         TEST(ids_poste[0] == 1);
         TEST(ids_poste[1] == 0);
         TEST(ids_poste[2] == 0);
 
-        recherche_poste_par_competences(2, ids_poste);
+        lu_recherche_poste_par_competences(2, ids_poste);
         TEST(ids_poste[0] == 2);
         TEST(ids_poste[1] == 3);
         TEST(ids_poste[2] == 0);
