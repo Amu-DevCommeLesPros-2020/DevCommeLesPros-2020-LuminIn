@@ -12,6 +12,9 @@
 char const* const chemin_journal = "./luminin.log";
 char const* const chemin_bd = "./bd";
 
+size_t id_entreprise = 0;
+char nom_entreprise[L_NOM];
+
 typedef enum action
 {
     INVALIDE,
@@ -21,6 +24,7 @@ typedef enum action
     NAVIGUER_MENU_ENTREPRISE,
     NAVIGUER_MENU_EMPLOYE,
     NAVIGUER_MENU_CHERCHEUR,
+    S_IDENTIFIER_ENTREPRISE,
     CREER_ENTREPRISE,
     MODIFIER_ENTREPRISE,
     SUPPRIMER_ENTREPRISE,
@@ -89,30 +93,49 @@ Vous êtes :\n\
 2. Un employé\n\
 3. À la recherche d'un emploi\n\n");
 
-    return choix(3, (action[]){NAVIGUER_MENU_ENTREPRISE, NAVIGUER_MENU_EMPLOYE, NAVIGUER_MENU_CHERCHEUR, NAVIGUER_MENU_PRINCIPAL});
+    return choix(3, (action[]){S_IDENTIFIER_ENTREPRISE, NAVIGUER_MENU_EMPLOYE, NAVIGUER_MENU_CHERCHEUR, NAVIGUER_MENU_PRINCIPAL});
 }
 
-action menu_entreprise()
+action identification_entreprise()
 {
-    printf("  * Menu entreprise *\n\n\
-Vous voulez :\n\
-1. Créer le profil de votre entreprise\n\
-2. Modifier le profil de votre entreprise\n\
-3. Supprimer le profil de votre entreprise\n\
-4. Créer le profil d'un poste à pourvoir\n\
-5. Supprimer le profil d'un poste maintenant pourvu\n\
-6. Faire une recherche parmi les chercheurs d'emploi\n\n");
+    printf("  * Menu entreprise *\n\n");
 
-    return choix(6, (action []){CREER_ENTREPRISE, MODIFIER_ENTREPRISE, SUPPRIMER_ENTREPRISE, CREER_POSTE, SUPPRIMER_POSTE, RECHERCHE_CHERCHEUR, NAVIGUER_MENU_PRINCIPAL});
+    id_entreprise = 0;
+    nom_entreprise[0] = '\0';
+
+    printf("Spécifiez votre identifiant ou, pour créer un nouveau profil d'entreprise, le nom de celle-ci.\n");
+    char identifiant_entreprise[L_NOM] = {'\0'};
+    while(!id_entreprise)
+    {
+        printf("Identifiant : ");
+        scanf(" %" STRINGIZE(L_NOM) "[^\n]%*c", identifiant_entreprise);
+
+        long long const identifiant_numerique = atoll(identifiant_entreprise);
+        if(identifiant_numerique)
+        {
+            char const* const n = lu_nom_entreprise(identifiant_numerique);
+            if(n)
+            {
+                id_entreprise = identifiant_numerique;
+                strcpy(nom_entreprise, n);
+                return NAVIGUER_MENU_ENTREPRISE;
+            }
+        }
+        else
+        {
+            strcpy(nom_entreprise, identifiant_entreprise);
+            return CREER_ENTREPRISE;
+        }
+    }
+
+    return INVALIDE;
 }
 
 void creer_entreprise()
 {
     printf("  * Menu entreprise *\n\n");
     
-    printf("Nom : ");
-    char nom[L_NOM];
-    scanf(" %" STRINGIZE(L_NOM) "[^\n]%*c", nom);
+    printf("Nom : %s\n", nom_entreprise);
 
     printf("Code postal : ");
     char code_postal[L_CP + 1];
@@ -122,13 +145,26 @@ void creer_entreprise()
     char mail[L_MAIL];
     scanf(" %" STRINGIZE(L_MAIL) "[^\n]%*c", mail);
 
-    size_t const identifiant = lu_creer_profil_entreprise(nom, code_postal, mail);
+    size_t const identifiant = lu_creer_profil_entreprise(nom_entreprise, code_postal, mail);
     printf("Votre identifiant : %zu\n\n", identifiant);
+}
+
+action menu_entreprise()
+{
+    printf("  * Menu entreprise [%s] *\n\n\
+Vous voulez :\n\
+1. Modifier le profil de votre entreprise\n\
+2. Supprimer le profil de votre entreprise\n\
+3. Créer le profil d'un poste à pourvoir\n\
+4. Supprimer le profil d'un poste maintenant pourvu\n\
+5. Faire une recherche parmi les chercheurs d'emploi\n\n", nom_entreprise);
+
+    return choix(5, (action []){MODIFIER_ENTREPRISE, SUPPRIMER_ENTREPRISE, CREER_POSTE, SUPPRIMER_POSTE, RECHERCHE_CHERCHEUR, NAVIGUER_MENU_PRINCIPAL});
 }
 
 void modifier_entreprise()
 {
-    printf("  * Menu entreprise *\n\n");
+    printf("  * Menu entreprise [%s] *\n\n", nom_entreprise);
 
     printf("Identifiant : ");
     size_t identifiant;
@@ -155,18 +191,16 @@ void modifier_entreprise()
 
 void supprimer_entreprise()
 {
-    printf("  * Menu entreprise *\n\n");
+    printf("  * Menu entreprise [%s] *\n\n", nom_entreprise);
 
-    printf("Identifiant : ");
-    size_t identifiant;
-    scanf(" %zu%*c", &identifiant);
+    lu_supprimer_profil_entreprise(id_entreprise);
 
-    lu_supprimer_profil_entreprise(identifiant);
+    printf("Entreprise supprmiée.\n\n");
 }
 
 void creer_poste()
 {
-    printf("  * Menu entreprise *\n\n");
+    printf("  * Menu entreprise [%s] *\n\n", nom_entreprise);
     
     printf("Titre : ");
     char titre[L_TITRE];
@@ -191,17 +225,13 @@ void creer_poste()
         }
     }
 
-    printf("Identifiant d'entreprise : ");
-    size_t id_entreprise;
-    scanf(" %zu[^\n]%*c", &id_entreprise);
-
     size_t const identifiant = lu_creer_poste(titre, competences, id_entreprise);
     printf("Identifiant de ce poste : %zu\n\n", identifiant);
 }
 
 void supprimer_poste()
 {
-    printf("  * Menu entreprise *\n\n");
+    printf("  * Menu entreprise [%s]* \n\n", nom_entreprise);
 
     printf("Identifiant : ");
     size_t identifiant;
@@ -225,26 +255,32 @@ int main()
             case NAVIGUER_MENU_PRINCIPAL:
                 a = menu_principal();
                 break;
+            case S_IDENTIFIER_ENTREPRISE:
+                a = identification_entreprise();
+                break;
             case NAVIGUER_MENU_ENTREPRISE:
                 a = menu_entreprise();
                 break;
             case CREER_ENTREPRISE:
                 creer_entreprise();
-                a = NAVIGUER_MENU_PRINCIPAL;
+                a = NAVIGUER_MENU_ENTREPRISE;
                 break;
             case MODIFIER_ENTREPRISE:
                 modifier_entreprise();
-                a = NAVIGUER_MENU_PRINCIPAL;
+                a = NAVIGUER_MENU_ENTREPRISE;
                 break;
             case SUPPRIMER_ENTREPRISE:
                 supprimer_entreprise();
                 a = NAVIGUER_MENU_PRINCIPAL;
+                break;
             case CREER_POSTE:
                 creer_poste();
                 a = NAVIGUER_MENU_ENTREPRISE;
+                break;
             case SUPPRIMER_POSTE:
                 supprimer_poste();
                 a = NAVIGUER_MENU_ENTREPRISE;
+                break;
             case QUITTER:
             default:
                 break;

@@ -13,6 +13,8 @@ void lu_supprimer_profil_entreprise(size_t const id);
 
 void lu_modifier_profil_entreprise(size_t const id, char const nom[L_NOM], char const code_postal[L_CP], char const mail[L_MAIL]);
 
+char const* lu_nom_entreprise(size_t const id);
+
 // Fonctions relatives aux postes.
 size_t lu_creer_poste(char const titre[L_TITRE], char const competences[N_COMPETENCES][L_COMPETENCE], size_t const id_compagnie);
 
