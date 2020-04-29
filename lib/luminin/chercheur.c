@@ -35,8 +35,8 @@ void ch_destroy()
 size_t ch_creer_profil(char const nom[L_NOM], char const prenom[L_PRENOM], char const mail[L_MAIL], char const code_postal[L_CP], char const competences[N_COMPETENCES][L_COMPETENCE], size_t const id_collegues[N_COLLEGUES])
 {
     j_ecrire("Création profil de chercheur. [nom=%s,prenom=%s,mail=%s,code_postal=%" STRINGIZE(L_CP) "s,\
-              competence[0]=%s,competence[1]=%s,competence[2]=%s,competence[3]=%s,competence[4]=%s,\
-              collegues[0]=%zu,collegues[1]=%zu,collegues[2]=%zu,collegues[3]=%zu,collegues[4]=%zu", nom, prenom, mail, code_postal, competences[0], competences[1], competences[2], competences[3], competences[4], id_collegues[0], id_collegues[1], id_collegues[2], id_collegues[3], id_collegues[4]);
+competence[0]=%s,competence[1]=%s,competence[2]=%s,competence[3]=%s,competence[4]=%s,\
+collegues[0]=%zu,collegues[1]=%zu,collegues[2]=%zu,collegues[3]=%zu,collegues[4]=%zu", nom, prenom, mail, code_postal, competences[0], competences[1], competences[2], competences[3], competences[4], id_collegues[0], id_collegues[1], id_collegues[2], id_collegues[3], id_collegues[4]);
 
     chercheur *ch = malloc(sizeof(chercheur));
     ch->id = chs_->tete ? ((chercheur*)(l_tail(chs_->tete)->data))->id + 1 : 1;
@@ -65,8 +65,8 @@ size_t ch_creer_profil(char const nom[L_NOM], char const prenom[L_PRENOM], char 
 void ch_modifier_profil(size_t const id, char const nom[L_NOM], char const prenom[L_PRENOM], char const mail[L_MAIL], char const code_postal[L_CP], char const competences[N_COMPETENCES][L_COMPETENCE], size_t const id_collegues[N_COLLEGUES])
 {
     j_ecrire("Modification profil de chercheur. [identifiant=%zu,nom=%s,prenom=%s,mail=%s,code_postal=%" STRINGIZE(L_CP) "s,\
-              competence[0]=%s,competence[1]=%s,competence[2]=%s,competence[3]=%s,competence[4]=%s,\
-              collegues[0]=%zu,collegues[1]=%zu,collegues[2]=%zu,collegues[3]=%zu,collegues[4]=%zu", id, nom, prenom, mail, code_postal, competences[0], competences[1], competences[2], competences[3], competences[4], id_collegues[0], id_collegues[1], id_collegues[2], id_collegues[3], id_collegues[4]);
+competence[0]=%s,competence[1]=%s,competence[2]=%s,competence[3]=%s,competence[4]=%s,\
+collegues[0]=%zu,collegues[1]=%zu,collegues[2]=%zu,collegues[3]=%zu,collegues[4]=%zu", id, nom, prenom, mail, code_postal, competences[0], competences[1], competences[2], competences[3], competences[4], id_collegues[0], id_collegues[1], id_collegues[2], id_collegues[3], id_collegues[4]);
 
     chercheur *ch = ch_recherche(id);
     if(ch)

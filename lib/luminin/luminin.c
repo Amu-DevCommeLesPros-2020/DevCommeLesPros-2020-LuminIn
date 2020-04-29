@@ -6,6 +6,7 @@
 #include "entreprise.h"
 #include "poste.h"
 
+#include <assert.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <string.h>
@@ -42,10 +43,38 @@ void lu_supprimer_profil_entreprise(size_t const id)
     co_supprimer_profil(id);
 }
 
-void lu_modifier_profil_entreprise(size_t const id, char const nom[L_NOM], char const code_postal[L_CP], char const mail[L_MAIL])
+void lu_modifier_profil_entreprise(size_t const id, char nom[L_NOM], char code_postal[L_CP], char mail[L_MAIL])
 {
+    assert(nom);
+    assert(mail);
+    assert(code_postal);
+
     entreprise *e = co_recherche(id);
-    co_modifier_profil(id, strlen(nom) ? nom : e->nom, strlen(code_postal) ? code_postal : e->code_postal, strlen(mail) ? mail : e->mail);
+    assert(e);
+    
+    bool modifie = false;
+    if(strcmp(nom, e->nom))
+    {
+        if(strlen(nom)) modifie = true;
+        else strcpy(nom, e->nom);
+    }
+    
+    if(strcmp(mail, e->mail))
+    {
+        if(strlen(mail)) modifie = true;
+        else strcpy(mail, e->mail);
+    }
+
+    if(strncmp(code_postal, e->code_postal, L_CP))
+    {
+        if(code_postal[0] != '\0') modifie = true;
+        else strncpy(code_postal, e->code_postal, L_CP);
+    }
+
+    if(modifie)
+    {
+        co_modifier_profil(id, strlen(nom) ? nom : e->nom, strlen(code_postal) ? code_postal : e->code_postal, strlen(mail) ? mail : e->mail);
+    }
 }
 
 char const* lu_nom_entreprise(size_t const id)
@@ -62,6 +91,71 @@ size_t lu_creer_poste(char const titre[L_TITRE], char const competences[N_COMPET
 void lu_supprimer_poste(size_t const id)
 {
     po_supprimer_poste(id);
+}
+
+size_t lu_creer_profil_chercheur(char const nom[L_NOM], char const prenom[L_PRENOM], char const mail[L_MAIL], char const code_postal[L_CP], char const competences[N_COMPETENCES][L_COMPETENCE], size_t const id_collegues[N_COLLEGUES])
+{
+    return ch_creer_profil(nom, prenom, mail, code_postal, competences, id_collegues);
+}
+
+void lu_modifier_profil_chercheur(size_t const id, char nom[L_NOM], char prenom[L_PRENOM], char mail[L_MAIL], char code_postal[L_CP], char competences[N_COMPETENCES][L_COMPETENCE], size_t id_collegues[N_COLLEGUES])
+{
+    assert(nom);
+    assert(prenom);
+    assert(mail);
+    assert(code_postal);
+
+    chercheur *c = ch_recherche(id);
+    assert(c);
+
+    bool modifie = false;
+
+    if(strcmp(nom, c->nom))
+    {
+        if(strlen(nom)) modifie = true;
+        else strcpy(nom, c->nom);
+    }
+
+    if(strcmp(prenom, c->prenom))
+    {
+        if(strlen(prenom)) modifie = true;
+        else strcpy(prenom, c->prenom);
+    }
+    
+    if(strcmp(mail, c->mail))
+    {
+        if(strlen(mail)) modifie = true;
+        else strcpy(mail, c->mail);
+    }
+
+    if(strncmp(code_postal, c->code_postal, L_CP))
+    {
+        if(code_postal[0] != '\0') modifie = true;
+        else strncpy(code_postal, c->code_postal, L_CP);
+    }
+
+    if(memcmp(competences, c->competences, NL_COMPETENCES))
+    {
+        if(competences[0][0] != '\0') modifie = true;
+        else memcpy(competences, c->competences, NL_COMPETENCES);
+    }
+
+    if(memcmp(id_collegues, c->id_collegues, N_COLLEGUES * sizeof(size_t)))
+    {
+        if(id_collegues[0] != 0) modifie = true;
+        else memcpy(id_collegues, c->id_collegues, N_COLLEGUES * sizeof(size_t));
+    }
+
+    if(modifie)
+    {
+        ch_modifier_profil(id, nom, prenom, mail, code_postal, competences, id_collegues);
+    }
+}
+
+char const* lu_nom_chercheur(size_t const id)
+{
+    chercheur const* const c = ch_recherche(id);
+    return c ? c->nom : NULL;
 }
 
 void lu_recherche_poste_par_competences(size_t const id_chercheur, size_t ids_poste[N_POSTES])

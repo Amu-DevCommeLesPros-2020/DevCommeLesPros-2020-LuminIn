@@ -320,7 +320,7 @@ void bd_ecriture_employes(employes const* const ems)
 
 void bd_ecriture_chercheurs(chercheurs const* const chs)
 {
-j_ecrire("Écriture de la table employe.");
+    j_ecrire("Écriture de la table chercheur.");
 
     char chemin_table[PATH_MAX];
     sprintf(chemin_table, "%s/%s.csv", chemin_bd_, nom_table_chercheur);

@@ -678,8 +678,19 @@ int main()
         TEST(ids_poste[0] == 2);
         TEST(ids_poste[1] == 3);
         TEST(ids_poste[2] == 0);
-
     }
+
+    // Test pour recherche de nom d'entreprise.
+    {
+        lu_init(chemin_test_bd);
+
+        TEST(strcmp(lu_nom_entreprise(1), "Disney") == 0);
+        TEST(strcmp(lu_nom_entreprise(2), "Google") == 0);
+        TEST(strcmp(lu_nom_entreprise(3), "Polytech") == 0);
+        TEST(lu_nom_entreprise(4) == NULL);
+        TEST(lu_nom_entreprise(5) == NULL);
+    }
+
     printf("%d/%d\n", tests_reussis, tests_executes);
 
     return tests_executes - tests_reussis;
