@@ -62,18 +62,28 @@ collegues[0]=%zu,collegues[1]=%zu,collegues[2]=%zu,collegues[3]=%zu,collegues[4]
     return ch->id;
 }
 
-void ch_modifier_profil(size_t const id, char const nom[L_NOM], char const prenom[L_PRENOM], char const mail[L_MAIL], char const code_postal[L_CP], char const competences[N_COMPETENCES][L_COMPETENCE], size_t const id_collegues[N_COLLEGUES])
+void ch_supprimer_profil(size_t const id)
 {
-    j_ecrire("Modification profil de chercheur. [identifiant=%zu,nom=%s,prenom=%s,mail=%s,code_postal=%" STRINGIZE(L_CP) "s,\
+    j_ecrire("Suppression profil chercheur. [identifiant=%zu]", id);
+
+    // Si la tête est supprimée, la tête est décalée à la deuxième node.
+    node** n = recherche(id);
+    node* const next = n == &chs_->tete ? (*n)->next : chs_->tete;
+    l_remove(n);
+    chs_->tete = next;
+
+    bd_ecriture_chercheurs(chs_);
+}
+
+void ch_modifier_profil(size_t const id, char const code_postal[L_CP], char const competences[N_COMPETENCES][L_COMPETENCE], size_t const id_collegues[N_COLLEGUES])
+{
+    j_ecrire("Modification profil de chercheur. [identifiant=%zu,code_postal=%" STRINGIZE(L_CP) "s,\
 competence[0]=%s,competence[1]=%s,competence[2]=%s,competence[3]=%s,competence[4]=%s,\
-collegues[0]=%zu,collegues[1]=%zu,collegues[2]=%zu,collegues[3]=%zu,collegues[4]=%zu", id, nom, prenom, mail, code_postal, competences[0], competences[1], competences[2], competences[3], competences[4], id_collegues[0], id_collegues[1], id_collegues[2], id_collegues[3], id_collegues[4]);
+collegues[0]=%zu,collegues[1]=%zu,collegues[2]=%zu,collegues[3]=%zu,collegues[4]=%zu", id, code_postal, competences[0], competences[1], competences[2], competences[3], competences[4], id_collegues[0], id_collegues[1], id_collegues[2], id_collegues[3], id_collegues[4]);
 
     chercheur *ch = ch_recherche(id);
     if(ch)
     {
-        strcpy(ch->nom, nom);
-        strcpy(ch->prenom, prenom);
-        strcpy(ch->mail, mail);
         strncpy(ch->code_postal, code_postal, L_CP);
         for(int i = 0; i != N_COMPETENCES; ++i)
         {

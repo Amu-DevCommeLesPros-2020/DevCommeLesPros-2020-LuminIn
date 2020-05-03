@@ -66,21 +66,6 @@ void co_supprimer_profil(size_t const id)
     bd_ecriture_entreprises(cos_);
 }
 
-void co_modifier_profil(size_t const id, char const nom[L_NOM], char const code_postal[L_CP], char const mail[L_MAIL])
-{
-    j_ecrire("Modification profil compagnie. [identifiant=%zu,nom=%s,code_postal=%" STRINGIZE(L_CP) "s,mail=%s]", id, nom, code_postal, mail);
-
-    entreprise *co = co_recherche(id);
-    if(co)
-    {
-        memmove(co->nom, nom, L_NOM);
-        memmove(co->code_postal, code_postal, L_CP);
-        memmove(co->mail, mail, L_MAIL);
-
-        bd_ecriture_entreprises(cos_);
-    }
-}
-
 entreprise* co_recherche(size_t const id)
 {
     j_ecrire("Recherche profil compagnie. [identifiant=%zu]", id);

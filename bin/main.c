@@ -30,7 +30,6 @@ typedef enum action
     NAVIGUER_MENU_CHERCHEUR,
     S_IDENTIFIER_ENTREPRISE,
     CREER_ENTREPRISE,
-    MODIFIER_ENTREPRISE,
     SUPPRIMER_ENTREPRISE,
     CREER_POSTE,
     SUPPRIMER_POSTE,
@@ -50,7 +49,7 @@ action choix(size_t const n, action const actions[])
     {    
         printf("Votre choix [1-%zu],menu [p]rincipal,menu p[r]écédent,[q]uitter : ", n);
         char const c = getchar();
-        getchar();
+        if(c != '\n') while(getchar() != '\n');
 
         switch(c)
         {
@@ -159,56 +158,6 @@ void creer_entreprise()
     printf("Votre identifiant : %zu\n\n", id_entreprise);
 }
 
-action menu_entreprise()
-{
-    assert(id_entreprise);
-    assert(nom_entreprise);
-
-    printf("  * Menu entreprise [%s] *\n\n\
-Vous voulez :\n\
-1. Modifier le profil de votre entreprise\n\
-2. Supprimer le profil de votre entreprise\n\
-3. Créer le profil d'un poste à pourvoir\n\
-4. Supprimer le profil d'un poste maintenant pourvu\n\
-5. Faire une recherche parmi les chercheurs d'emploi\n\n", nom_entreprise);
-
-    return choix(5, (action []){MODIFIER_ENTREPRISE, SUPPRIMER_ENTREPRISE, CREER_POSTE, SUPPRIMER_POSTE, RECHERCHE_CHERCHEUR, NAVIGUER_MENU_PRINCIPAL});
-}
-
-void modifier_entreprise()
-{
-    assert(id_entreprise);
-    assert(nom_entreprise);
-
-    printf("  * Menu entreprise [%s] *\n\n", nom_entreprise);
-
-    char nom[L_NOM] = {'\0'};
-    char mail[L_MAIL] = {'\0'};
-    char code_postal[L_CP] = {'\0'};
-
-    lu_modifier_profil_entreprise(id_entreprise, nom, code_postal, mail);
-
-    printf("Nom [%s] : ", nom);
-    char n[L_NOM];
-    fgets(n, L_NOM, stdin);
-    n[strcspn(n, "\n")] = '\0';
-    if(strlen(n)) strcpy(nom, n);
-
-    printf("Mail [%s] : ", mail);
-    char m[L_MAIL];
-    fgets(m, L_MAIL, stdin);
-    m[strcspn(m, "\n")] = '\0';
-    if(strlen(m)) strcpy(mail, m);
-
-    printf("Code postal [%.5s] : ", code_postal);
-    char cp[L_CP + 1 + 1];
-    fgets(cp, L_CP + 1 + 1, stdin);
-    cp[strcspn(cp, "\n")] = '\0';
-    if(strlen(cp)) strncpy(code_postal, cp, 5);
-
-    lu_modifier_profil_entreprise(id_entreprise, nom, code_postal, mail);
-}
-
 void supprimer_entreprise()
 {
     assert(id_entreprise);
@@ -218,7 +167,25 @@ void supprimer_entreprise()
 
     lu_supprimer_profil_entreprise(id_entreprise);
 
-    printf("Entreprise supprmiée.\n\n");
+    printf("Entreprise supprimée.\n\n");
+
+    id_entreprise = 0;
+    nom_entreprise[0] = '\0';
+}
+
+action menu_entreprise()
+{
+    assert(id_entreprise);
+    assert(nom_entreprise);
+
+    printf("  * Menu entreprise [%s] *\n\n\
+Vous voulez :\n\
+2. Supprimer le profil de votre entreprise\n\
+3. Créer le profil d'un poste à pourvoir\n\
+4. Supprimer le profil d'un poste maintenant pourvu\n\
+5. Faire une recherche parmi les chercheurs d'emploi\n\n", nom_entreprise);
+
+    return choix(4, (action []){SUPPRIMER_ENTREPRISE, CREER_POSTE, SUPPRIMER_POSTE, RECHERCHE_CHERCHEUR, NAVIGUER_MENU_PRINCIPAL});
 }
 
 void creer_poste()
@@ -368,32 +335,14 @@ void modifier_chercheur()
 
     printf("  * Menu chercheur [%s] *\n\n", nom_chercheur);
 
-    char nom[L_NOM] = {'\0'};
-    char prenom[L_PRENOM] = {'\0'};
-    char mail[L_MAIL] = {'\0'};
-    char code_postal[L_CP] = {'\0'};
-    char competences[N_COMPETENCES][L_COMPETENCE] = {{'\0'}};
+    char nom[L_NOM];
+    char prenom[L_PRENOM];
+    char mail[L_MAIL];
+    char code_postal[L_CP];
+    char competences[N_COMPETENCES][L_COMPETENCE] = {{'\0'}, {'\0'}, {'\0'}, {'\0'}, {'\0'}};
     size_t id_collegues[N_COLLEGUES] = {0};
 
-    lu_modifier_profil_chercheur(id_chercheur, nom, prenom, mail, code_postal, competences, id_collegues);
-
-    printf("Nom [%s] : ", nom);
-    char n[L_NOM];
-    fgets(n, L_NOM, stdin);
-    n[strcspn(n, "\n")] = '\0';
-    if(strlen(n)) strcpy(nom, n);
-
-    printf("Prenom [%s] : ", prenom);
-    char p[L_PRENOM];
-    fgets(p, L_PRENOM, stdin);
-    p[strcspn(p, "\n")] = '\0';
-    if(strlen(p)) strcpy(prenom, p);
-
-    printf("Mail [%s] : ", mail);
-    char m[L_MAIL];
-    fgets(m, L_MAIL, stdin);
-    m[strcspn(m, "\n")] = '\0';
-    if(strlen(m)) strcpy(mail, m);
+    lu_profil_chercheur(id_chercheur, nom, prenom, mail, code_postal, competences, id_collegues);
 
     printf("Code postal [%.5s] : ", code_postal);
     char cp[L_CP + 1 + 1];
@@ -432,7 +381,22 @@ void modifier_chercheur()
         }
     }
 
-    lu_modifier_profil_chercheur(id_chercheur, nom, prenom, mail, code_postal, competences, id_collegues);
+    lu_modifier_profil_chercheur(id_chercheur, code_postal, competences, id_collegues);
+}
+
+void supprimer_chercheur()
+{
+    assert(id_chercheur);
+    assert(nom_chercheur);
+
+    printf("  * Menu chercheur [%s] *\n\n", nom_chercheur);
+
+    lu_supprimer_profil_chercheur(id_chercheur);
+
+    printf("Chercheur suppmimé.\n\n");
+
+    id_chercheur = 0;
+    nom_chercheur[0] = '\0';
 }
 
 action menu_chercheur()
@@ -444,7 +408,7 @@ action menu_chercheur()
 Vous voulez :\n\
 1. Modifier votre profil\n\
 2. Transitionner vers un profil d'employé\n\
-3. Supprimer votre profil\n", nom_chercheur);
+3. Supprimer votre profil\n\n", nom_chercheur);
 
     return choix(3, (action []){MODIFIER_CHERCHEUR, TRANSITION_EMPLOYE, SUPPRIMER_CHERCHEUR, NAVIGUER_MENU_PRINCIPAL});
 }
@@ -474,10 +438,6 @@ int main()
                 creer_entreprise();
                 a = NAVIGUER_MENU_ENTREPRISE;
                 break;
-            case MODIFIER_ENTREPRISE:
-                modifier_entreprise();
-                a = NAVIGUER_MENU_ENTREPRISE;
-                break;
             case SUPPRIMER_ENTREPRISE:
                 supprimer_entreprise();
                 a = NAVIGUER_MENU_PRINCIPAL;
@@ -502,6 +462,10 @@ int main()
             case MODIFIER_CHERCHEUR:
                 modifier_chercheur();
                 a = NAVIGUER_MENU_CHERCHEUR;
+                break;
+            case SUPPRIMER_CHERCHEUR:
+                supprimer_chercheur();
+                a = NAVIGUER_MENU_PRINCIPAL;
                 break;
             case QUITTER:
             default:

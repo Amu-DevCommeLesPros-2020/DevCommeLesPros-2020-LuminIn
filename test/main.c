@@ -41,7 +41,14 @@ int tests_reussis = 0;
 
 int main()
 {
-    // Tests pour la bilbiothèques de journal.
+    //  Quatre catégories de tests :
+    //  1. Pour la bibliothèque libjournal.
+    //  2. Pour l'interface bd_* de la bibliothèque libluminin.
+    //  3. Pour les interfaces [ch/co/em/po]_* de la bibliothèque libluminin.
+    //  4. Pour l'interface lu_* de la bibliothèque libluminin.
+
+    // 1. Tests pour la bilbiothèque libjournal.
+
     {
         char const* const nom_journal = "./luminin-test.log";
 
@@ -66,6 +73,8 @@ int main()
         stat(nom_journal, &s2);
         TEST(s2.st_size > s1.st_size);
     }
+
+    // 2. Tests pour l'interface bd_* de la bibliothèque libluminin.
 
     // Tests pour la lecture d'une BD non-existante.
     {
@@ -250,6 +259,8 @@ int main()
         free_entreprises(cos);
     }
 
+    //  3. Tests pour les interfaces [ch/co/em/po]_* de la bibliothèque libluminin.
+
     // Test pour créer un profil d'entreprise.
     {
         system("rm -rf " chemin_test_ecriture_bd "/*");
@@ -294,22 +305,6 @@ int main()
 
         co_supprimer_profil(id_2);
         TEST(co_recherche(id_2) == NULL);
-    }
-
-    // Test pour modifier un profil d'entreprise.
-    {
-        system("rm -rf " chemin_test_ecriture_bd "/*");
-        bd_init(chemin_test_ecriture_bd);
-        co_init();
-
-        size_t const id = co_creer_profil("Fictive", "99000", "nobody@nowhere.com");
-        co_modifier_profil(id, "Reelle", "13010", "president@luminy.com");
-
-        entreprise *co = co_recherche(id);
-        TEST(co->id == id);
-        TEST(strcmp(co->nom, "Reelle") == 0);
-        TEST(strncmp(co->code_postal, "13010", L_CP) == 0);
-        TEST(strcmp(co->mail, "president@luminy.com") == 0);
     }
 
     // Test pour écriture d'une structure postes dans la BD.
@@ -630,14 +625,14 @@ int main()
         size_t const id = ch_creer_profil("Glandu", "Germaine", "gg@glandu.name", "00000", incompetences, id_collegues);
 
         char const competences[N_COMPETENCES][L_COMPETENCE] = {"futee", "adroite", "assidue", "rigolote", ""};
-        ch_modifier_profil(id, "Gogol", "Germaine", "gg@gogol.name", "11111", competences, id_collegues);
+        ch_modifier_profil(id, "11111", competences, id_collegues);
 
         chercheur *ch = ch_recherche(id);
 
         TEST(ch->id == id);
-        TEST(strcmp(ch->nom, "Gogol") == 0);
+        TEST(strcmp(ch->nom, "Glandu") == 0);
         TEST(strcmp(ch->prenom, "Germaine") == 0);
-        TEST(strcmp(ch->mail, "gg@gogol.name") == 0);
+        TEST(strcmp(ch->mail, "gg@glandu.name") == 0);
         TEST(strncmp(ch->code_postal, "11111", L_CP) == 0);
         TEST(strcmp(ch->competences[0], "futee") == 0);
         TEST(strcmp(ch->competences[1], "adroite") == 0);
@@ -663,6 +658,155 @@ int main()
         TEST(ids[4] == 0);
     }
 
+    // 4. Tests pour l'interface lu_*.
+
+    // Tests pour nom d'entreprise.
+    {
+        lu_init(chemin_test_bd);
+
+        TEST(strcmp(lu_nom_entreprise(1), "Disney") == 0);
+        TEST(strcmp(lu_nom_entreprise(2), "Google") == 0);
+        TEST(strcmp(lu_nom_entreprise(3), "Polytech") == 0);
+        TEST(lu_nom_entreprise(4) == NULL);
+    }
+
+    // Tests pour créer une entreprise.
+    {
+        lu_init(chemin_test_ecriture_bd);
+
+        size_t const id = lu_creer_profil_entreprise("Fictive", "99000", "rh@fictive.com");
+        TEST(id != 0);
+        TEST(strcmp(lu_nom_entreprise(id), "Fictive") == 0);
+    }
+
+    // Test pour suppression d'entreprise.
+    {
+        lu_init(chemin_test_ecriture_bd);
+
+        size_t const id = lu_creer_profil_entreprise("Fictive", "99000", "rh@fictive.com");
+        lu_supprimer_profil_entreprise(id);
+
+        TEST(lu_nom_entreprise(id) == NULL);
+    }
+
+    // Test pour profile d'entreprise.
+    {
+        lu_init(chemin_test_bd);
+
+        char nom[L_NOM];
+        char code_postal[L_CP];
+        char mail[L_MAIL];
+
+        lu_profil_entreprise(1, nom, code_postal, mail);
+        TEST(strcmp(nom, "Disney") == 0);
+        TEST(strncmp(code_postal, "77700", L_CP) == 0);
+        TEST(strcmp(mail, "walt@disney.com") == 0);
+
+        lu_profil_entreprise(5, nom, code_postal, mail);
+        TEST(strcmp(nom, "") == 0);
+        TEST(strncmp(code_postal, "", L_CP) == 0);
+        TEST(strcmp(mail, "") == 0);
+    }
+
+    // Test de création de poste.
+    {
+        lu_init(chemin_test_ecriture_bd);
+
+        char const competences[N_COMPETENCES][L_COMPETENCE] = {"esprit", "humour", "", "", ""};
+        size_t const id = lu_creer_poste("improvisateur", competences, 3);
+        TEST(id != 0);
+    }
+
+    // Test de suppression de poste.
+    {
+        lu_init(chemin_test_ecriture_bd);
+
+        char const competences[N_COMPETENCES][L_COMPETENCE] = {"esprit", "humour", "", "", ""};
+        size_t const id = lu_creer_poste("improvisateur", competences, 3);
+        lu_supprimer_poste(id);
+    }
+
+    // Test pour nom de chercheur.
+    {
+        lu_init(chemin_test_bd);
+
+        TEST(strcmp(lu_nom_chercheur(1), "Duck") == 0);
+        TEST(strcmp(lu_nom_chercheur(2), "Pignon") == 0);
+        TEST(lu_nom_chercheur(3) == NULL);
+        TEST(lu_nom_chercheur(4) == NULL);
+    }
+
+    // Test pour création de profil de chercheur.
+    {
+        lu_init(chemin_test_ecriture_bd);
+
+        char const competences[N_COMPETENCES][L_COMPETENCE] = {"esprit", "humour", "", "", ""};
+        size_t const id = lu_creer_profil_chercheur("Rigolo", "Robert", "robert@rigolo.fr", "13001", competences, (const size_t []){0});
+        TEST(id != 0);
+        TEST(strcmp(lu_nom_chercheur(id), "Rigolo") == 0);
+    }
+
+    // Test pour suppression de profil de chercheur.
+    {
+        lu_init(chemin_test_ecriture_bd);
+
+        char const competences[N_COMPETENCES][L_COMPETENCE] = {"esprit", "humour", "", "", ""};
+        size_t const id = lu_creer_profil_chercheur("Rigolo", "Robert", "robert@rigolo.fr", "13001", competences, (const size_t []){0});
+        lu_supprimer_profil_chercheur(id);
+        TEST(lu_nom_chercheur(id) == NULL);
+    }
+
+    // Test pour profil de chercheur.
+    {
+        lu_init(chemin_test_bd);
+
+        char nom[L_NOM];
+        char prenom[L_PRENOM];
+        char code_postal[L_CP];
+        char mail[L_MAIL];
+        char competences[N_COMPETENCES][L_COMPETENCE];
+        size_t id_collegues[N_COLLEGUES];
+
+        lu_profil_chercheur(1, nom, prenom, mail, code_postal, competences, id_collegues);
+        TEST(strcmp(nom, "Duck") == 0);
+        TEST(strcmp(prenom, "Donald") == 0);
+        TEST(strcmp(mail, "donal.duck@canardville.gov") == 0);
+        TEST(strncmp(code_postal, "77700", L_CP) == 0);
+        TEST(strcmp(competences[0], "comedie") == 0);
+        TEST(strcmp(competences[1], "gag") == 0);
+        TEST(strcmp(competences[2], "") == 0);
+        TEST(id_collegues[0] == 2);
+        TEST(id_collegues[1] == 0);
+
+        lu_profil_chercheur(3, nom, prenom, mail, code_postal, competences, id_collegues);
+        TEST(strcmp(nom, "") == 0);
+        TEST(strcmp(prenom, "") == 0);
+        TEST(strcmp(mail, "") == 0);
+        TEST(strcmp(code_postal, "") == 0);
+        TEST(strcmp(competences[0], "") == 0);
+        TEST(id_collegues[0] == 0);
+    }
+
+    // Test pour modification de profil de chercheur.
+    {
+        lu_init(chemin_test_ecriture_bd);
+
+        char nom[L_NOM];
+        char prenom[L_PRENOM];
+        char code_postal[L_CP];
+        char mail[L_MAIL];
+        char competences[N_COMPETENCES][L_COMPETENCE];
+        size_t id_collegues[N_COLLEGUES];
+        lu_profil_chercheur(1, nom, prenom, mail, code_postal, competences, id_collegues);
+
+        strncpy(code_postal, "22222", L_CP);
+        strcpy(competences[4], "ponctuelle");
+        lu_modifier_profil_chercheur(1, code_postal, competences, id_collegues);
+        lu_profil_chercheur(1, nom, prenom, mail, code_postal, competences, id_collegues);
+        TEST(strncmp(code_postal, "22222", 5) == 0);
+        TEST(strcmp(competences[4], "ponctuelle") == 0);
+    }
+
     // Test pour recherche de postes pour lesquels un chercheur est qualifié.
     {
         lu_init(chemin_test_bd);
@@ -678,17 +822,6 @@ int main()
         TEST(ids_poste[0] == 2);
         TEST(ids_poste[1] == 3);
         TEST(ids_poste[2] == 0);
-    }
-
-    // Test pour recherche de nom d'entreprise.
-    {
-        lu_init(chemin_test_bd);
-
-        TEST(strcmp(lu_nom_entreprise(1), "Disney") == 0);
-        TEST(strcmp(lu_nom_entreprise(2), "Google") == 0);
-        TEST(strcmp(lu_nom_entreprise(3), "Polytech") == 0);
-        TEST(lu_nom_entreprise(4) == NULL);
-        TEST(lu_nom_entreprise(5) == NULL);
     }
 
     printf("%d/%d\n", tests_reussis, tests_executes);
