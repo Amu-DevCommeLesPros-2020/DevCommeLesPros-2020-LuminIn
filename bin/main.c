@@ -38,7 +38,8 @@ typedef enum action
     CREER_CHERCHEUR,
     MODIFIER_CHERCHEUR,
     TRANSITION_EMPLOYE,
-    SUPPRIMER_CHERCHEUR
+    SUPPRIMER_CHERCHEUR,
+    RECHERCHE_POSTE
 } action;
 
 // actions doit être de taille n + 1 et actions[n] doit décrire l'action à appliquer pour 'r' (menu précédent).
@@ -180,10 +181,10 @@ action menu_entreprise()
 
     printf("  * Menu entreprise [%s] *\n\n\
 Vous voulez :\n\
-2. Supprimer le profil de votre entreprise\n\
-3. Créer le profil d'un poste à pourvoir\n\
-4. Supprimer le profil d'un poste maintenant pourvu\n\
-5. Faire une recherche parmi les chercheurs d'emploi\n\n", nom_entreprise);
+1. Supprimer le profil de votre entreprise\n\
+2. Créer le profil d'un poste à pourvoir\n\
+3. Supprimer le profil d'un poste maintenant pourvu\n\
+4. Faire une recherche parmi les chercheurs d'emploi\n\n", nom_entreprise);
 
     return choix(4, (action []){SUPPRIMER_ENTREPRISE, CREER_POSTE, SUPPRIMER_POSTE, RECHERCHE_CHERCHEUR, NAVIGUER_MENU_PRINCIPAL});
 }
@@ -234,6 +235,65 @@ void supprimer_poste()
     scanf(" %zu%*c", &identifiant);
 
     lu_supprimer_poste(identifiant);
+}
+
+void recherche_chercheur()
+{
+    assert(id_entreprise);
+    assert(nom_entreprise);
+
+    printf("  * Menu entreprise [%s] *\n\n", nom_entreprise);
+
+    printf("Pour le poste [");
+    size_t ids_poste[N_POSTES];
+    lu_postes_par_entreprise(id_entreprise, ids_poste);
+    for(size_t i = 0; ids_poste[i] != 0 && i != N_POSTES; ++i)
+    {
+        if(i != 0)
+        {
+            printf(", ");
+        }
+        printf("%zu", ids_poste[i]);
+    }
+    printf("] : ");
+    
+    size_t id_poste;
+    scanf(" %zu", &id_poste);
+
+    printf("Recerche restreinte au code postal [o/n] : ");
+    char cp;
+    scanf(" %c", &cp);
+    getchar();
+
+    size_t ids_chercheur[N_CHERCHEURS];
+    if(cp != 'o')
+    {
+        lu_recherche_chercheur_par_competences(id_poste, ids_chercheur);
+    }
+    else
+    {
+        lu_recherche_chercheur_par_competences_code_postal(id_poste, ids_chercheur);
+    }
+
+    if(ids_chercheur[0] == 0)
+    {
+        printf("Aucun chercheur qualifie pour ce poste.\n");
+    }
+    else
+    {
+        printf("\nChercheurs qualifies par ordre de competences :\n");
+        for(size_t i = 0; ids_chercheur[i] != 0 && i != N_CHERCHEURS; ++i)
+        {
+            char nom[L_NOM];
+            char prenom[L_PRENOM];
+            char mail[L_MAIL];
+
+            lu_profil_chercheur(ids_chercheur[i], nom, prenom, mail, NULL, NULL, NULL);
+
+            printf("%zu. Nom : %s, Prenom : %s, Mail : %s", i + 1, nom, prenom, mail);
+        }
+        printf("\n");
+    }
 }
 
 action identification_chercheur()
@@ -399,18 +459,64 @@ void supprimer_chercheur()
     nom_chercheur[0] = '\0';
 }
 
+void recherche_poste()
+{
+    assert(id_chercheur);
+    assert(nom_chercheur);
+
+    printf("  * Menu chercheur [%s] *\n\n", nom_chercheur);
+
+    printf("Recerche restreinte au code postal [o/n] : ");
+    char cp;
+    scanf(" %c", &cp);
+    getchar();
+
+    size_t ids_poste[N_POSTES];
+    if(cp != 'o')
+    {
+        lu_recherche_poste_par_competences(id_chercheur, ids_poste);
+    }
+    else
+    {
+        lu_recherche_poste_par_competences_code_postal(id_chercheur, ids_poste);
+    }
+
+    if(ids_poste[0] == 0)
+    {
+        printf("Aucun des postes ne correspond a vos competences.\n");
+    }
+    else
+    {
+        printf("\nPoste(s) pour lesquels vous vous qualifiez par ordre de competences :\n");
+        for(size_t i = 0; ids_poste[i] != 0 && i != N_POSTES; ++i)
+        {
+            size_t id_entreprise;
+            char titre[L_TITRE];
+            lu_poste(ids_poste[i], titre, NULL, &id_entreprise);
+
+            char nom[L_NOM];
+            char mail[L_MAIL];
+            char code_postal[L_CP];
+            lu_profil_entreprise(id_entreprise, nom, code_postal, mail);
+
+            printf("%zu. Titre : %s, Entreprise : %s, Mail : %s, Code postal : %5s\n", i + 1, titre, nom, mail, code_postal);
+        }
+    }
+}
+
 action menu_chercheur()
 {
     assert(id_chercheur);
     assert(nom_chercheur);
 
-    printf("  * Menu chercheur [%s] *\n\n\
-Vous voulez :\n\
+    printf("  * Menu chercheur [%s] *\n\n", nom_chercheur);
+    printf("Vous voulez :\n\
 1. Modifier votre profil\n\
 2. Transitionner vers un profil d'employé\n\
-3. Supprimer votre profil\n\n", nom_chercheur);
+3. Supprimer votre profil\n\
+4. Faire une recherche parmi les postes offerts\n\n");
 
-    return choix(3, (action []){MODIFIER_CHERCHEUR, TRANSITION_EMPLOYE, SUPPRIMER_CHERCHEUR, NAVIGUER_MENU_PRINCIPAL});
+    return choix(4, (action []){MODIFIER_CHERCHEUR, TRANSITION_EMPLOYE, SUPPRIMER_CHERCHEUR, RECHERCHE_POSTE, NAVIGUER_MENU_PRINCIPAL});
 }
 
 int main()
@@ -450,6 +556,10 @@ int main()
                 supprimer_poste();
                 a = NAVIGUER_MENU_ENTREPRISE;
                 break;
+            case RECHERCHE_CHERCHEUR:
+                recherche_chercheur();
+                a = NAVIGUER_MENU_ENTREPRISE;
+                break;
             case S_IDENTIFIER_CHERCHEUR:
                 a = identification_chercheur();
                 break;
@@ -467,6 +577,9 @@ int main()
                 supprimer_chercheur();
                 a = NAVIGUER_MENU_PRINCIPAL;
                 break;
+            case RECHERCHE_POSTE:
+                recherche_poste();
+                a = NAVIGUER_MENU_CHERCHEUR;
             case QUITTER:
             default:
                 break;

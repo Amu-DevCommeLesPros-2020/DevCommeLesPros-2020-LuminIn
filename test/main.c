@@ -726,6 +726,24 @@ int main()
         lu_supprimer_poste(id);
     }
 
+    // Test pour liste des postes par entreprise.
+    {
+        lu_init(chemin_test_bd);
+
+        size_t ids_poste[N_POSTES];
+        lu_postes_par_entreprise(1, ids_poste);
+        TEST(ids_poste[0] == 1);
+        TEST(ids_poste[1] == 0);
+
+        lu_postes_par_entreprise(2, ids_poste);
+        TEST(ids_poste[0] == 2);
+        TEST(ids_poste[1] == 0);
+
+        lu_postes_par_entreprise(3, ids_poste);
+        TEST(ids_poste[0] == 3);
+        TEST(ids_poste[1] == 0);
+    }
+
     // Test pour nom de chercheur.
     {
         lu_init(chemin_test_bd);
@@ -807,7 +825,7 @@ int main()
         TEST(strcmp(competences[4], "ponctuelle") == 0);
     }
 
-    // Test pour recherche de postes pour lesquels un chercheur est qualifié.
+    // Test pour recherche de postes par compétences.
     {
         lu_init(chemin_test_bd);
 
@@ -822,6 +840,52 @@ int main()
         TEST(ids_poste[0] == 2);
         TEST(ids_poste[1] == 3);
         TEST(ids_poste[2] == 0);
+    }
+
+    // Test pour recherche de postes par compétences et code postal.
+    {
+        lu_init(chemin_test_bd);
+
+        size_t ids_poste[N_POSTES];
+        
+        lu_recherche_poste_par_competences_code_postal(1, ids_poste);
+        TEST(ids_poste[0] == 1);
+        TEST(ids_poste[1] == 0);
+        TEST(ids_poste[2] == 0);
+
+        lu_recherche_poste_par_competences_code_postal(2, ids_poste);
+        TEST(ids_poste[0] == 0);
+        TEST(ids_poste[1] == 0);
+    }
+
+    // Test pour recherche de chercheur par poste.
+    {
+        lu_init(chemin_test_bd);
+
+        size_t ids_chercheur[N_CHERCHEURS];
+
+        lu_recherche_chercheur_par_competences(1, ids_chercheur);
+        TEST(ids_chercheur[0] == 1);
+        TEST(ids_chercheur[1] == 0);
+
+        lu_recherche_chercheur_par_competences(2, ids_chercheur);
+        TEST(ids_chercheur[0] == 2);
+        TEST(ids_chercheur[1] == 0);
+    }
+
+    // Test pour recherche de chercheur par poste et code_postal.
+    {
+        lu_init(chemin_test_bd);
+
+        size_t ids_chercheur[N_CHERCHEURS];
+
+        lu_recherche_chercheur_par_competences_code_postal(1, ids_chercheur);
+        TEST(ids_chercheur[0] == 1);
+        TEST(ids_chercheur[1] == 0);
+
+        lu_recherche_chercheur_par_competences_code_postal(2, ids_chercheur);
+        TEST(ids_chercheur[0] == 0);
+        TEST(ids_chercheur[1] == 0);
     }
 
     printf("%d/%d\n", tests_reussis, tests_executes);

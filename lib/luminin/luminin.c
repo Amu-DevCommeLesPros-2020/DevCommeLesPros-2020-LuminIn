@@ -49,14 +49,14 @@ char const* lu_nom_entreprise(size_t const id)
     return e ? e->nom : NULL;
 }
 
-void lu_profil_entreprise(size_t const id, char nom[L_NOM], char code_postal[L_CP], char mail[L_MAIL])
+void lu_profil_entreprise(size_t const id, char* const nom, char* const code_postal, char* const mail)
 {
     entreprise const* const e = co_recherche(id);
     if(e)
     {
-        strcpy(nom, e->nom);
-        strncpy(code_postal, e->code_postal, L_CP);
-        strcpy(mail, e->mail);
+        if(nom) strcpy(nom, e->nom);
+        if(code_postal) strncpy(code_postal, e->code_postal, L_CP);
+        if(mail) strcpy(mail, e->mail);
     }
     else
     {
@@ -74,6 +74,39 @@ size_t lu_creer_poste(char const titre[L_TITRE], char const competences[N_COMPET
 void lu_supprimer_poste(size_t const id)
 {
     po_supprimer_poste(id);
+}
+
+void lu_postes_par_entreprise(size_t const id_compagnie, size_t ids_poste[N_POSTES])
+{
+    memset(ids_poste, 0, N_POSTES * sizeof(size_t));
+
+    size_t ids[N_POSTES];
+    po_ids(ids);
+    poste const* p = po_recherche(ids[0]);
+    for(size_t i = 0, j = 0; p && i != N_POSTES; p = po_recherche(ids[++i]))
+    {
+        if(p->id_entreprise == id_compagnie)
+        {
+            ids_poste[j++] = p->id;
+        }
+    }
+}
+
+void lu_poste(size_t const id_poste, char* const titre, char competences[][L_COMPETENCE], size_t* const id_compagnie)
+{
+    poste const* const p = po_recherche(id_poste);
+    if(p)
+    {
+        if(titre) strcpy(titre, p->titre);
+        if(competences) memcpy(competences, p->competences, NL_COMPETENCES);
+        if(id_compagnie) *id_compagnie = p->id_entreprise;
+    }
+    else
+    {
+        if(titre) strcpy(titre, "");
+        if(competences) memcpy(competences, "", NL_COMPETENCES);
+        if(id_compagnie) *id_compagnie = 0;
+    }
 }
 
 size_t lu_creer_profil_chercheur(char const nom[L_NOM], char const prenom[L_PRENOM], char const mail[L_MAIL], char const code_postal[L_CP], char const competences[N_COMPETENCES][L_COMPETENCE], size_t const id_collegues[N_COLLEGUES])
@@ -100,17 +133,17 @@ char const* lu_nom_chercheur(size_t const id)
     return c ? c->nom : NULL;
 }
 
-void lu_profil_chercheur(size_t id, char nom[L_NOM], char prenom[L_PRENOM], char mail[L_MAIL], char code_postal[L_CP], char competences[N_COMPETENCES][L_COMPETENCE], size_t id_collegues[N_COLLEGUES])
+void lu_profil_chercheur(size_t id, char* const nom, char* const prenom, char* const mail, char* const code_postal, char competences[][L_COMPETENCE], size_t* const id_collegues)
 {
     chercheur const*  const c = ch_recherche(id);
     if(c)
     {
-        strcpy(nom, c->nom);
-        strcpy(prenom, c->prenom);
-        strcpy(mail, c->mail);
-        strncpy(code_postal, c->code_postal, L_CP);
-        memcpy(competences, c->competences, NL_COMPETENCES);
-        memcpy(id_collegues, c->id_collegues, N_COLLEGUES * sizeof(size_t));
+        if(nom) strcpy(nom, c->nom);
+        if(prenom) strcpy(prenom, c->prenom);
+        if(mail) strcpy(mail, c->mail);
+        if(code_postal) strncpy(code_postal, c->code_postal, L_CP);
+        if(competences) memcpy(competences, c->competences, NL_COMPETENCES);
+        if(id_collegues) memcpy(id_collegues, c->id_collegues, N_COLLEGUES * sizeof(size_t));
     }
     else
     {
@@ -182,5 +215,105 @@ void lu_recherche_poste_par_competences(size_t const id_chercheur, size_t ids_po
         ids_poste[ipi] = postes_qualifies[max_i][0];
         postes_qualifies[max_i][0] = 0;
         postes_qualifies[max_i][1] = 0;
+    }
+}
+
+void lu_recherche_poste_par_competences_code_postal(size_t const id_chercheur, size_t ids_poste[N_POSTES])
+{
+    lu_recherche_poste_par_competences(id_chercheur, ids_poste);
+
+    // Code postal du chercheur.
+    char code_postal[L_CP];
+    strncpy(code_postal, ch_recherche(id_chercheur)->code_postal, L_CP);
+
+    // Filtration des résultats obtenus précédement par code postal.
+    size_t ids[N_POSTES];
+    memcpy(ids, ids_poste, N_POSTES * sizeof(size_t));
+    memset(ids_poste, 0, N_POSTES * sizeof(size_t));
+    for(size_t i = 0, j = 0; ids[i] != 0 && i != N_POSTES; ++i)
+    {
+        if(strncmp(co_recherche(po_recherche(ids[i])->id_entreprise)->code_postal, code_postal, L_CP) == 0)
+        {
+            ids_poste[j++] = ids[i];
+        }
+    }
+}
+
+void lu_recherche_chercheur_par_competences(size_t const id_poste, size_t ids_chercheur[N_CHERCHEURS])
+{
+    // Liste des chercheurs qualifiés pour le poste et le nombre de compétences remplies.
+    size_t chercheurs_qualifies[N_POSTES][2];
+    memset(chercheurs_qualifies, 0, N_POSTES * 2 * sizeof(size_t));
+    size_t q = 0;   // Nombre de chercheur qualifiés.
+
+    poste const* const p = po_recherche(id_poste);
+
+    // Recherche parmi les chercheurs, ceux qui sont qualifiés pour le poste.
+    size_t ids[N_CHERCHEURS];
+    ch_ids(ids);
+    chercheur* c = ch_recherche(ids[0]);
+    for(size_t i = 0; c && i != N_CHERCHEURS; c = ch_recherche(ids[++i]))
+    {
+        bool qualifie = false;
+
+        // Pour chaque compétence du chercheur...
+        for(size_t cci = 0; strlen(c->competences[cci]) && cci != N_COMPETENCES; ++cci)
+        {
+            // Pour chaque compétence requise du poste...
+            for(size_t pci = 0; strlen(p->competences[pci]) && pci != N_COMPETENCES; ++pci)
+            {
+                // Si c'est la même...
+                if(strcmp(c->competences[cci], p->competences[pci]) == 0)
+                {
+                    // Le chercheur est qualifié et on incrémente le nombre de compétences qui correspondent.
+                    qualifie = true;
+                    chercheurs_qualifies[q][0] = c->id;
+                    ++chercheurs_qualifies[q][1];
+                }
+            }
+        }
+
+        if(qualifie)
+        {
+            ++q;
+        }
+    }
+
+    // Arrangement des chercheurs qualifiés pour le poste par ordre décroissant du nombre de qualifications correspondantes.
+    for(size_t ipi = 0; q--; ++ipi)
+    {
+        size_t max_i = 0;
+        for(size_t i = 1; i != N_POSTES; ++i)
+        {
+            if(chercheurs_qualifies[i][1] > chercheurs_qualifies[max_i][1])
+            {
+                max_i = i;
+            }
+        }
+
+        ids_chercheur[ipi] = chercheurs_qualifies[max_i][0];
+        chercheurs_qualifies[max_i][0] = 0;
+        chercheurs_qualifies[max_i][1] = 0;
+    }
+}
+
+void lu_recherche_chercheur_par_competences_code_postal(size_t const id_poste, size_t ids_chercheur[N_CHERCHEURS])
+{
+    lu_recherche_chercheur_par_competences(id_poste, ids_chercheur);
+
+    // Code postal de l'entreprise.
+    char code_postal[L_CP];
+    strncpy(code_postal, co_recherche(po_recherche(id_poste)->id_entreprise)->code_postal, L_CP);
+
+    // Filtration des résultats obtenus précédement par code postal.
+    size_t ids[N_CHERCHEURS];
+    memcpy(ids, ids_chercheur, N_CHERCHEURS * sizeof(size_t));
+    memset(ids_chercheur, 0, N_CHERCHEURS * sizeof(size_t));
+    for(size_t i = 0, j = 0; ids[i] != 0 && i != N_CHERCHEURS; ++i)
+    {
+        if(strncmp(ch_recherche(ids[i])->code_postal, code_postal, L_CP) == 0)
+        {
+            ids_chercheur[j++] = ids[i];
+        }
     }
 }
