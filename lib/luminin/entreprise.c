@@ -37,8 +37,8 @@ size_t co_creer_profil(char const nom[L_NOM], char const code_postal[L_CP], char
 {
     j_ecrire("Creation profil compagnie. [nom=%s,code_postal=%s,mail=%s]", nom, code_postal, mail);
 
-    entreprise *co = malloc(sizeof(entreprise));
-    co->id = cos_->tete ? ((entreprise*)(l_tail(cos_->tete)->data))->id + 1 : 1;
+    entreprise *co = calloc(1, sizeof(entreprise));
+    co->id = cos_->tete ? ((entreprise*)(l_tail(cos_->tete)->data))->id + 1 : I_ENTREPRISE;
     strcpy(co->nom, nom);
     strcpy(co->code_postal, code_postal);
     strcpy(co->mail, mail);

@@ -6,6 +6,8 @@
 
 void lu_init(char const* const chemin_bd);
 
+void lu_destroy();
+
 // Fonctions relatives aux entreprises.
 size_t lu_creer_profil_entreprise(char const nom[L_NOM], char const code_postal[L_CP], char const mail[L_MAIL]);
 
@@ -24,6 +26,7 @@ void lu_supprimer_poste(size_t const id);
 void lu_postes_par_entreprise(size_t const id_compagnie, size_t ids_poste[N_POSTES]);
 
 void lu_poste(size_t const id_poste, char* const titre, char competences[][L_COMPETENCE], size_t* const id_compagnie);
+
 
 // Fonctions relatives aux chercheurs.
 size_t lu_creer_profil_chercheur(char const nom[L_NOM], char const prenom[L_PRENOM], char const mail[L_MAIL], char const code_postal[L_CP], char competences[N_COMPETENCES][L_COMPETENCE], size_t const id_collegues[N_COLLEGUES]);

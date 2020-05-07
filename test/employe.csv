@@ -1,4 +1,4 @@
 id,nom,prenom,mail,code postal,competences,entreprise,collegues
-1,Untel,Michel,m_untel@google.com,13010,C++;Python,2,
-2,Mouse,Mickey,mickey@mickeyville.gov,77700,comedie,1,3
-3,Mouse,Minnie,minnie@mickeyville.gov,77700,comedie;chant,1,2
+2001,Untel,Michel,m_untel@google.com,13010,C++;Python,3002,
+2002,Mouse,Mickey,mickey@mickeyville.gov,77700,comedie,3001,2003
+2003,Mouse,Minnie,minnie@mickeyville.gov,77700,comedie;chant,3001,2002

@@ -38,17 +38,17 @@ size_t ch_creer_profil(char const nom[L_NOM], char const prenom[L_PRENOM], char 
 competence[0]=%s,competence[1]=%s,competence[2]=%s,competence[3]=%s,competence[4]=%s,\
 collegues[0]=%zu,collegues[1]=%zu,collegues[2]=%zu,collegues[3]=%zu,collegues[4]=%zu", nom, prenom, mail, code_postal, competences[0], competences[1], competences[2], competences[3], competences[4], id_collegues[0], id_collegues[1], id_collegues[2], id_collegues[3], id_collegues[4]);
 
-    chercheur *ch = malloc(sizeof(chercheur));
-    ch->id = chs_->tete ? ((chercheur*)(l_tail(chs_->tete)->data))->id + 1 : 1;
+    chercheur *ch = calloc(1, sizeof(chercheur));
+    ch->id = chs_->tete ? ((chercheur*)(l_tail(chs_->tete)->data))->id + 1 : I_CHERCHEUR;
     strcpy(ch->nom, nom);
     strcpy(ch->prenom, prenom);
     strcpy(ch->mail, mail);
     strcpy(ch->code_postal, code_postal);
-    for(int i = 0; i != N_COMPETENCES; ++i)
+    for(int i = 0; competences[i] && i != N_COMPETENCES; ++i)
     {
         strcpy(ch->competences[i], competences[i]);
     }
-    for(int i = 0; i != N_COLLEGUES; ++i)
+    for(int i = 0; id_collegues[i] && i != N_COLLEGUES; ++i)
     {
         ch->id_collegues[i] = id_collegues[i];
     }

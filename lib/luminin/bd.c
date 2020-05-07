@@ -50,8 +50,7 @@ void bd_lecture_entreprises(entreprises** ens)
     j_ecrire("Lecture de la table entreprise.");
 
     // Allocation de mémoire pour entreprises.
-    *ens = malloc(sizeof(entreprises));
-    (*ens)->tete = NULL;
+    *ens = calloc(1, sizeof(entreprises));
 
     // Création du chemin complet pour la table entreprise.csv.
     char chemin_table[PATH_MAX];
@@ -65,9 +64,10 @@ void bd_lecture_entreprises(entreprises** ens)
 
         // Lecture des tuples.
         entreprise co;
+        memset(&co, 0, sizeof(co));
         while(fscanf(table_entreprise, "%zu,%" STRINGIZE(L_NOM) "[^,],%" STRINGIZE(SL_CP) "[^,],%s", &co.id, co.nom, co.code_postal, co.mail) == 4)
         {
-            entreprise *data = malloc(sizeof(entreprise));
+            entreprise *data = calloc(1, sizeof(entreprise));
             *data = co;
             l_append(&((*ens)->tete), l_make_node(data));
         }
@@ -81,8 +81,7 @@ void bd_lecture_postes(postes** pos)
     j_ecrire("Lecture de la table poste.");
 
     // Allocation de mémoire pour postes.
-    *pos = malloc(sizeof(postes));
-    (*pos)->tete = NULL;
+    *pos = calloc(1, sizeof(postes));
 
     // Création du chemin complet pour la table poste.csv.
     char chemin_table[PATH_MAX];
@@ -96,14 +95,15 @@ void bd_lecture_postes(postes** pos)
 
         // Lecture des tuples.
         poste po;
-        char competences[NL_COMPETENCES];
+        memset(&po, 0, sizeof(po));
+        char competences[NL_COMPETENCES] = {'\0'};
         while(fscanf(table_poste, "%zu,%" STRINGIZE(L_TITRE) "[^,],%" STRINGIZE(NL_COMPETENCES) "[^,],%zu", &po.id, po.titre, competences, &po.id_entreprise) == 4)
         {
-            poste *data = malloc(sizeof(poste));
+            poste *data = calloc(1, sizeof(poste));
             *data = po;
             
             char *competence = strtok(competences, ";");
-            for(int i = 0; i != N_COMPETENCES; ++i)
+            for(int i = 0; competence && i != N_COMPETENCES; ++i)
             {
                 strcpy(data->competences[i], competence ? competence : "");
                 competence = strtok(NULL, ";");
@@ -121,8 +121,7 @@ void bd_lecture_employes(employes** ems)
     j_ecrire("Lecture de la table employe.");
 
     // Allocation de mémoire pour employes.
-    *ems = malloc(sizeof(employes));
-    (*ems)->tete = NULL;
+    *ems = calloc(1, sizeof(employes));
 
     // Création du chemin complet pour la table employe.csv.
     char chemin_table[PATH_MAX];
@@ -137,23 +136,23 @@ void bd_lecture_employes(employes** ems)
         // Lecture des tuples.
         employe em;
         memset(&em, 0, sizeof(employe));
-        char competences[NL_COMPETENCES];
-        char id_collegues[3 * N_COLLEGUES];
+        char competences[NL_COMPETENCES] = {'\0'};
+        char id_collegues[5 * N_COLLEGUES] = {'\0'};
         // J'ai mis le champ id_collegues à la toute fin parce que lorsqu'il est vide, il ne peut être capturé par [^,] car ce champ de capture *doit* capturer au moins un caractère.
-        while(fscanf(table_employe, "%zu,%" STRINGIZE(L_NOM) "[^,],%" STRINGIZE(L_PRENOM) "[^,],%" STRINGIZE(L_MAIL) "[^,],%" STRINGIZE(SL_CP) "[^,],%" STRINGIZE(NL_COMPETENCES) "[^,],%zu,%14[^\n]", &em.id, em.nom, em.prenom, em.mail, em.code_postal, competences, &em.id_entreprise, id_collegues) >= 7)
+        while(fscanf(table_employe, "%zu,%" STRINGIZE(L_NOM) "[^,],%" STRINGIZE(L_PRENOM) "[^,],%" STRINGIZE(L_MAIL) "[^,],%" STRINGIZE(SL_CP) "[^,],%" STRINGIZE(NL_COMPETENCES) "[^,],%zu,%300[^\n]", &em.id, em.nom, em.prenom, em.mail, em.code_postal, competences, &em.id_entreprise, id_collegues) >= 7)
         {
-            employe *data = malloc(sizeof(employe));
+            employe *data = calloc(1, sizeof(employe));
             *data = em;
             
             char *competence = strtok(competences, ";");
-            for(int i = 0; i != N_COMPETENCES; ++i)
+            for(int i = 0; competence && i != N_COMPETENCES; ++i)
             {
                 strcpy(data->competences[i], competence ? competence : "");
                 competence = strtok(NULL, ";");
             }
 
             char *id_collegue = strtok(id_collegues, ";");
-            for(int i = 0; i != N_COLLEGUES; ++i)
+            for(int i = 0; id_collegue && i != N_COLLEGUES; ++i)
             {
                 data->id_collegues[i] = id_collegue ? atoi(id_collegue) : 0;
                 id_collegue = strtok(NULL, ";");
@@ -172,8 +171,7 @@ void bd_lecture_chercheurs(chercheurs** chs)
     j_ecrire("Lecture de la table chercheur.");
 
     // Allocation de mémoire pour chercheurs.
-    *chs = malloc(sizeof(chercheurs));
-    (*chs)->tete = NULL;
+    *chs = calloc(1, sizeof(chercheurs));
 
     // Création du chemin complet pour la table chercheur.csv.
     char chemin_table[PATH_MAX];
@@ -188,23 +186,23 @@ void bd_lecture_chercheurs(chercheurs** chs)
         // Lecture des tuples.
         chercheur ch;
         memset(&ch, 0, sizeof(chercheur));
-        char competences[NL_COMPETENCES];
-        char id_collegues[3 * N_COLLEGUES];
+        char competences[NL_COMPETENCES] = {'\0'};
+        char id_collegues[3 * N_COLLEGUES] = {0};
         // J'ai mis le champ id_collegues à la toute fin parce que lorsqu'il est vide, il ne peut être capturé par [^,] car ce champ de capture *doit* capturer au moins un caractère.
         while(fscanf(table_chercheur, "%zu,%" STRINGIZE(L_NOM) "[^,],%" STRINGIZE(L_PRENOM) "[^,],%" STRINGIZE(L_MAIL) "[^,],%" STRINGIZE(SL_CP) "[^,],%" STRINGIZE(NL_COMPETENCES) "[^,],%14[^\n]", &ch.id, ch.nom, ch.prenom, ch.mail, ch.code_postal, competences, id_collegues) >= 6)
         {
-            chercheur *data = malloc(sizeof(chercheur));
+            chercheur *data = calloc(1, sizeof(chercheur));
             *data = ch;
             
             char *competence = strtok(competences, ";");
-            for(int i = 0; i != N_COMPETENCES; ++i)
+            for(int i = 0; competence && i != N_COMPETENCES; ++i)
             {
                 strcpy(data->competences[i], competence ? competence : "");
                 competence = strtok(NULL, ";");
             }
 
             char *id_collegue = strtok(id_collegues, ";");
-            for(int i = 0; i != N_COLLEGUES; ++i)
+            for(int i = 0; id_collegue && i != N_COLLEGUES; ++i)
             {
                 data->id_collegues[i] = id_collegue ? atoi(id_collegue) : 0;
                 id_collegue = strtok(NULL, ";");

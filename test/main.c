@@ -107,15 +107,15 @@ int main()
         TEST(cos != NULL);
 
         entreprise *disney = (entreprise*)(cos->tete->data);
-        TEST(disney->id == 1);
+        TEST(disney->id == I_ENTREPRISE + 1);
         TEST(strcmp(disney->nom, "Disney") == 0);
-        TEST(strncmp(disney->code_postal, "77700", L_CP) == 0);
+        TEST(strcmp(disney->code_postal, "77700") == 0);
         TEST(strcmp(disney->mail, "walt@disney.com") == 0);
 
         entreprise *google = (entreprise*)(l_skip(cos->tete, 1)->data);
-        TEST(google->id == 2);
+        TEST(google->id == I_ENTREPRISE + 2);
         TEST(strcmp(google->nom, "Google") == 0);
-        TEST(strncmp(google->code_postal, "75009", L_CP) == 0);
+        TEST(strcmp(google->code_postal, "75009") == 0);
         TEST(strcmp(google->mail, "emplois@google.com") == 0);
 
         free_entreprises(cos);
@@ -126,24 +126,24 @@ int main()
 
         TEST(pos != NULL);
         poste *acteur = (poste*)(pos->tete->data);
-        TEST(acteur->id == 1);
+        TEST(acteur->id == I_POSTE + 1);
         TEST(strcmp(acteur->titre, "acteur") == 0);
         TEST(strcmp(acteur->competences[0], "comedie") == 0);
         TEST(strcmp(acteur->competences[1], "gag") == 0);
         TEST(strcmp(acteur->competences[2], "") == 0);
         TEST(strcmp(acteur->competences[3], "") == 0);
         TEST(strcmp(acteur->competences[4], "") == 0);
-        TEST(acteur->id_entreprise == 1);
+        TEST(acteur->id_entreprise == I_ENTREPRISE + 1);
 
         poste *developpeur = (poste*)(l_skip(pos->tete, 1)->data);
-        TEST(developpeur->id == 2);
+        TEST(developpeur->id == I_POSTE + 2);
         TEST(strcmp(developpeur->titre, "developpeur") == 0);
         TEST(strcmp(developpeur->competences[0], "C") == 0);
         TEST(strcmp(developpeur->competences[1], "SQL") == 0);
         TEST(strcmp(developpeur->competences[2], "Python") == 0);
         TEST(strcmp(developpeur->competences[3], "") == 0);
         TEST(strcmp(developpeur->competences[4], "") == 0);
-        TEST(developpeur->id_entreprise == 2);
+        TEST(developpeur->id_entreprise == I_ENTREPRISE + 2);
 
         // Lecture d'une liste d'employés d'une BD dont les valeurs sont connues.
         employes *ems;
@@ -151,17 +151,17 @@ int main()
 
         TEST(ems != NULL);
         employe *em = (employe*)(ems->tete->data);
-        TEST(em->id == 1);
+        TEST(em->id == I_EMPLOYE + 1);
         TEST(strcmp(em->nom, "Untel") == 0);
         TEST(strcmp(em->prenom, "Michel") == 0);
         TEST(strcmp(em->mail, "m_untel@google.com") == 0);
-        TEST(strncmp(em->code_postal, "13010", L_CP) == 0);
+        TEST(strcmp(em->code_postal, "13010") == 0);
         TEST(strcmp(em->competences[0], "C++") == 0);
         TEST(strcmp(em->competences[1], "Python") == 0);
         TEST(strcmp(em->competences[2], "") == 0);
         TEST(strcmp(em->competences[3], "") == 0);
         TEST(strcmp(em->competences[4], "") == 0);
-        TEST(em->id_entreprise == 2);
+        TEST(em->id_entreprise == I_ENTREPRISE + 2);
         TEST(em->id_collegues[0] == 0);
         TEST(em->id_collegues[1] == 0);
         TEST(em->id_collegues[2] == 0);
@@ -169,18 +169,18 @@ int main()
         TEST(em->id_collegues[4] == 0);
 
         em = (employe*)(l_skip(ems->tete, 1)->data);
-        TEST(em->id == 2);
+        TEST(em->id == I_EMPLOYE + 2);
         TEST(strcmp(em->nom, "Mouse") == 0);
         TEST(strcmp(em->prenom, "Mickey") == 0);
         TEST(strcmp(em->mail, "mickey@mickeyville.gov") == 0);
-        TEST(strncmp(em->code_postal, "77700", L_CP) == 0);
+        TEST(strcmp(em->code_postal, "77700") == 0);
         TEST(strcmp(em->competences[0], "comedie") == 0);
         TEST(strcmp(em->competences[1], "") == 0);
         TEST(strcmp(em->competences[2], "") == 0);
         TEST(strcmp(em->competences[3], "") == 0);
         TEST(strcmp(em->competences[4], "") == 0);
-        TEST(em->id_entreprise == 1);
-        TEST(em->id_collegues[0] == 3);
+        TEST(em->id_entreprise == I_ENTREPRISE + 1);
+        TEST(em->id_collegues[0] == I_EMPLOYE + 3);
         TEST(em->id_collegues[1] == 0);
         TEST(em->id_collegues[2] == 0);
         TEST(em->id_collegues[3] == 0);
@@ -192,28 +192,28 @@ int main()
 
         TEST(chs != NULL);
         chercheur *ch = (chercheur*)(chs->tete->data);
-        TEST(ch->id == 1);
+        TEST(ch->id == I_CHERCHEUR + 1);
         TEST(strcmp(ch->nom, "Duck") == 0);
         TEST(strcmp(ch->prenom, "Donald") == 0);
         TEST(strcmp(ch->mail, "donal.duck@canardville.gov") == 0);
-        TEST(strncmp(ch->code_postal, "77700", L_CP) == 0);
+        TEST(strcmp(ch->code_postal, "77700") == 0);
         TEST(strcmp(ch->competences[0], "comedie") == 0);
         TEST(strcmp(ch->competences[1], "gag") == 0);
         TEST(strcmp(ch->competences[2], "") == 0);
         TEST(strcmp(ch->competences[3], "") == 0);
         TEST(strcmp(ch->competences[4], "") == 0);
-        TEST(ch->id_collegues[0] == 2);
+        TEST(ch->id_collegues[0] == I_EMPLOYE + 2);
         TEST(ch->id_collegues[1] == 0);
         TEST(ch->id_collegues[2] == 0);
         TEST(ch->id_collegues[3] == 0);
         TEST(ch->id_collegues[4] == 0);
 
         ch = (chercheur*)(l_skip(chs->tete, 1)->data);
-        TEST(ch->id == 2);
+        TEST(ch->id == I_CHERCHEUR + 2);
         TEST(strcmp(ch->nom, "Pignon") == 0);
         TEST(strcmp(ch->prenom, "Francois") == 0);
         TEST(strcmp(ch->mail, "pignouf@gmail.com") == 0);
-        TEST(strncmp(ch->code_postal, "75020", L_CP) == 0);
+        TEST(strcmp(ch->code_postal, "75020") == 0);
         TEST(strcmp(ch->competences[0], "C") == 0);
         TEST(strcmp(ch->competences[1], "SQL") == 0);
         TEST(strcmp(ch->competences[2], "Python") == 0);
@@ -234,10 +234,9 @@ int main()
         bd_init(chemin_test_ecriture_bd);
 
         // Creation d'une liste d'entreprises fictives (avec une seule entreprise).
-        entreprises *cos = malloc(sizeof(entreprises));
-        cos->tete = NULL;
+        entreprises *cos = calloc(1, sizeof(entreprises));
 
-        entreprise *co = malloc(sizeof(entreprise));
+        entreprise *co = calloc(1, sizeof(entreprise));
         co->id = 100;
         strcpy(co->nom, "Fictive");
         strcpy(co->code_postal, "99000");
@@ -282,7 +281,7 @@ int main()
 
         TEST(co != NULL);
         TEST(strcmp(co->nom, "Fictive") == 0);
-        TEST(strncmp(co->code_postal, "99000", L_CP) == 0);
+        TEST(strcmp(co->code_postal, "99000") == 0);
         TEST(strcmp(co->mail, "nobody@nowhere.com") == 0);
     }
 
@@ -313,10 +312,9 @@ int main()
         bd_init(chemin_test_ecriture_bd);
 
         // Creation d'une liste de postes fictifs.
-        postes *pos = malloc(sizeof(postes));
-        pos->tete = NULL;
+        postes *pos = calloc(1, sizeof(postes));
 
-        poste *po = malloc(sizeof(poste));
+        poste *po = calloc(1, sizeof(poste));
         po->id = 100;
         strcpy(po->titre, "Professeur");
         strcpy(po->competences[0], "experience");
@@ -382,9 +380,9 @@ int main()
         size_t ids[N_POSTES] = {0};
         po_ids(ids);
 
-        TEST(ids[0] == 1);
-        TEST(ids[1] == 2);
-        TEST(ids[2] == 3);
+        TEST(ids[0] == I_POSTE + 1);
+        TEST(ids[1] == I_POSTE + 2);
+        TEST(ids[2] == I_POSTE + 3);
         TEST(ids[3] == 0);
         TEST(ids[4] == 0);
 
@@ -419,10 +417,10 @@ int main()
         bd_init(chemin_test_ecriture_bd);
 
         // Creation d'une liste dd'employes fictifs.
-        employes *ems = malloc(sizeof(employes));
-        ems->tete = NULL;
+        employes *ems = calloc(1, sizeof(employes));
 
-        employe *em = malloc(sizeof(employe));
+        employe *em = calloc(1, sizeof(employe));
+        memset(em, 0, sizeof(*em));
         em->id = 100;
         strcpy(em->nom, "Gladu");
         strcpy(em->prenom, "Gaston");
@@ -433,12 +431,12 @@ int main()
         strcpy(em->competences[2], "empote");
         strcpy(em->competences[3], "pompeur d'air");
         strcpy(em->competences[4], "emmerdeur");
-        em->id_entreprise = 100;
-        em->id_collegues[0] = 66;
-        em->id_collegues[1] = 67;
-        em->id_collegues[2] = 68;
-        em->id_collegues[3] = 69;
-        em->id_collegues[4] = 70;
+        em->id_entreprise = I_ENTREPRISE;
+        em->id_collegues[0] = I_EMPLOYE + 66;
+        em->id_collegues[1] = I_EMPLOYE + 67;
+        em->id_collegues[2] = I_EMPLOYE + 68;
+        em->id_collegues[3] = I_EMPLOYE + 69;
+        em->id_collegues[4] = I_EMPLOYE + 70;
         l_append(&(ems->tete), l_make_node(em));
 
         // Écriture de ces employes dans la BD.
@@ -452,18 +450,18 @@ int main()
         TEST(strcmp(em->nom, "Gladu") == 0);
         TEST(strcmp(em->prenom, "Gaston") == 0);
         TEST(strcmp(em->mail, "gg@gladu.name") == 0);
-        TEST(strncmp(em->code_postal, "00000", L_CP) == 0);
+        TEST(strcmp(em->code_postal, "00000") == 0);
         TEST(strcmp(em->competences[0], "ennuyeux") == 0);
         TEST(strcmp(em->competences[1], "maladroit") == 0);
         TEST(strcmp(em->competences[2], "empote") == 0);
         TEST(strcmp(em->competences[3], "pompeur d'air") == 0);
         TEST(strcmp(em->competences[4], "emmerdeur") == 0);
-        TEST(em->id_entreprise == 100);
-        TEST(em->id_collegues[0] == 66);
-        TEST(em->id_collegues[1] == 67);
-        TEST(em->id_collegues[2] == 68);
-        TEST(em->id_collegues[3] == 69);
-        TEST(em->id_collegues[4] == 70);
+        TEST(em->id_entreprise == I_ENTREPRISE);
+        TEST(em->id_collegues[0] == I_EMPLOYE + 66);
+        TEST(em->id_collegues[1] == I_EMPLOYE + 67);
+        TEST(em->id_collegues[2] == I_EMPLOYE + 68);
+        TEST(em->id_collegues[3] == I_EMPLOYE + 69);
+        TEST(em->id_collegues[4] == I_EMPLOYE + 70);
 
         free_employes(ems);
     }
@@ -495,7 +493,7 @@ int main()
 
         TEST(em != NULL);
         TEST(strcmp(em->nom, "Gladu") == 0);
-        TEST(strncmp(em->code_postal, "00000", L_CP) == 0);
+        TEST(strcmp(em->code_postal, "00000") == 0);
         TEST(strcmp(em->mail, "gg@gladu.name") == 0);
     }
 
@@ -518,7 +516,7 @@ int main()
         TEST(strcmp(em->nom, "Gogol") == 0);
         TEST(strcmp(em->prenom, "Gaston") == 0);
         TEST(strcmp(em->mail, "gg@gogol.name") == 0);
-        TEST(strncmp(em->code_postal, "11111", L_CP) == 0);
+        TEST(strcmp(em->code_postal, "11111") == 0);
         TEST(strcmp(em->competences[0], "charmant") == 0);
         TEST(strcmp(em->competences[1], "adroit") == 0);
         TEST(strcmp(em->competences[2], "gracieux") == 0);
@@ -532,10 +530,9 @@ int main()
         bd_init(chemin_test_ecriture_bd);
 
         // Creation d'une liste de chercheurs fictifs.
-        chercheurs *chs = malloc(sizeof(chercheurs));
-        chs->tete = NULL;
+        chercheurs *chs = calloc(1, sizeof(chercheurs));
 
-        chercheur *ch = malloc(sizeof(chercheur));
+        chercheur *ch = calloc(1, sizeof(chercheur));
         ch->id = 100;
         strcpy(ch->nom, "Glandu");
         strcpy(ch->prenom, "Germaine");
@@ -564,7 +561,7 @@ int main()
         TEST(strcmp(ch->nom, "Glandu") == 0);
         TEST(strcmp(ch->prenom, "Germaine") == 0);
         TEST(strcmp(ch->mail, "gg@glandu.name") == 0);
-        TEST(strncmp(ch->code_postal, "00000", L_CP) == 0);
+        TEST(strcmp(ch->code_postal, "00000") == 0);
         TEST(strcmp(ch->competences[0], "etourdie") == 0);
         TEST(strcmp(ch->competences[1], "tete-en-l'air") == 0);
         TEST(strcmp(ch->competences[2], "paresseuse") == 0);
@@ -608,7 +605,7 @@ int main()
 
         TEST(ch != NULL);
         TEST(strcmp(ch->nom, "Glandu") == 0);
-        TEST(strncmp(ch->code_postal, "00000", L_CP) == 0);
+        TEST(strcmp(ch->code_postal, "00000") == 0);
         TEST(strcmp(ch->mail, "gg@glandu.name") == 0);
 
         ch_destroy();
@@ -621,7 +618,7 @@ int main()
         ch_init();
 
         char incompetences[N_COMPETENCES][L_COMPETENCE] = {"etourdie", "tete-en-l'air", "paresseuse", "maladroite", ""};
-        size_t const id_collegues[N_COLLEGUES] = {86, 87, 88, 89, 90};
+        size_t const id_collegues[N_COLLEGUES] = {I_EMPLOYE + 86, I_EMPLOYE + 87, I_EMPLOYE + 88, I_EMPLOYE + 89, I_EMPLOYE + 90};
         size_t const id = ch_creer_profil("Glandu", "Germaine", "gg@glandu.name", "00000", incompetences, id_collegues);
 
         char competences[N_COMPETENCES][L_COMPETENCE] = {"futee", "adroite", "assidue", "rigolote", ""};
@@ -633,7 +630,7 @@ int main()
         TEST(strcmp(ch->nom, "Glandu") == 0);
         TEST(strcmp(ch->prenom, "Germaine") == 0);
         TEST(strcmp(ch->mail, "gg@glandu.name") == 0);
-        TEST(strncmp(ch->code_postal, "11111", L_CP) == 0);
+        TEST(strcmp(ch->code_postal, "11111") == 0);
         TEST(strcmp(ch->competences[0], "futee") == 0);
         TEST(strcmp(ch->competences[1], "adroite") == 0);
         TEST(strcmp(ch->competences[2], "assidue") == 0);
@@ -651,8 +648,8 @@ int main()
         size_t ids[N_CHERCHEURS] = {0};
         ch_ids(ids);
 
-        TEST(ids[0] == 1);
-        TEST(ids[1] == 2);
+        TEST(ids[0] == I_CHERCHEUR + 1);
+        TEST(ids[1] == I_CHERCHEUR + 2);
         TEST(ids[2] == 0);
         TEST(ids[3] == 0);
         TEST(ids[4] == 0);
@@ -664,9 +661,9 @@ int main()
     {
         lu_init(chemin_test_bd);
 
-        TEST(strcmp(lu_nom_entreprise(1), "Disney") == 0);
-        TEST(strcmp(lu_nom_entreprise(2), "Google") == 0);
-        TEST(strcmp(lu_nom_entreprise(3), "Polytech") == 0);
+        TEST(strcmp(lu_nom_entreprise(I_ENTREPRISE + 1), "Disney") == 0);
+        TEST(strcmp(lu_nom_entreprise(I_ENTREPRISE + 2), "Google") == 0);
+        TEST(strcmp(lu_nom_entreprise(I_ENTREPRISE + 3), "Polytech") == 0);
         TEST(lu_nom_entreprise(4) == NULL);
     }
 
@@ -697,14 +694,14 @@ int main()
         char code_postal[L_CP];
         char mail[L_MAIL];
 
-        lu_profil_entreprise(1, nom, code_postal, mail);
+        lu_profil_entreprise(I_ENTREPRISE + 1, nom, code_postal, mail);
         TEST(strcmp(nom, "Disney") == 0);
-        TEST(strncmp(code_postal, "77700", L_CP) == 0);
+        TEST(strcmp(code_postal, "77700") == 0);
         TEST(strcmp(mail, "walt@disney.com") == 0);
 
-        lu_profil_entreprise(5, nom, code_postal, mail);
+        lu_profil_entreprise(I_ENTREPRISE + 5, nom, code_postal, mail);
         TEST(strcmp(nom, "") == 0);
-        TEST(strncmp(code_postal, "", L_CP) == 0);
+        TEST(strcmp(code_postal, "") == 0);
         TEST(strcmp(mail, "") == 0);
     }
 
@@ -731,16 +728,16 @@ int main()
         lu_init(chemin_test_bd);
 
         size_t ids_poste[N_POSTES];
-        lu_postes_par_entreprise(1, ids_poste);
-        TEST(ids_poste[0] == 1);
+        lu_postes_par_entreprise(I_ENTREPRISE + 1, ids_poste);
+        TEST(ids_poste[0] == I_POSTE + 1);
         TEST(ids_poste[1] == 0);
 
-        lu_postes_par_entreprise(2, ids_poste);
-        TEST(ids_poste[0] == 2);
+        lu_postes_par_entreprise(I_ENTREPRISE + 2, ids_poste);
+        TEST(ids_poste[0] == I_POSTE + 2);
         TEST(ids_poste[1] == 0);
 
-        lu_postes_par_entreprise(3, ids_poste);
-        TEST(ids_poste[0] == 3);
+        lu_postes_par_entreprise(I_ENTREPRISE + 3, ids_poste);
+        TEST(ids_poste[0] == I_POSTE + 3);
         TEST(ids_poste[1] == 0);
     }
 
@@ -748,8 +745,8 @@ int main()
     {
         lu_init(chemin_test_bd);
 
-        TEST(strcmp(lu_nom_chercheur(1), "Duck") == 0);
-        TEST(strcmp(lu_nom_chercheur(2), "Pignon") == 0);
+        TEST(strcmp(lu_nom_chercheur(I_CHERCHEUR + 1), "Duck") == 0);
+        TEST(strcmp(lu_nom_chercheur(I_CHERCHEUR + 2), "Pignon") == 0);
         TEST(lu_nom_chercheur(3) == NULL);
         TEST(lu_nom_chercheur(4) == NULL);
     }
@@ -785,18 +782,18 @@ int main()
         char competences[N_COMPETENCES][L_COMPETENCE];
         size_t id_collegues[N_COLLEGUES];
 
-        lu_profil_chercheur(1, nom, prenom, mail, code_postal, competences, id_collegues);
+        lu_profil_chercheur(I_CHERCHEUR + 1, nom, prenom, mail, code_postal, competences, id_collegues);
         TEST(strcmp(nom, "Duck") == 0);
         TEST(strcmp(prenom, "Donald") == 0);
         TEST(strcmp(mail, "donal.duck@canardville.gov") == 0);
-        TEST(strncmp(code_postal, "77700", L_CP) == 0);
+        TEST(strcmp(code_postal, "77700") == 0);
         TEST(strcmp(competences[0], "comedie") == 0);
         TEST(strcmp(competences[1], "gag") == 0);
         TEST(strcmp(competences[2], "") == 0);
-        TEST(id_collegues[0] == 2);
+        TEST(id_collegues[0] == I_EMPLOYE + 2);
         TEST(id_collegues[1] == 0);
 
-        lu_profil_chercheur(3, nom, prenom, mail, code_postal, competences, id_collegues);
+        lu_profil_chercheur(I_CHERCHEUR + 3, nom, prenom, mail, code_postal, competences, id_collegues);
         TEST(strcmp(nom, "") == 0);
         TEST(strcmp(prenom, "") == 0);
         TEST(strcmp(mail, "") == 0);
@@ -815,14 +812,14 @@ int main()
         char mail[L_MAIL];
         char competences[N_COMPETENCES][L_COMPETENCE];
         size_t id_collegues[N_COLLEGUES];
-        lu_profil_chercheur(1, nom, prenom, mail, code_postal, competences, id_collegues);
+        lu_profil_chercheur(I_CHERCHEUR, nom, prenom, mail, code_postal, competences, id_collegues);
 
         strcpy(code_postal, "22222");
-        strcpy(competences[4], "ponctuelle");
-        lu_modifier_profil_chercheur(1, code_postal, competences, id_collegues);
-        lu_profil_chercheur(1, nom, prenom, mail, code_postal, competences, id_collegues);
-        TEST(strncmp(code_postal, "22222", 5) == 0);
-        TEST(strcmp(competences[4], "ponctuelle") == 0);
+        strcpy(competences[4], "ponctualite");
+        lu_modifier_profil_chercheur(I_CHERCHEUR, code_postal, competences, id_collegues);
+        lu_profil_chercheur(I_CHERCHEUR, nom, prenom, mail, code_postal, competences, id_collegues);
+        TEST(strcmp(code_postal, "22222") == 0);
+        TEST(strcmp(competences[4], "ponctualite") == 0);
     }
 
     // Test pour recherche de postes par compétences.
@@ -831,14 +828,14 @@ int main()
 
         size_t ids_poste[N_POSTES];
         
-        lu_recherche_poste_par_competences(1, ids_poste);
-        TEST(ids_poste[0] == 1);
+        lu_recherche_poste_par_competences(I_CHERCHEUR + 1, ids_poste);
+        TEST(ids_poste[0] == I_POSTE + 1);
         TEST(ids_poste[1] == 0);
         TEST(ids_poste[2] == 0);
 
-        lu_recherche_poste_par_competences(2, ids_poste);
-        TEST(ids_poste[0] == 2);
-        TEST(ids_poste[1] == 3);
+        lu_recherche_poste_par_competences(I_CHERCHEUR + 2, ids_poste);
+        TEST(ids_poste[0] == I_POSTE + 2);
+        TEST(ids_poste[1] == I_POSTE + 3);
         TEST(ids_poste[2] == 0);
     }
 
@@ -848,12 +845,12 @@ int main()
 
         size_t ids_poste[N_POSTES];
         
-        lu_recherche_poste_par_competences_code_postal(1, ids_poste);
-        TEST(ids_poste[0] == 1);
+        lu_recherche_poste_par_competences_code_postal(I_CHERCHEUR + 1, ids_poste);
+        TEST(ids_poste[0] == I_POSTE + 1);
         TEST(ids_poste[1] == 0);
         TEST(ids_poste[2] == 0);
 
-        lu_recherche_poste_par_competences_code_postal(2, ids_poste);
+        lu_recherche_poste_par_competences_code_postal(I_CHERCHEUR + 2, ids_poste);
         TEST(ids_poste[0] == 0);
         TEST(ids_poste[1] == 0);
     }
@@ -864,12 +861,12 @@ int main()
 
         size_t ids_chercheur[N_CHERCHEURS];
 
-        lu_recherche_chercheur_par_competences(1, ids_chercheur);
-        TEST(ids_chercheur[0] == 1);
+        lu_recherche_chercheur_par_competences(I_POSTE + 1, ids_chercheur);
+        TEST(ids_chercheur[0] == I_CHERCHEUR + 1);
         TEST(ids_chercheur[1] == 0);
 
-        lu_recherche_chercheur_par_competences(2, ids_chercheur);
-        TEST(ids_chercheur[0] == 2);
+        lu_recherche_chercheur_par_competences(I_POSTE + 2, ids_chercheur);
+        TEST(ids_chercheur[0] == I_CHERCHEUR + 2);
         TEST(ids_chercheur[1] == 0);
     }
 
@@ -879,11 +876,11 @@ int main()
 
         size_t ids_chercheur[N_CHERCHEURS];
 
-        lu_recherche_chercheur_par_competences_code_postal(1, ids_chercheur);
-        TEST(ids_chercheur[0] == 1);
+        lu_recherche_chercheur_par_competences_code_postal(I_POSTE + 1, ids_chercheur);
+        TEST(ids_chercheur[0] == I_CHERCHEUR + 1);
         TEST(ids_chercheur[1] == 0);
 
-        lu_recherche_chercheur_par_competences_code_postal(2, ids_chercheur);
+        lu_recherche_chercheur_par_competences_code_postal(I_POSTE + 2, ids_chercheur);
         TEST(ids_chercheur[0] == 0);
         TEST(ids_chercheur[1] == 0);
     }

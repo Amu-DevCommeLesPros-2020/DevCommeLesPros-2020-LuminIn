@@ -266,7 +266,7 @@ void recherche_chercheur()
     scanf(" %c", &cp);
     getchar();
 
-    size_t ids_chercheur[N_CHERCHEURS];
+    size_t ids_chercheur[N_CHERCHEURS] = {0};
     if(cp != 'o')
     {
         lu_recherche_chercheur_par_competences(id_poste, ids_chercheur);
@@ -336,7 +336,7 @@ action identification_chercheur()
 void creer_chercheur()
 {
     printf("  * Menu chercheur *\n\n");
-    
+
     printf("Nom : %s\n", nom_chercheur);
 
     printf("Prénom : ");
@@ -387,7 +387,6 @@ void creer_chercheur()
     id_chercheur = lu_creer_profil_chercheur(nom_chercheur, prenom, mail, code_postal, competences, collegues);
     printf("Votre identifiant : %zu\n\n", id_chercheur);
 }
-
 
 void modifier_chercheur()
 {
@@ -589,7 +588,8 @@ int main()
         }
     }
 
-    void j_fermer();
+    lu_destroy();
+    j_fermer();
 
     return 0;
 }

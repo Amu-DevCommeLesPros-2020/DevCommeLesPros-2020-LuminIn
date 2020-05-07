@@ -21,6 +21,14 @@ void lu_init(char const* const chemin_bd)
     po_init();
 }
 
+void lu_destroy()
+{
+    ch_destroy();
+    em_destroy();
+    co_destroy();
+    po_destroy();
+}
+
 size_t lu_creer_profil_entreprise(char const nom[L_NOM], char const code_postal[L_CP], char const mail[L_MAIL])
 {
     return co_creer_profil(nom, code_postal, mail);
@@ -232,7 +240,7 @@ void lu_recherche_poste_par_competences_code_postal(size_t const id_chercheur, s
     memset(ids_poste, 0, N_POSTES * sizeof(size_t));
     for(size_t i = 0, j = 0; ids[i] != 0 && i != N_POSTES; ++i)
     {
-        if(strncmp(co_recherche(po_recherche(ids[i])->id_entreprise)->code_postal, code_postal, L_CP) == 0)
+        if(strcmp(co_recherche(po_recherche(ids[i])->id_entreprise)->code_postal, code_postal) == 0)
         {
             ids_poste[j++] = ids[i];
         }
