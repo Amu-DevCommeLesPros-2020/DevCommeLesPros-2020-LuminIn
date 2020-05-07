@@ -1,4 +1,4 @@
-CFLAGS = -Wall -Wextra -pedantic -Werror -Wno-gnu-folding-constant -g
+CFLAGS = -Wall -Wextra -pedantic -Werror -g
 
 .DEFAULT_GOAL := all
 
@@ -31,9 +31,9 @@ build/libluminin.a: lib/luminin/bd.c lib/luminin/bd.h lib/luminin/constantes.h l
 	ar crs build/libluminin.a build/lib/bd.o build/lib/chercheur.o build/lib/employe.o build/lib/entreprise.o build/lib/luminin.o build/lib/poste.o
 
 build/luminin: build/libjournal.a build/libliste.a build/libluminin.a bin/main.c | build
-	gcc $(CFLAGS) -I lib -L build -l luminin -l liste -l journal bin/main.c -o build/luminin
+	gcc $(CFLAGS) bin/main.c -o build/luminin -I lib -L build -l luminin -l liste -l journal
 
 build/test: build/libjournal.a build/libliste.a build/libluminin.a test/main.c | build
-	gcc $(CFLAGS) -I lib -L build -l luminin -l liste -l journal test/main.c -o build/test
+	gcc $(CFLAGS) test/main.c -o build/test -I lib -L build -l luminin -l liste -l journal
 
 all: build/luminin build/test

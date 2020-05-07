@@ -32,7 +32,7 @@ void ch_destroy()
     chs_ = NULL;
 }
 
-size_t ch_creer_profil(char const nom[L_NOM], char const prenom[L_PRENOM], char const mail[L_MAIL], char const code_postal[L_CP], char const competences[N_COMPETENCES][L_COMPETENCE], size_t const id_collegues[N_COLLEGUES])
+size_t ch_creer_profil(char const nom[L_NOM], char const prenom[L_PRENOM], char const mail[L_MAIL], char const code_postal[L_CP], char competences[N_COMPETENCES][L_COMPETENCE], size_t const id_collegues[N_COLLEGUES])
 {
     j_ecrire("Création profil de chercheur. [nom=%s,prenom=%s,mail=%s,code_postal=%" STRINGIZE(L_CP) "s,\
 competence[0]=%s,competence[1]=%s,competence[2]=%s,competence[3]=%s,competence[4]=%s,\
@@ -43,7 +43,7 @@ collegues[0]=%zu,collegues[1]=%zu,collegues[2]=%zu,collegues[3]=%zu,collegues[4]
     strcpy(ch->nom, nom);
     strcpy(ch->prenom, prenom);
     strcpy(ch->mail, mail);
-    strncpy(ch->code_postal, code_postal, L_CP);
+    strcpy(ch->code_postal, code_postal);
     for(int i = 0; i != N_COMPETENCES; ++i)
     {
         strcpy(ch->competences[i], competences[i]);
@@ -75,7 +75,7 @@ void ch_supprimer_profil(size_t const id)
     bd_ecriture_chercheurs(chs_);
 }
 
-void ch_modifier_profil(size_t const id, char const code_postal[L_CP], char const competences[N_COMPETENCES][L_COMPETENCE], size_t const id_collegues[N_COLLEGUES])
+void ch_modifier_profil(size_t const id, char const code_postal[L_CP], char competences[N_COMPETENCES][L_COMPETENCE], size_t const id_collegues[N_COLLEGUES])
 {
     j_ecrire("Modification profil de chercheur. [identifiant=%zu,code_postal=%" STRINGIZE(L_CP) "s,\
 competence[0]=%s,competence[1]=%s,competence[2]=%s,competence[3]=%s,competence[4]=%s,\
@@ -84,7 +84,7 @@ collegues[0]=%zu,collegues[1]=%zu,collegues[2]=%zu,collegues[3]=%zu,collegues[4]
     chercheur *ch = ch_recherche(id);
     if(ch)
     {
-        strncpy(ch->code_postal, code_postal, L_CP);
+        strcpy(ch->code_postal, code_postal);
         for(int i = 0; i != N_COMPETENCES; ++i)
         {
             strcpy(ch->competences[i], competences[i]);

@@ -33,7 +33,7 @@ void em_destroy()
     ems_ = NULL;
 }
 
-size_t em_creer_profil(char const nom[L_NOM], char const prenom[L_PRENOM], char const mail[L_MAIL], char const code_postal[L_CP], char const competences[N_COMPETENCES][L_COMPETENCE], size_t const id_entreprise, size_t const id_collegues[N_COLLEGUES])
+size_t em_creer_profil(char const nom[L_NOM], char const prenom[L_PRENOM], char const mail[L_MAIL], char const code_postal[L_CP], char competences[N_COMPETENCES][L_COMPETENCE], size_t const id_entreprise, size_t const id_collegues[N_COLLEGUES])
 {
     j_ecrire("Creation profil d'employe. [nom=%s,prenom=%s,mail=%s,code_postal=%" STRINGIZE(L_CP) "s,\
               competence[0]=%s,competence[1]=%s,competence[2]=%s,competence[3]=%s,competence[4]=%s,\
@@ -44,7 +44,7 @@ size_t em_creer_profil(char const nom[L_NOM], char const prenom[L_PRENOM], char 
     strcpy(em->nom, nom);
     strcpy(em->prenom, prenom);
     strcpy(em->mail, mail);
-    strncpy(em->code_postal, code_postal, L_CP);
+    strcpy(em->code_postal, code_postal);
     for(int i = 0; i != N_COMPETENCES; ++i)
     {
         strcpy(em->competences[i], competences[i]);
@@ -64,7 +64,7 @@ size_t em_creer_profil(char const nom[L_NOM], char const prenom[L_PRENOM], char 
     return em->id;
 }
 
-void em_modifier_profil(size_t const id, char const nom[L_NOM], char const prenom[L_PRENOM], char const mail[L_MAIL], char const code_postal[L_CP], char const competences[N_COMPETENCES][L_COMPETENCE], size_t const id_entreprise, size_t const id_collegues[N_COLLEGUES])
+void em_modifier_profil(size_t const id, char const nom[L_NOM], char const prenom[L_PRENOM], char const mail[L_MAIL], char const code_postal[L_CP], char competences[N_COMPETENCES][L_COMPETENCE], size_t const id_entreprise, size_t const id_collegues[N_COLLEGUES])
 {
     j_ecrire("Modification profil d'employe. [identifiant=%zu,nom=%s,prenom=%s,mail=%s,code_postal=%" STRINGIZE(L_CP) "s,\
               competence[0]=%s,competence[1]=%s,competence[2]=%s,competence[3]=%s,competence[4]=%s,\
@@ -76,7 +76,7 @@ void em_modifier_profil(size_t const id, char const nom[L_NOM], char const preno
         strcpy(em->nom, nom);
         strcpy(em->prenom, prenom);
         strcpy(em->mail, mail);
-        strncpy(em->code_postal, code_postal, L_CP);
+        strcpy(em->code_postal, code_postal);
         for(int i = 0; i != N_COMPETENCES; ++i)
         {
             strcpy(em->competences[i], competences[i]);

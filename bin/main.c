@@ -148,8 +148,8 @@ void creer_entreprise()
     printf("Nom : %s\n", nom_entreprise);
 
     printf("Code postal : ");
-    char code_postal[L_CP + 1];
-    scanf("%" STRINGIZE(L_CP) "c%*c", code_postal);
+    char code_postal[L_CP];
+    scanf(" %" STRINGIZE(L_CP) "[^\n]%*c", code_postal);
 
     printf("Mail : ");
     char mail[L_MAIL];
@@ -162,7 +162,7 @@ void creer_entreprise()
 void supprimer_entreprise()
 {
     assert(id_entreprise);
-    assert(nom_entreprise);
+    assert(strlen(nom_entreprise));
 
     printf("  * Menu entreprise [%s] *\n\n", nom_entreprise);
 
@@ -177,7 +177,7 @@ void supprimer_entreprise()
 action menu_entreprise()
 {
     assert(id_entreprise);
-    assert(nom_entreprise);
+    assert(strlen(nom_entreprise));
 
     printf("  * Menu entreprise [%s] *\n\n\
 Vous voulez :\n\
@@ -192,13 +192,14 @@ Vous voulez :\n\
 void creer_poste()
 {
     assert(id_entreprise);
-    assert(nom_entreprise);
+    assert(strlen(nom_entreprise));
 
     printf("  * Menu entreprise [%s] *\n\n", nom_entreprise);
     
     printf("Titre : ");
     char titre[L_TITRE];
-    scanf(" %" STRINGIZE(L_TITRE) "[^\n]%*c", titre);
+    fgets(titre, L_TITRE, stdin);
+    titre[strcspn(titre, "\n")] = '\0';
 
     char competences[N_COMPETENCES][L_COMPETENCE];
     for(int i = 0; i != N_COMPETENCES; ++i)
@@ -226,7 +227,7 @@ void creer_poste()
 void supprimer_poste()
 {
     assert(id_entreprise);
-    assert(nom_entreprise);
+    assert(strlen(nom_entreprise));
 
     printf("  * Menu entreprise [%s]* \n\n", nom_entreprise);
 
@@ -240,7 +241,7 @@ void supprimer_poste()
 void recherche_chercheur()
 {
     assert(id_entreprise);
-    assert(nom_entreprise);
+    assert(strlen(nom_entreprise));
 
     printf("  * Menu entreprise [%s] *\n\n", nom_entreprise);
 
@@ -340,11 +341,11 @@ void creer_chercheur()
 
     printf("Prénom : ");
     char prenom[L_NOM + 1];
-    scanf("%" STRINGIZE(L_NOM) "s%*c", prenom);
+    scanf(" %" STRINGIZE(L_NOM) "s%*c", prenom);
 
     printf("Code postal : ");
-    char code_postal[L_CP + 1];
-    scanf("%" STRINGIZE(L_CP) "c%*c", code_postal);
+    char code_postal[L_CP];
+    scanf(" %" STRINGIZE(L_CP) "[^\n]%*c", code_postal);
 
     printf("Mail : ");
     char mail[L_MAIL];
@@ -391,7 +392,7 @@ void creer_chercheur()
 void modifier_chercheur()
 {
     assert(id_chercheur);
-    assert(nom_chercheur);
+    assert(strlen(nom_chercheur));
 
     printf("  * Menu chercheur [%s] *\n\n", nom_chercheur);
 
@@ -404,11 +405,11 @@ void modifier_chercheur()
 
     lu_profil_chercheur(id_chercheur, nom, prenom, mail, code_postal, competences, id_collegues);
 
-    printf("Code postal [%.5s] : ", code_postal);
-    char cp[L_CP + 1 + 1];
-    fgets(cp, L_CP + 1 + 1, stdin);
+    printf("Code postal [%s] : ", code_postal);
+    char cp[L_CP + 1];
+    fgets(cp, L_CP + 1, stdin);
     cp[strcspn(cp, "\n")] = '\0';
-    if(strlen(cp)) strncpy(code_postal, cp, 5);
+    if(strlen(cp)) strcpy(code_postal, cp);
 
     bool derniere = false;
     for(int i = 0; i != N_COMPETENCES && !derniere; ++i)
@@ -447,7 +448,7 @@ void modifier_chercheur()
 void supprimer_chercheur()
 {
     assert(id_chercheur);
-    assert(nom_chercheur);
+    assert(strlen(nom_chercheur));
 
     printf("  * Menu chercheur [%s] *\n\n", nom_chercheur);
 
@@ -462,7 +463,7 @@ void supprimer_chercheur()
 void recherche_poste()
 {
     assert(id_chercheur);
-    assert(nom_chercheur);
+    assert(strlen(nom_chercheur));
 
     printf("  * Menu chercheur [%s] *\n\n", nom_chercheur);
 
@@ -499,7 +500,7 @@ void recherche_poste()
             char code_postal[L_CP];
             lu_profil_entreprise(id_entreprise, nom, code_postal, mail);
 
-            printf("%zu. Titre : %s, Entreprise : %s, Mail : %s, Code postal : %5s\n", i + 1, titre, nom, mail, code_postal);
+            printf("%zu. Titre : %s, Entreprise : %s, Mail : %s, Code postal : %s\n", i + 1, titre, nom, mail, code_postal);
         }
     }
 }
@@ -507,7 +508,7 @@ void recherche_poste()
 action menu_chercheur()
 {
     assert(id_chercheur);
-    assert(nom_chercheur);
+    assert(strlen(nom_chercheur));
 
     printf("  * Menu chercheur [%s] *\n\n", nom_chercheur);
     printf("Vous voulez :\n\
@@ -566,6 +567,7 @@ int main()
             case CREER_CHERCHEUR:
                 creer_chercheur();
                 a = NAVIGUER_MENU_CHERCHEUR;
+                break;
             case NAVIGUER_MENU_CHERCHEUR:
                 a = menu_chercheur();
                 break;
@@ -580,6 +582,7 @@ int main()
             case RECHERCHE_POSTE:
                 recherche_poste();
                 a = NAVIGUER_MENU_CHERCHEUR;
+                break;
             case QUITTER:
             default:
                 break;

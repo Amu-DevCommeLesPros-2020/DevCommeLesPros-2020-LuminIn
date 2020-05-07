@@ -5,7 +5,6 @@
 
 #include "journal/journal.h"
 #include "liste/liste.h"
-#include "utilite/stringize.h"
 
 #include <stdbool.h>
 #include <stddef.h>
@@ -36,12 +35,12 @@ void co_destroy()
 
 size_t co_creer_profil(char const nom[L_NOM], char const code_postal[L_CP], char const mail[L_MAIL])
 {
-    j_ecrire("Creation profil compagnie. [nom=%s,code_postal=%" STRINGIZE(L_CP) "c,mail=%s]", nom, code_postal, mail);
+    j_ecrire("Creation profil compagnie. [nom=%s,code_postal=%s,mail=%s]", nom, code_postal, mail);
 
     entreprise *co = malloc(sizeof(entreprise));
     co->id = cos_->tete ? ((entreprise*)(l_tail(cos_->tete)->data))->id + 1 : 1;
     strcpy(co->nom, nom);
-    strncpy(co->code_postal, code_postal, L_CP);
+    strcpy(co->code_postal, code_postal);
     strcpy(co->mail, mail);
 
     l_append(&(cos_->tete), l_make_node(co));

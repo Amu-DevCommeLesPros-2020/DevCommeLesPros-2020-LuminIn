@@ -24,7 +24,7 @@ void po_init();
 void po_destroy();
 
 // Créer un poste.
-size_t po_creer_poste(char const titre[L_TITRE], char const competences[N_COMPETENCES][L_COMPETENCE], size_t const id_compagnie);
+size_t po_creer_poste(char const titre[L_TITRE], char competences[N_COMPETENCES][L_COMPETENCE], size_t const id_compagnie);
 
 // Supprimer un poste.
 void po_supprimer_poste(size_t const id);

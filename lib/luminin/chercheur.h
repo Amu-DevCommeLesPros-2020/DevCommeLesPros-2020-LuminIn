@@ -27,13 +27,13 @@ void ch_init();
 void ch_destroy();
 
 // Crée un nouveau profil de chercheur.
-size_t ch_creer_profil(char const nom[L_NOM], char const prenom[L_PRENOM], char const mail[L_MAIL], char const code_postal[L_CP], char const competences[N_COMPETENCES][L_COMPETENCE], size_t const id_collegues[N_COLLEGUES]);
+size_t ch_creer_profil(char const nom[L_NOM], char const prenom[L_PRENOM], char const mail[L_MAIL], char const code_postal[L_CP], char competences[N_COMPETENCES][L_COMPETENCE], size_t const id_collegues[N_COLLEGUES]);
 
 // Supprimer un profil, donné un index.
 void ch_supprimer_profil(size_t const id);
 
 // Modifier un profil, donné un index.
-void ch_modifier_profil(size_t const id, char const code_postal[L_CP], char const competences[N_COMPETENCES][L_COMPETENCE], size_t const id_collegues[N_COLLEGUES]);
+void ch_modifier_profil(size_t const id, char const code_postal[L_CP], char competences[N_COMPETENCES][L_COMPETENCE], size_t const id_collegues[N_COLLEGUES]);
 
 // Liste des chercheurs existants.
 void ch_ids(size_t ids[N_POSTES]);

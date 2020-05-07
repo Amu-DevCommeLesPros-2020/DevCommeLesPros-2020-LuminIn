@@ -24,7 +24,7 @@ char const* const nom_table_employe = "employe";
 char const* const nom_table_entreprise = "entreprise";
 char const* const nom_table_poste = "poste";
 
-char chemin_bd_[PATH_MAX];
+char chemin_bd_[PATH_MAX - NAME_MAX];
 
 void bd_init(char const* const chemin_bd)
 {
@@ -65,15 +65,15 @@ void bd_lecture_entreprises(entreprises** ens)
 
         // Lecture des tuples.
         entreprise co;
-        while(fscanf(table_entreprise, "%zu,%" STRINGIZE(L_NOM) "[^,],%" STRINGIZE(L_CP) "c,%s", &co.id, co.nom, co.code_postal, co.mail) == 4)
+        while(fscanf(table_entreprise, "%zu,%" STRINGIZE(L_NOM) "[^,],%" STRINGIZE(SL_CP) "[^,],%s", &co.id, co.nom, co.code_postal, co.mail) == 4)
         {
             entreprise *data = malloc(sizeof(entreprise));
             *data = co;
             l_append(&((*ens)->tete), l_make_node(data));
         }
-    }
 
-    fclose(table_entreprise);
+        fclose(table_entreprise);
+    }
 }
 
 void bd_lecture_postes(postes** pos)
@@ -111,9 +111,9 @@ void bd_lecture_postes(postes** pos)
 
             l_append(&((*pos)->tete), l_make_node(data));
         }
-    }
 
-    fclose(table_poste);
+        fclose(table_poste);
+    }
 }
 
 void bd_lecture_employes(employes** ems)
@@ -140,7 +140,7 @@ void bd_lecture_employes(employes** ems)
         char competences[NL_COMPETENCES];
         char id_collegues[3 * N_COLLEGUES];
         // J'ai mis le champ id_collegues à la toute fin parce que lorsqu'il est vide, il ne peut être capturé par [^,] car ce champ de capture *doit* capturer au moins un caractère.
-        while(fscanf(table_employe, "%zu,%" STRINGIZE(L_NOM) "[^,],%" STRINGIZE(L_PRENOM) "[^,],%" STRINGIZE(L_MAIL) "[^,],%" STRINGIZE(L_CP) "c,%" STRINGIZE(NL_COMPETENCES) "[^,],%zu,%14[^\n]", &em.id, em.nom, em.prenom, em.mail, em.code_postal, competences, &em.id_entreprise, id_collegues) >= 7)
+        while(fscanf(table_employe, "%zu,%" STRINGIZE(L_NOM) "[^,],%" STRINGIZE(L_PRENOM) "[^,],%" STRINGIZE(L_MAIL) "[^,],%" STRINGIZE(SL_CP) "[^,],%" STRINGIZE(NL_COMPETENCES) "[^,],%zu,%14[^\n]", &em.id, em.nom, em.prenom, em.mail, em.code_postal, competences, &em.id_entreprise, id_collegues) >= 7)
         {
             employe *data = malloc(sizeof(employe));
             *data = em;
@@ -162,9 +162,9 @@ void bd_lecture_employes(employes** ems)
 
             l_append(&((*ems)->tete), l_make_node(data));
         }
-    }
 
-    fclose(table_employe);
+        fclose(table_employe);
+    }
 }
 
 void bd_lecture_chercheurs(chercheurs** chs)
@@ -191,7 +191,7 @@ void bd_lecture_chercheurs(chercheurs** chs)
         char competences[NL_COMPETENCES];
         char id_collegues[3 * N_COLLEGUES];
         // J'ai mis le champ id_collegues à la toute fin parce que lorsqu'il est vide, il ne peut être capturé par [^,] car ce champ de capture *doit* capturer au moins un caractère.
-        while(fscanf(table_chercheur, "%zu,%" STRINGIZE(L_NOM) "[^,],%" STRINGIZE(L_PRENOM) "[^,],%" STRINGIZE(L_MAIL) "[^,],%" STRINGIZE(L_CP) "c,%639[^,],%14[^\n]", &ch.id, ch.nom, ch.prenom, ch.mail, ch.code_postal, competences, id_collegues) >= 6)
+        while(fscanf(table_chercheur, "%zu,%" STRINGIZE(L_NOM) "[^,],%" STRINGIZE(L_PRENOM) "[^,],%" STRINGIZE(L_MAIL) "[^,],%" STRINGIZE(SL_CP) "[^,],%" STRINGIZE(NL_COMPETENCES) "[^,],%14[^\n]", &ch.id, ch.nom, ch.prenom, ch.mail, ch.code_postal, competences, id_collegues) >= 6)
         {
             chercheur *data = malloc(sizeof(chercheur));
             *data = ch;
@@ -213,9 +213,9 @@ void bd_lecture_chercheurs(chercheurs** chs)
 
             l_append(&((*chs)->tete), l_make_node(data));
         }
-    }
 
-    fclose(table_chercheur);
+        fclose(table_chercheur);
+    }
 }
 
 void bd_ecriture(chercheurs const* const chs, employes const* const ems, entreprises const* const ens, postes const* const pos)
@@ -242,7 +242,7 @@ void bd_ecriture_entreprises(entreprises const* const cos)
         for(node const* n = cos->tete; n; n = n->next)
         {
             entreprise *co = (entreprise*)(n->data);
-            fprintf(table_entreprise, "%zu,%s,%." STRINGIZE(L_CP) "s,%s\n", co->id, co->nom, co->code_postal, co->mail);
+            fprintf(table_entreprise, "%zu,%s,%s,%s\n", co->id, co->nom, co->code_postal, co->mail);
         }
     }
     
@@ -293,7 +293,7 @@ void bd_ecriture_employes(employes const* const ems)
         for(node const* n = ems->tete; n; n = n->next)
         {
             employe *em = (employe*)(n->data);
-            fprintf(table_employe, "%zu,%s,%s,%s,%." STRINGIZE(L_CP) "s,", em->id, em->nom, em->prenom, em->mail, em->code_postal);
+            fprintf(table_employe, "%zu,%s,%s,%s,%s,", em->id, em->nom, em->prenom, em->mail, em->code_postal);
             for(int i = 0; i != N_COMPETENCES && strlen(em->competences[i]) != 0; ++i)
             {
                 if(i != 0)
@@ -332,7 +332,7 @@ void bd_ecriture_chercheurs(chercheurs const* const chs)
         for(node const* n = chs->tete; n; n = n->next)
         {
             chercheur *ch = (chercheur*)(n->data);
-            fprintf(table_chercheur, "%zu,%s,%s,%s,%." STRINGIZE(L_CP) "s,", ch->id, ch->nom, ch->prenom, ch->mail, ch->code_postal);
+            fprintf(table_chercheur, "%zu,%s,%s,%s,%s,", ch->id, ch->nom, ch->prenom, ch->mail, ch->code_postal);
             for(int i = 0; i != N_COMPETENCES && strlen(ch->competences[i]) != 0; ++i)
             {
                 if(i != 0)
