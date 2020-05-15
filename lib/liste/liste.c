@@ -140,20 +140,20 @@ node* l_insert(node** p, node* body)
 
 node* l_remove(node** n)
 {
-    node *next = (*n) ? (*n)->next : NULL;
+    node *c = *n;
+    node *next = c ? c->next : NULL;
 
-    if(*n && (*n)->previous)
+    if(c && c->previous)
     {
-        (*n)->previous->next = (*n)->next;
+        c->previous->next = next;
     }
 
-    if((*n) && (*n)->next)
+    if(c && c->next)
     {
-        (*n)->next->previous = (*n)->previous;
+        c->next->previous = c->previous;
     }
 
-    l_free_node(*n);
-    (*n) = NULL;
+    l_free_node(c);
     
     return next;
 }

@@ -39,11 +39,22 @@ char const* lu_nom_chercheur(size_t const id);
 
 void lu_profil_chercheur(size_t id, char* const nom, char* const prenom, char* const mail, char* const code_postal, char competences[][L_COMPETENCE], size_t* const id_collegues);
 
+// Fonctions relatives aux employés.
+size_t lu_creer_profil_employe(char const nom[L_NOM], char const prenom[L_PRENOM], char const mail[L_MAIL], char const code_postal[L_CP], char competences[N_COMPETENCES][L_COMPETENCE], size_t const id_entreprise, size_t const id_collegues[N_COLLEGUES]);
+
+void lu_supprimer_profil_employe(size_t const id);
+
+void lu_modifier_profil_employe(size_t id, char const code_postal[L_CP], char competences[N_COMPETENCES][L_COMPETENCE], size_t const id_entreprise, size_t const id_collegues[N_COLLEGUES]);
+
+char const* lu_nom_employe(size_t const id);
+
+void lu_profil_employe(size_t id, char* const nom, char* const prenom, char* const mail, char* const code_postal, char competences[][L_COMPETENCE], size_t* const id_entreprise, size_t* const id_collegues);
+
 
 // Fonctions relatives aux recherches.
-void lu_recherche_poste_par_competences(size_t const id_chercheur, size_t ids_poste[N_POSTES]);
+void lu_recherche_poste_par_competences(char competences[N_COMPETENCES][L_COMPETENCE], size_t ids_poste[N_POSTES]);
 
-void lu_recherche_poste_par_competences_code_postal(size_t const id_chercheur, size_t ids_poste[N_POSTES]);
+void lu_recherche_poste_par_competences_code_postal(char competences[N_COMPETENCES][L_COMPETENCE], char const code_postal[L_CP], size_t ids_poste[N_POSTES]);
 
 void lu_recherche_chercheur_par_competences(size_t const id_poste, size_t ids_chercheur[N_CHERCHEURS]);
 

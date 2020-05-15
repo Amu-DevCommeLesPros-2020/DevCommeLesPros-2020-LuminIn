@@ -383,7 +383,7 @@ int main()
         TEST(ids[0] == I_POSTE + 1);
         TEST(ids[1] == I_POSTE + 2);
         TEST(ids[2] == I_POSTE + 3);
-        TEST(ids[3] == 0);
+        TEST(ids[3] == I_POSTE + 4);
         TEST(ids[4] == 0);
 
         po_destroy();
@@ -508,14 +508,11 @@ int main()
         size_t const id = em_creer_profil("Gladu", "Gaston", "gg@gaston.name", "00000", incompetences, 100, id_collegues);
 
         char competences[N_COMPETENCES][L_COMPETENCE] = {"charmant", "adroit", "gracieux", "amusant", "charmeur"};
-        em_modifier_profil(id, "Gogol", "Gaston", "gg@gogol.name", "11111", competences, 100, id_collegues);
+        em_modifier_profil(id, "11111", competences, 100, id_collegues);
 
         employe *em = em_recherche(id);
 
         TEST(em->id == id);
-        TEST(strcmp(em->nom, "Gogol") == 0);
-        TEST(strcmp(em->prenom, "Gaston") == 0);
-        TEST(strcmp(em->mail, "gg@gogol.name") == 0);
         TEST(strcmp(em->code_postal, "11111") == 0);
         TEST(strcmp(em->competences[0], "charmant") == 0);
         TEST(strcmp(em->competences[1], "adroit") == 0);
@@ -828,12 +825,17 @@ int main()
 
         size_t ids_poste[N_POSTES];
         
-        lu_recherche_poste_par_competences(I_CHERCHEUR + 1, ids_poste);
+        char competences[N_COMPETENCES][L_COMPETENCE];
+        lu_profil_chercheur(I_CHERCHEUR + 1, NULL, NULL, NULL, NULL, competences, NULL);
+
+        lu_recherche_poste_par_competences(competences, ids_poste);
         TEST(ids_poste[0] == I_POSTE + 1);
-        TEST(ids_poste[1] == 0);
+        TEST(ids_poste[1] == I_POSTE + 4);
         TEST(ids_poste[2] == 0);
 
-        lu_recherche_poste_par_competences(I_CHERCHEUR + 2, ids_poste);
+        lu_profil_chercheur(I_CHERCHEUR + 2, NULL, NULL, NULL, NULL, competences, NULL);
+
+        lu_recherche_poste_par_competences(competences, ids_poste);
         TEST(ids_poste[0] == I_POSTE + 2);
         TEST(ids_poste[1] == I_POSTE + 3);
         TEST(ids_poste[2] == 0);
@@ -845,12 +847,18 @@ int main()
 
         size_t ids_poste[N_POSTES];
         
-        lu_recherche_poste_par_competences_code_postal(I_CHERCHEUR + 1, ids_poste);
+        char code_postal[L_CP];
+        char competences[N_COMPETENCES][L_COMPETENCE];
+        lu_profil_chercheur(I_CHERCHEUR + 1, NULL, NULL, NULL, code_postal, competences, NULL);
+
+        lu_recherche_poste_par_competences_code_postal(competences, code_postal, ids_poste);
         TEST(ids_poste[0] == I_POSTE + 1);
         TEST(ids_poste[1] == 0);
         TEST(ids_poste[2] == 0);
 
-        lu_recherche_poste_par_competences_code_postal(I_CHERCHEUR + 2, ids_poste);
+        lu_profil_chercheur(I_CHERCHEUR + 2, NULL, NULL, NULL, code_postal, competences, NULL);
+
+        lu_recherche_poste_par_competences_code_postal(competences, code_postal, ids_poste);
         TEST(ids_poste[0] == 0);
         TEST(ids_poste[1] == 0);
     }

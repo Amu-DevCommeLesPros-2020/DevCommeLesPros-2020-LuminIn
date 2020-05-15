@@ -35,7 +35,7 @@ void em_destroy()
 
 size_t em_creer_profil(char const nom[L_NOM], char const prenom[L_PRENOM], char const mail[L_MAIL], char const code_postal[L_CP], char competences[N_COMPETENCES][L_COMPETENCE], size_t const id_entreprise, size_t const id_collegues[N_COLLEGUES])
 {
-    j_ecrire("Creation profil d'employe. [nom=%s,prenom=%s,mail=%s,code_postal=%" STRINGIZE(L_CP) "s,\
+    j_ecrire("Creation profil d'employe. [nom=%s,prenom=%s,mail=%s,code_postal=%s,\
               competence[0]=%s,competence[1]=%s,competence[2]=%s,competence[3]=%s,competence[4]=%s,\
               id_entreprise=%zu,collegues[0]=%zu,collegues[1]=%zu,collegues[2]=%zu,collegues[3]=%zu,collegues[4]=%zu", nom, prenom, mail, code_postal, competences[0], competences[1], competences[2], competences[3], competences[4], id_entreprise, id_collegues[0], id_collegues[1], id_collegues[2], id_collegues[3], id_collegues[4]);
 
@@ -64,18 +64,28 @@ size_t em_creer_profil(char const nom[L_NOM], char const prenom[L_PRENOM], char 
     return em->id;
 }
 
-void em_modifier_profil(size_t const id, char const nom[L_NOM], char const prenom[L_PRENOM], char const mail[L_MAIL], char const code_postal[L_CP], char competences[N_COMPETENCES][L_COMPETENCE], size_t const id_entreprise, size_t const id_collegues[N_COLLEGUES])
+void em_supprimer_profil(size_t const id)
 {
-    j_ecrire("Modification profil d'employe. [identifiant=%zu,nom=%s,prenom=%s,mail=%s,code_postal=%" STRINGIZE(L_CP) "s,\
+    j_ecrire("Suppression profil employe. [identifiant=%zu]", id);
+
+    // Si la tête est supprimée, la tête est décalée à la deuxième node.
+    node** n = recherche(id);
+    node* const tete = (n == &ems_->tete ? (*n)->next : ems_->tete);
+    l_remove(n);
+    ems_->tete = tete;
+
+    bd_ecriture_employes(ems_);
+}
+
+void em_modifier_profil(size_t const id, char const code_postal[L_CP], char competences[N_COMPETENCES][L_COMPETENCE], size_t const id_entreprise, size_t const id_collegues[N_COLLEGUES])
+{
+    j_ecrire("Modification profil d'employe. [identifiant=%zu,code_postal=%s,\
               competence[0]=%s,competence[1]=%s,competence[2]=%s,competence[3]=%s,competence[4]=%s,\
-              id_entreprise=%zu,collegues[0]=%zu,collegues[1]=%zu,collegues[2]=%zu,collegues[3]=%zu,collegues[4]=%zu", id, nom, prenom, mail, code_postal, competences[0], competences[1], competences[2], competences[3], competences[4], id_entreprise, id_collegues[0], id_collegues[1], id_collegues[2], id_collegues[3], id_collegues[4]);
+              id_entreprise=%zu,collegues[0]=%zu,collegues[1]=%zu,collegues[2]=%zu,collegues[3]=%zu,collegues[4]=%zu", id, code_postal, competences[0], competences[1], competences[2], competences[3], competences[4], id_entreprise, id_collegues[0], id_collegues[1], id_collegues[2], id_collegues[3], id_collegues[4]);
 
     employe *em = em_recherche(id);
     if(em)
     {
-        strcpy(em->nom, nom);
-        strcpy(em->prenom, prenom);
-        strcpy(em->mail, mail);
         strcpy(em->code_postal, code_postal);
         for(int i = 0; i != N_COMPETENCES; ++i)
         {
