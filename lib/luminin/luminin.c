@@ -17,7 +17,7 @@ void lu_init(char const* const chemin_bd)
 
     ch_init();
     em_init();
-    co_init();
+    en_init();
     po_init();
 }
 
@@ -25,13 +25,13 @@ void lu_destroy()
 {
     ch_destroy();
     em_destroy();
-    co_destroy();
+    en_destroy();
     po_destroy();
 }
 
 size_t lu_creer_profil_entreprise(char const nom[L_NOM], char const code_postal[L_CP], char const mail[L_MAIL])
 {
-    return co_creer_profil(nom, code_postal, mail);
+    return en_creer_profil(nom, code_postal, mail);
 }
 
 void lu_supprimer_profil_entreprise(size_t const id)
@@ -48,18 +48,18 @@ void lu_supprimer_profil_entreprise(size_t const id)
         }
     }
 
-    co_supprimer_profil(id);
+    en_supprimer_profil(id);
 }
 
 char const* lu_nom_entreprise(size_t const id)
 {
-    entreprise const* const e = co_recherche(id);
+    entreprise const* const e = en_recherche(id);
     return e ? e->nom : NULL;
 }
 
 void lu_profil_entreprise(size_t const id, char* const nom, char* const code_postal, char* const mail)
 {
-    entreprise const* const e = co_recherche(id);
+    entreprise const* const e = en_recherche(id);
     if(e)
     {
         if(nom) strcpy(nom, e->nom);
@@ -283,7 +283,7 @@ void lu_recherche_poste_par_competences_code_postal(char competences[N_COMPETENC
     memset(ids_poste, 0, N_POSTES * sizeof(size_t));
     for(size_t i = 0, j = 0; ids[i] != 0 && i != N_POSTES; ++i)
     {
-        if(strcmp(co_recherche(po_recherche(ids[i])->id_entreprise)->code_postal, code_postal) == 0)
+        if(strcmp(en_recherche(po_recherche(ids[i])->id_entreprise)->code_postal, code_postal) == 0)
         {
             ids_poste[j++] = ids[i];
         }
@@ -354,7 +354,7 @@ void lu_recherche_chercheur_par_competences_code_postal(size_t const id_poste, s
 
     // Code postal de l'entreprise.
     char code_postal[L_CP];
-    strcpy(code_postal, co_recherche(po_recherche(id_poste)->id_entreprise)->code_postal);
+    strcpy(code_postal, en_recherche(po_recherche(id_poste)->id_entreprise)->code_postal);
 
     // Filtration des résultats obtenus précédement par code postal.
     size_t ids[N_CHERCHEURS];

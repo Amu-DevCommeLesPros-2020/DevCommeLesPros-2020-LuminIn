@@ -104,24 +104,24 @@ int main()
         bd_init(chemin_test_bd);
 
         // Lecture d'une liste d'entreprises d'une BD dont les valeurs sont connues.
-        entreprises *cos;
-        bd_lecture_entreprises(&cos);
+        entreprises *ens;
+        bd_lecture_entreprises(&ens);
 
-        TEST(cos != NULL);
+        TEST(ens != NULL);
 
-        entreprise *disney = (entreprise*)(cos->tete->data);
+        entreprise *disney = (entreprise*)(ens->tete->data);
         TEST(disney->id == I_ENTREPRISE + 1);
         TEST(strcmp(disney->nom, "Disney") == 0);
         TEST(strcmp(disney->code_postal, "77700") == 0);
         TEST(strcmp(disney->mail, "walt@disney.com") == 0);
 
-        entreprise *google = (entreprise*)(l_skip(cos->tete, 1)->data);
+        entreprise *google = (entreprise*)(l_skip(ens->tete, 1)->data);
         TEST(google->id == I_ENTREPRISE + 2);
         TEST(strcmp(google->nom, "Google") == 0);
         TEST(strcmp(google->code_postal, "75009") == 0);
         TEST(strcmp(google->mail, "emplois@google.com") == 0);
 
-        free_entreprises(cos);
+        free_entreprises(ens);
 
         // Lecture d'une liste de postes d'une BD dont les valeurs sont connues.
         postes *pos;
@@ -237,28 +237,28 @@ int main()
         bd_init(chemin_test_ecriture_bd);
 
         // Creation d'une liste d'entreprises fictives (avec une seule entreprise).
-        entreprises *cos = calloc(1, sizeof(entreprises));
+        entreprises *ens = calloc(1, sizeof(entreprises));
 
         entreprise *co = calloc(1, sizeof(entreprise));
         co->id = 100;
         strcpy(co->nom, "Fictive");
         strcpy(co->code_postal, "99000");
         strcpy(co->mail, "nobody@bowhere.com");
-        l_append(&(cos->tete), l_make_node(co));
+        l_append(&(ens->tete), l_make_node(co));
 
         // Écriture de ces entreprises dans la BD.
-        bd_ecriture_entreprises(cos);
-        free_entreprises(cos);
+        bd_ecriture_entreprises(ens);
+        free_entreprises(ens);
 
         // Lecture des entreprises de cette BD et test que les valeurs sont les mêmes.
-        bd_lecture_entreprises(&cos);
-        co = (entreprise*)(cos->tete->data);
+        bd_lecture_entreprises(&ens);
+        co = (entreprise*)(ens->tete->data);
         TEST(co->id == 100);
         TEST(strcmp(co->nom, "Fictive") == 0);
         TEST(strcmp(co->code_postal, "99000") == 0);
         TEST(strcmp(co->mail, "nobody@bowhere.com") == 0);
 
-        free_entreprises(cos);
+        free_entreprises(ens);
     }
 
     //  3. Tests pour les interfaces [ch/co/em/po]_* de la bibliothèque libluminin.
@@ -267,9 +267,9 @@ int main()
     {
         system("rm -rf " chemin_test_ecriture_bd "/*");
         bd_init(chemin_test_ecriture_bd);
-        co_init();
+        en_init();
 
-        size_t const id = co_creer_profil("Fictive", "99000", "nobody@nowhere.com");
+        size_t const id = en_creer_profil("Fictive", "99000", "nobody@nowhere.com");
         TEST(id != 0);
     }
 
@@ -277,10 +277,10 @@ int main()
     {
         system("rm -rf " chemin_test_ecriture_bd "/*");
         bd_init(chemin_test_ecriture_bd);
-        co_init();
+        en_init();
 
-        size_t const id = co_creer_profil("Fictive", "99000", "nobody@nowhere.com");
-        entreprise *co = co_recherche(id);
+        size_t const id = en_creer_profil("Fictive", "99000", "nobody@nowhere.com");
+        entreprise *co = en_recherche(id);
 
         TEST(co != NULL);
         TEST(strcmp(co->nom, "Fictive") == 0);
@@ -292,21 +292,21 @@ int main()
     {
         system("rm -rf " chemin_test_ecriture_bd "/*");
         bd_init(chemin_test_ecriture_bd);
-        co_init();
+        en_init();
 
-        size_t const id = co_creer_profil("Fictive", "99000", "nobody@nowhere.com");
-        co_supprimer_profil(id);
+        size_t const id = en_creer_profil("Fictive", "99000", "nobody@nowhere.com");
+        en_supprimer_profil(id);
         
-        TEST(co_recherche(id) == NULL);
+        TEST(en_recherche(id) == NULL);
 
-        size_t const id_1 = co_creer_profil("Fictive", "99000", "fictive@nullepart.com");
-        size_t const id_2 = co_creer_profil("Irrelle", "99000", "irrelle@nullepart.com");
-        co_supprimer_profil(id_1);
-        TEST(co_recherche(id_1) == NULL);
-        TEST(co_recherche(id_2) != NULL);
+        size_t const id_1 = en_creer_profil("Fictive", "99000", "fictive@nullepart.com");
+        size_t const id_2 = en_creer_profil("Irrelle", "99000", "irrelle@nullepart.com");
+        en_supprimer_profil(id_1);
+        TEST(en_recherche(id_1) == NULL);
+        TEST(en_recherche(id_2) != NULL);
 
-        co_supprimer_profil(id_2);
-        TEST(co_recherche(id_2) == NULL);
+        en_supprimer_profil(id_2);
+        TEST(en_recherche(id_2) == NULL);
     }
 
     // Test pour écriture d'une structure postes dans la BD.

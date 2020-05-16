@@ -215,7 +215,7 @@ void bd_ecriture(chercheurs const* const chs, employes const* const ems, entrepr
     bd_ecriture_postes(pos);
 }
 
-void bd_ecriture_entreprises(entreprises const* const cos)
+void bd_ecriture_entreprises(entreprises const* const ens)
 {
     j_ecrire("Écriture de la table entreprise.");
 
@@ -224,9 +224,9 @@ void bd_ecriture_entreprises(entreprises const* const cos)
     FILE *table_entreprise = fopen(chemin_table, "w");
 
     fprintf(table_entreprise, "id,nom,code postal,mail\n");
-    if(cos)
+    if(ens)
     {
-        for(node const* n = cos->tete; n; n = n->next)
+        for(node const* n = ens->tete; n; n = n->next)
         {
             entreprise *co = (entreprise*)(n->data);
             fprintf(table_entreprise, "%zu,%s,%s,%s\n", co->id, co->nom, co->code_postal, co->mail);
@@ -344,13 +344,13 @@ void bd_ecriture_chercheurs(chercheurs const* const chs)
     fclose(table_chercheur);
 }
 
-void free_entreprises(entreprises* cos)
+void free_entreprises(entreprises* ens)
 {
-    if(cos)
+    if(ens)
     {
-        l_free_list(cos->tete);
+        l_free_list(ens->tete);
     }
-    free(cos);
+    free(ens);
 }
 
 void free_postes(postes* pos)

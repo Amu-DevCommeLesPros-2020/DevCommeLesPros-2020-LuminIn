@@ -24,7 +24,7 @@ void bd_lecture_chercheurs(chercheurs** chs);
 void bd_ecriture(chercheurs const* const chs, employes const* const ems, entreprises const* const ens, postes const* const pos);
 
 // Écrit la structure entreprises dans la BD.
-void bd_ecriture_entreprises(entreprises const* const cos);
+void bd_ecriture_entreprises(entreprises const* const ens);
 
 // Écrit la structure postes dans la BD.
 void bd_ecriture_postes(postes const* const pos);
@@ -36,7 +36,7 @@ void bd_ecriture_employes(employes const* const ems);
 void bd_ecriture_chercheurs(chercheurs const* const chs);
 
 // Libère la mémoire allouée pour entreprises.
-void free_entreprises(entreprises* cos);
+void free_entreprises(entreprises* ens);
 
 // Libère la mémoire allouée pour postes.
 void free_postes(postes* pos);

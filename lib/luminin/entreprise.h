@@ -18,16 +18,16 @@ typedef struct entreprises
 } entreprises;
 
 // Initialise la liste des compagnies.
-void co_init();
+void en_init();
 
 // Détruit la liste des compagnies.
-void co_destroy();
+void en_destroy();
 
 // Crée un nouveau profil de compagnie.
-size_t co_creer_profil(char const nom[L_NOM], char const code_postal[L_CP], char const mail[L_MAIL]);
+size_t en_creer_profil(char const nom[L_NOM], char const code_postal[L_CP], char const mail[L_MAIL]);
 
 // Supprimer un profil, donné un index.
-void co_supprimer_profil(size_t const id);
+void en_supprimer_profil(size_t const id);
 
 // Rechercher une compagnie par id.
-struct entreprise* co_recherche(size_t const id);
+struct entreprise* en_recherche(size_t const id);

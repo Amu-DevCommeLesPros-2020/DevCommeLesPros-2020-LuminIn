@@ -11,61 +11,61 @@
 #include <string.h>
 #include <stdlib.h>
 
-entreprises *cos_ = NULL;
+entreprises *ens_ = NULL;
 
 static node** recherche(size_t const id)
 {
     node** n;
-    for(n = &cos_->tete; (*n) && ((entreprise*)((*n)->data))->id != id; n = &((*n)->next));
+    for(n = &ens_->tete; (*n) && ((entreprise*)((*n)->data))->id != id; n = &((*n)->next));
     return n;
 }
 
-void co_init()
+void en_init()
 {
-    co_destroy();
+    en_destroy();
 
-    bd_lecture_entreprises(&cos_);
+    bd_lecture_entreprises(&ens_);
 }
 
-void co_destroy()
+void en_destroy()
 {
-    free_entreprises(cos_);
-    cos_ = NULL;
+    free_entreprises(ens_);
+    ens_ = NULL;
 }
 
-size_t co_creer_profil(char const nom[L_NOM], char const code_postal[L_CP], char const mail[L_MAIL])
+size_t en_creer_profil(char const nom[L_NOM], char const code_postal[L_CP], char const mail[L_MAIL])
 {
     j_ecrire("Creation profil compagnie. [nom=%s,code_postal=%s,mail=%s]", nom, code_postal, mail);
 
     entreprise *co = calloc(1, sizeof(entreprise));
-    co->id = cos_->tete ? ((entreprise*)(l_tail(cos_->tete)->data))->id + 1 : I_ENTREPRISE;
+    co->id = ens_->tete ? ((entreprise*)(l_tail(ens_->tete)->data))->id + 1 : I_ENTREPRISE;
     strcpy(co->nom, nom);
     strcpy(co->code_postal, code_postal);
     strcpy(co->mail, mail);
 
-    l_append(&(cos_->tete), l_make_node(co));
+    l_append(&(ens_->tete), l_make_node(co));
 
-    bd_ecriture_entreprises(cos_);
+    bd_ecriture_entreprises(ens_);
 
     j_ecrire("Compagnie créée. [identifiant=%zu]", co->id);
 
     return co->id;
 }
 
-void co_supprimer_profil(size_t const id)
+void en_supprimer_profil(size_t const id)
 {
     j_ecrire("Suppression profil compagnie. [identifiant=%zu]", id);
 
     // Si la tête est supprimée, la tête est décalée à la deuxième node.
     node** n = recherche(id);
-    node* const next = n == &cos_->tete ? (*n)->next : cos_->tete;
+    node* const next = n == &ens_->tete ? (*n)->next : ens_->tete;
     l_remove(n);
-    cos_->tete = next;
+    ens_->tete = next;
 
-    bd_ecriture_entreprises(cos_);
+    bd_ecriture_entreprises(ens_);
 }
 
-entreprise* co_recherche(size_t const id)
+entreprise* en_recherche(size_t const id)
 {
     j_ecrire("Recherche profil compagnie. [identifiant=%zu]", id);
 
