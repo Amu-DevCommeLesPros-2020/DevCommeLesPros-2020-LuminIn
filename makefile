@@ -20,7 +20,7 @@ build/libliste.a: lib/liste/liste.c lib/liste/liste.h | build
 	gcc $(CFLAGS) -c lib/liste/liste.c -o build/lib/liste.o
 	ar crs build/libliste.a build/lib/liste.o
 
-build/libluminin.a: lib/luminin/bd.c lib/luminin/bd.h lib/luminin/constantes.h lib/luminin/chercheur.c lib/luminin/chercheur.h lib/luminin/employe.c lib/luminin/employe.h lib/luminin/entreprise.c lib/luminin/entreprise.h lib/luminin/luminin.c lib/luminin/luminin.h lib/luminin/poste.c lib/luminin/poste.h lib/utilite/stringize.h | build
+build/libluminin.a: lib/luminin/bd.c lib/luminin/bd.h lib/luminin/constantes.h lib/luminin/chercheur.c lib/luminin/chercheur.h lib/luminin/employe.c lib/luminin/employe.h lib/luminin/entreprise.c lib/luminin/entreprise.h lib/luminin/luminin.c lib/luminin/luminin.h lib/luminin/poste.c lib/luminin/poste.h | build
 	mkdir -p build/lib
 	gcc $(CFLAGS) -I lib -c lib/luminin/bd.c -o build/lib/bd.o
 	gcc $(CFLAGS) -I lib -c lib/luminin/chercheur.c -o build/lib/chercheur.o

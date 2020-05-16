@@ -5,7 +5,6 @@
 
 #include "journal/journal.h"
 #include "liste/liste.h"
-#include "utilite/stringize.h"
 
 #include <stddef.h>
 #include <stdlib.h>

@@ -4,7 +4,6 @@
 
 #include "journal/journal.h"
 #include "liste/liste.h"
-#include "utilite/stringize.h"
 
 #include <stddef.h>
 #include <stdlib.h>
@@ -34,7 +33,7 @@ void ch_destroy()
 
 size_t ch_creer_profil(char const nom[L_NOM], char const prenom[L_PRENOM], char const mail[L_MAIL], char const code_postal[L_CP], char competences[N_COMPETENCES][L_COMPETENCE], size_t const id_collegues[N_COLLEGUES])
 {
-    j_ecrire("Création profil de chercheur. [nom=%s,prenom=%s,mail=%s,code_postal=%" STRINGIZE(L_CP) "s,\
+    j_ecrire("Création profil de chercheur. [nom=%s,prenom=%s,mail=%s,code_postal=%s,\
 competence[0]=%s,competence[1]=%s,competence[2]=%s,competence[3]=%s,competence[4]=%s,\
 collegues[0]=%zu,collegues[1]=%zu,collegues[2]=%zu,collegues[3]=%zu,collegues[4]=%zu", nom, prenom, mail, code_postal, competences[0], competences[1], competences[2], competences[3], competences[4], id_collegues[0], id_collegues[1], id_collegues[2], id_collegues[3], id_collegues[4]);
 
@@ -77,7 +76,7 @@ void ch_supprimer_profil(size_t const id)
 
 void ch_modifier_profil(size_t const id, char const code_postal[L_CP], char competences[N_COMPETENCES][L_COMPETENCE], size_t const id_collegues[N_COLLEGUES])
 {
-    j_ecrire("Modification profil de chercheur. [identifiant=%zu,code_postal=%" STRINGIZE(L_CP) "s,\
+    j_ecrire("Modification profil de chercheur. [identifiant=%zu,code_postal=%s,\
 competence[0]=%s,competence[1]=%s,competence[2]=%s,competence[3]=%s,competence[4]=%s,\
 collegues[0]=%zu,collegues[1]=%zu,collegues[2]=%zu,collegues[3]=%zu,collegues[4]=%zu", id, code_postal, competences[0], competences[1], competences[2], competences[3], competences[4], id_collegues[0], id_collegues[1], id_collegues[2], id_collegues[3], id_collegues[4]);
 

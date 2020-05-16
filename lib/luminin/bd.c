@@ -8,7 +8,6 @@
 
 #include "journal/journal.h"
 #include "liste/liste.h"
-#include "utilite/stringize.h"
 
 #include <sys/stat.h>
 
@@ -54,7 +53,7 @@ void bd_lecture_entreprises(entreprises** ens)
         // Lecture des tuples.
         entreprise co;
         memset(&co, 0, sizeof(co));
-        while(fscanf(table_entreprise, "%zu,%" STRINGIZE(L_NOM) "[^,],%" STRINGIZE(SL_CP) "[^,],%s", &co.id, co.nom, co.code_postal, co.mail) == 4)
+        while(fscanf(table_entreprise, "%zu,%[^,],%[^,],%s", &co.id, co.nom, co.code_postal, co.mail) == 4)
         {
             entreprise *data = calloc(1, sizeof(entreprise));
             *data = co;
@@ -86,7 +85,7 @@ void bd_lecture_postes(postes** pos)
         poste po;
         memset(&po, 0, sizeof(po));
         char competences[NL_COMPETENCES] = {'\0'};
-        while(fscanf(table_poste, "%zu,%" STRINGIZE(L_TITRE) "[^,],%" STRINGIZE(NL_COMPETENCES) "[^,],%zu", &po.id, po.titre, competences, &po.id_entreprise) == 4)
+        while(fscanf(table_poste, "%zu,%[^,],%[^,],%zu", &po.id, po.titre, competences, &po.id_entreprise) == 4)
         {
             poste *data = calloc(1, sizeof(poste));
             *data = po;
@@ -128,7 +127,7 @@ void bd_lecture_employes(employes** ems)
         char competences[NL_COMPETENCES] = {'\0'};
         char id_collegues[5 * N_COLLEGUES] = {'\0'};
         // J'ai mis le champ id_collegues à la toute fin parce que lorsqu'il est vide, il ne peut être capturé par [^,] car ce champ de capture *doit* capturer au moins un caractère.
-        while(fscanf(table_employe, "%zu,%" STRINGIZE(L_NOM) "[^,],%" STRINGIZE(L_PRENOM) "[^,],%" STRINGIZE(L_MAIL) "[^,],%" STRINGIZE(SL_CP) "[^,],%" STRINGIZE(NL_COMPETENCES) "[^,],%zu,%300[^\n]", &em.id, em.nom, em.prenom, em.mail, em.code_postal, competences, &em.id_entreprise, id_collegues) >= 7)
+        while(fscanf(table_employe, "%zu,%[^,],%[^,],%[^,],%[^,],%[^,],%zu,%250[^\n]", &em.id, em.nom, em.prenom, em.mail, em.code_postal, competences, &em.id_entreprise, id_collegues) >= 7)
         {
             employe *data = calloc(1, sizeof(employe));
             *data = em;
@@ -176,9 +175,9 @@ void bd_lecture_chercheurs(chercheurs** chs)
         chercheur ch;
         memset(&ch, 0, sizeof(chercheur));
         char competences[NL_COMPETENCES] = {'\0'};
-        char id_collegues[3 * N_COLLEGUES] = {0};
+        char id_collegues[5 * N_COLLEGUES] = {0};
         // J'ai mis le champ id_collegues à la toute fin parce que lorsqu'il est vide, il ne peut être capturé par [^,] car ce champ de capture *doit* capturer au moins un caractère.
-        while(fscanf(table_chercheur, "%zu,%" STRINGIZE(L_NOM) "[^,],%" STRINGIZE(L_PRENOM) "[^,],%" STRINGIZE(L_MAIL) "[^,],%" STRINGIZE(SL_CP) "[^,],%" STRINGIZE(NL_COMPETENCES) "[^,],%14[^\n]", &ch.id, ch.nom, ch.prenom, ch.mail, ch.code_postal, competences, id_collegues) >= 6)
+        while(fscanf(table_chercheur, "%zu,%[^,],%[^,],%[^,],%[^,],%[^,],%250[^\n]", &ch.id, ch.nom, ch.prenom, ch.mail, ch.code_postal, competences, id_collegues) >= 6)
         {
             chercheur *data = calloc(1, sizeof(chercheur));
             *data = ch;
