@@ -10,12 +10,14 @@
 #define STRINGIZE_(x) #x
 #define STRINGIZE(x) STRINGIZE_(x)
 
-char const* const chemin_journal = "./luminin.log";
-char const* const chemin_bd = "./bd";
+char const* const chemin_journal = "./luminin.log"; // Chemin où trouver le journal.
+char const* const chemin_bd = "./bd";   // Chemin où trouver la base de données.
 
+// Identifiant et nom de l'utilisateur.
 size_t id_utilisateur = 0;
 char nom_utilisateur[L_NOM];
 
+// Actions possibles.
 typedef enum action
 {
     INVALIDE,
