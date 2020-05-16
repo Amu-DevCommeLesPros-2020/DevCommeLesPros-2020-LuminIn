@@ -263,6 +263,8 @@ void recherche_chercheur()
     
     size_t id_poste;
     scanf(" %zu", &id_poste);
+    char competences[N_COMPETENCES][L_COMPETENCE];
+    lu_poste(id_poste, NULL, competences, NULL);
 
     printf("Recerche restreinte au code postal [o/n] : ");
     char cp;
@@ -272,11 +274,13 @@ void recherche_chercheur()
     size_t ids_chercheur[N_CHERCHEURS] = {0};
     if(cp != 'o')
     {
-        lu_recherche_chercheur_par_competences(id_poste, ids_chercheur);
+        lu_recherche_chercheur_par_competences(competences, ids_chercheur);
     }
     else
     {
-        lu_recherche_chercheur_par_competences_code_postal(id_poste, ids_chercheur);
+        char code_postal[L_CP];
+        lu_profil_entreprise(id_utilisateur, NULL, code_postal, NULL);
+        lu_recherche_chercheur_par_competences_code_postal(competences, code_postal, ids_chercheur);
     }
 
     if(ids_chercheur[0] == 0)

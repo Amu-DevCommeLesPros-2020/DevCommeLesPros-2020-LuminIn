@@ -871,12 +871,15 @@ int main()
         lu_init(chemin_test_bd);
 
         size_t ids_chercheur[N_CHERCHEURS];
-
-        lu_recherche_chercheur_par_competences(I_POSTE + 1, ids_chercheur);
+        char competences[N_COMPETENCES][L_COMPETENCE];
+        
+        lu_poste(I_POSTE + 1, NULL, competences, NULL);
+        lu_recherche_chercheur_par_competences(competences, ids_chercheur);
         TEST(ids_chercheur[0] == I_CHERCHEUR + 1);
         TEST(ids_chercheur[1] == 0);
 
-        lu_recherche_chercheur_par_competences(I_POSTE + 2, ids_chercheur);
+        lu_poste(I_POSTE + 2, NULL, competences, NULL);
+        lu_recherche_chercheur_par_competences(competences, ids_chercheur);
         TEST(ids_chercheur[0] == I_CHERCHEUR + 2);
         TEST(ids_chercheur[1] == 0);
     }
@@ -886,12 +889,19 @@ int main()
         lu_init(chemin_test_bd);
 
         size_t ids_chercheur[N_CHERCHEURS];
+        char competences[N_COMPETENCES][L_COMPETENCE];
+        size_t id_entreprise;
+        char code_postal[L_CP];
 
-        lu_recherche_chercheur_par_competences_code_postal(I_POSTE + 1, ids_chercheur);
+        lu_poste(I_POSTE + 1, NULL, competences, &id_entreprise);
+        lu_profil_entreprise(id_entreprise, NULL, code_postal, NULL);
+        lu_recherche_chercheur_par_competences_code_postal(competences, code_postal, ids_chercheur);
         TEST(ids_chercheur[0] == I_CHERCHEUR + 1);
         TEST(ids_chercheur[1] == 0);
 
-        lu_recherche_chercheur_par_competences_code_postal(I_POSTE + 2, ids_chercheur);
+        lu_poste(I_POSTE + 2, NULL, competences, &id_entreprise);
+        lu_profil_entreprise(id_entreprise, NULL, code_postal, NULL);
+        lu_recherche_chercheur_par_competences_code_postal(competences, code_postal, ids_chercheur);
         TEST(ids_chercheur[0] == 0);
         TEST(ids_chercheur[1] == 0);
     }

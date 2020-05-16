@@ -56,6 +56,6 @@ void lu_recherche_poste_par_competences(char competences[N_COMPETENCES][L_COMPET
 
 void lu_recherche_poste_par_competences_code_postal(char competences[N_COMPETENCES][L_COMPETENCE], char const code_postal[L_CP], size_t ids_poste[N_POSTES]);
 
-void lu_recherche_chercheur_par_competences(size_t const id_poste, size_t ids_chercheur[N_CHERCHEURS]);
+void lu_recherche_chercheur_par_competences(char competences[N_COMPETENCES][L_COMPETENCE], size_t ids_chercheur[N_CHERCHEURS]);
 
-void lu_recherche_chercheur_par_competences_code_postal(size_t const id_poste, size_t ids_chercheur[N_CHERCHEURS]);
+void lu_recherche_chercheur_par_competences_code_postal(char competences[N_COMPETENCES][L_COMPETENCE], char const code_postal[L_CP], size_t ids_chercheur[N_CHERCHEURS]);
