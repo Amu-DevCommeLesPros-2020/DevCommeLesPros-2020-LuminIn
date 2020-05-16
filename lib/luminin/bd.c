@@ -34,17 +34,6 @@ void bd_init(char const* const chemin_bd)
     mkdir(chemin_bd_, 0700);
 }
 
-void bd_lecture(chercheurs** chs, employes** ems, entreprises** ens, postes** pos)
-{
-    j_ecrire("Lecture de la BD.");
-
-    // Lecture des tables.
-    bd_lecture_chercheurs(chs);
-    bd_lecture_employes(ems);
-    bd_lecture_entreprises(ens);
-    bd_lecture_postes(pos);
-}
-
 void bd_lecture_entreprises(entreprises** ens)
 {
     j_ecrire("Lecture de la table entreprise.");

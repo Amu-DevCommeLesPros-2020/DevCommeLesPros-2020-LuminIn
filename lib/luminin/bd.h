@@ -8,9 +8,6 @@ typedef struct postes postes;
 // Donne le chemin de la BD.
 void bd_init(char const* const chemin_bd);
 
-// Lit la BD et rempli les structures données.
-void bd_lecture(chercheurs** chs, employes** ems, entreprises** ens, postes** pos);
-
 // Lit la table entreprise dans la structure donnée.
 void bd_lecture_entreprises(entreprises** ens);
 

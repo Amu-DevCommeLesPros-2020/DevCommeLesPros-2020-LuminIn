@@ -86,7 +86,10 @@ int main()
         employes *ems;
         entreprises *ens;
         postes *pos;
-        bd_lecture(&chs, &ems, &ens, &pos);
+        bd_lecture_chercheurs(&chs);
+        bd_lecture_employes(&ems);
+        bd_lecture_entreprises(&ens);
+        bd_lecture_postes(&pos);
 
         TEST(chs->tete == NULL);
         TEST(ems->tete == NULL);
