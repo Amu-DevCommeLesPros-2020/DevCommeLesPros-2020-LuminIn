@@ -60,11 +60,18 @@ char const* lu_nom_entreprise(size_t const id)
 void lu_profil_entreprise(size_t const id, char* const nom, char* const code_postal, char* const mail)
 {
     entreprise const* const e = en_recherche(id);
-    assert(e);
-
-    if(nom) strcpy(nom, e->nom);
-    if(code_postal) strcpy(code_postal, e->code_postal);
-    if(mail) strcpy(mail, e->mail);
+    if(e)
+    {
+        if(nom) strcpy(nom, e->nom);
+        if(code_postal) strcpy(code_postal, e->code_postal);
+        if(mail) strcpy(mail, e->mail);
+    }
+    else
+    {
+        if(nom) strcpy(nom, "");
+        if(code_postal) strcpy(code_postal, "");
+        if(mail) strcpy(mail, "");
+    }
 }
 
 size_t lu_creer_poste(char const titre[L_TITRE], char competences[N_COMPETENCES][L_COMPETENCE], size_t const id_compagnie)
@@ -96,11 +103,18 @@ void lu_postes_par_entreprise(size_t const id_compagnie, size_t ids_poste[N_POST
 void lu_poste(size_t const id_poste, char* const titre, char competences[][L_COMPETENCE], size_t* const id_compagnie)
 {
     poste const* const p = po_recherche(id_poste);
-    assert(p);
-
-    if(titre) strcpy(titre, p->titre);
-    if(competences) memcpy(competences, p->competences, NL_COMPETENCES);
-    if(id_compagnie) *id_compagnie = p->id_entreprise;
+    if(p)
+    {
+        if(titre) strcpy(titre, p->titre);
+        if(competences) memcpy(competences, p->competences, NL_COMPETENCES);
+        if(id_compagnie) *id_compagnie = p->id_entreprise;
+    }
+    else
+    {
+        if(titre) strcpy(titre, "");
+        if(competences) memcpy(competences, "", NL_COMPETENCES);
+        if(id_compagnie) *id_compagnie = 0;
+    }
 }
 
 size_t lu_creer_profil_chercheur(char const nom[L_NOM], char const prenom[L_PRENOM], char const mail[L_MAIL], char const code_postal[L_CP], char competences[N_COMPETENCES][L_COMPETENCE], size_t const id_collegues[N_COLLEGUES])
@@ -130,14 +144,24 @@ char const* lu_nom_chercheur(size_t const id)
 void lu_profil_chercheur(size_t id, char* const nom, char* const prenom, char* const mail, char* const code_postal, char competences[][L_COMPETENCE], size_t* const id_collegues)
 {
     chercheur const*  const c = ch_recherche(id);
-    assert(c);
-
-    if(nom) strcpy(nom, c->nom);
-    if(prenom) strcpy(prenom, c->prenom);
-    if(mail) strcpy(mail, c->mail);
-    if(code_postal) strcpy(code_postal, c->code_postal);
-    if(competences) memcpy(competences, c->competences, NL_COMPETENCES);
-    if(id_collegues) memcpy(id_collegues, c->id_collegues, N_COLLEGUES * sizeof(size_t));
+    if(c)
+    {
+        if(nom) strcpy(nom, c->nom);
+        if(prenom) strcpy(prenom, c->prenom);
+        if(mail) strcpy(mail, c->mail);
+        if(code_postal) strcpy(code_postal, c->code_postal);
+        if(competences) memcpy(competences, c->competences, NL_COMPETENCES);
+        if(id_collegues) memcpy(id_collegues, c->id_collegues, N_COLLEGUES * sizeof(size_t));
+    }
+    else
+    {
+        if(nom) strcpy(nom, "");
+        if(prenom) strcpy(prenom, "");
+        if(mail) strcpy(mail, "");
+        if(code_postal) strcpy(code_postal, "");
+        if(competences) memcpy(competences, "\0", NL_COMPETENCES);
+        if(id_collegues) memset(id_collegues, 0, N_COLLEGUES * sizeof(size_t));
+    }
 }
 
 size_t lu_creer_profil_employe(char const nom[L_NOM], char const prenom[L_PRENOM], char const mail[L_MAIL], char const code_postal[L_CP], char competences[N_COMPETENCES][L_COMPETENCE], size_t const id_entreprise, size_t const id_collegues[N_COLLEGUES])
@@ -167,15 +191,26 @@ char const* lu_nom_employe(size_t const id)
 void lu_profil_employe(size_t id, char* const nom, char* const prenom, char* const mail, char* const code_postal, char competences[][L_COMPETENCE], size_t* const id_entreprise, size_t* const id_collegues)
 {
     employe const* const e = em_recherche(id);
-    assert(e);
-
-    if(nom) strcpy(nom, e->nom);
-    if(prenom) strcpy(prenom, e->prenom);
-    if(mail) strcpy(mail, e->mail);
-    if(code_postal) strcpy(code_postal, e->code_postal);
-    if(competences) memcpy(competences, e->competences, NL_COMPETENCES);
-    if(id_entreprise) *id_entreprise = e->id_entreprise;
-    if(id_collegues) memcpy(id_collegues, e->id_collegues, N_COLLEGUES * sizeof(size_t));
+    if(e)
+    {
+        if(nom) strcpy(nom, e->nom);
+        if(prenom) strcpy(prenom, e->prenom);
+        if(mail) strcpy(mail, e->mail);
+        if(code_postal) strcpy(code_postal, e->code_postal);
+        if(competences) memcpy(competences, e->competences, NL_COMPETENCES);
+        if(id_entreprise) *id_entreprise = e->id_entreprise;
+        if(id_collegues) memcpy(id_collegues, e->id_collegues, N_COLLEGUES * sizeof(size_t));
+    }
+    else
+    {
+        if(nom) strcpy(nom, "");
+        if(prenom) strcpy(prenom, "");
+        if(mail) strcpy(mail, "");
+        if(code_postal) strcpy(code_postal, "");
+        if(competences) memcpy(competences, "\0", NL_COMPETENCES);
+        if(id_entreprise) *id_entreprise = 0;
+        if(id_collegues) memset(id_collegues, 0, N_COLLEGUES * sizeof(size_t));
+    }
 }
 
 void lu_recherche_poste_par_competences(char competences[N_COMPETENCES][L_COMPETENCE], size_t ids_poste[N_POSTES])
