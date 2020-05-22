@@ -42,3 +42,6 @@ build/test: build/libjournal.a build/libliste.a build/libluminin.a test/main.c |
 	gcc $(CFLAGS) test/main.c -o build/test -I lib -L build -l luminin -l liste -l journal
 
 all: build/luminin build/test
+
+check: build/test
+	cd build; ./test
