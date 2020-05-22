@@ -866,6 +866,47 @@ int main()
         TEST(ids_poste[1] == 0);
     }
 
+    // Test pour recherche de collegues par compétences.
+    {
+        lu_init(chemin_test_bd);
+
+        char competences_1[N_COMPETENCES][L_COMPETENCE] = {{"comedie"}, {"gag"}};
+        size_t ids_collegue_1[N_EMPLOYES] = {I_EMPLOYE + 1, I_EMPLOYE + 2, I_EMPLOYE + 3};
+        lu_recherche_collegue_par_competences(competences_1, ids_collegue_1);
+        TEST(ids_collegue_1[0] == I_EMPLOYE + 2);
+        TEST(ids_collegue_1[1] == I_EMPLOYE + 3);
+        TEST(ids_collegue_1[2] == 0);
+
+        char competences_2[N_COMPETENCES][L_COMPETENCE] = {{"C"}, {"SQL"}, {"Python"}, {"Java"}, {"Javascript"}};
+        size_t ids_collegue_2[N_EMPLOYES] = {I_EMPLOYE + 1, I_EMPLOYE + 2, I_EMPLOYE + 3};
+        lu_recherche_collegue_par_competences(competences_2, ids_collegue_2);
+        TEST(ids_collegue_2[0] == I_EMPLOYE + 1);
+        TEST(ids_collegue_2[1] == 0);
+        TEST(ids_collegue_2[2] == 0);
+    }
+
+    // Test pour recherche de collegues par entreprise.
+    {
+        lu_init(chemin_test_bd);
+        size_t ids_collegue_1[N_EMPLOYES] = {I_EMPLOYE + 1, I_EMPLOYE + 2, I_EMPLOYE + 3};
+        lu_recherche_collegue_par_entreprise(I_ENTREPRISE + 1, ids_collegue_1);
+        TEST(ids_collegue_1[0] == I_EMPLOYE + 2);
+        TEST(ids_collegue_1[1] == I_EMPLOYE + 3);
+        TEST(ids_collegue_1[2] == 0);
+
+        size_t ids_collegue_2[N_EMPLOYES] = {I_EMPLOYE + 1, I_EMPLOYE + 2, I_EMPLOYE + 3};
+        lu_recherche_collegue_par_entreprise(I_ENTREPRISE + 2, ids_collegue_2);
+        TEST(ids_collegue_2[0] == I_EMPLOYE + 1);
+        TEST(ids_collegue_2[1] == 0);
+        TEST(ids_collegue_2[2] == 0);
+
+        size_t ids_collegue_3[N_EMPLOYES] = {I_EMPLOYE + 1, I_EMPLOYE + 2, I_EMPLOYE + 3};
+        lu_recherche_collegue_par_entreprise(I_ENTREPRISE + 3, ids_collegue_3);
+        TEST(ids_collegue_3[0] == 0);
+        TEST(ids_collegue_3[1] == 0);
+        TEST(ids_collegue_3[2] == 0);
+    }
+
     // Test pour recherche de chercheur par poste.
     {
         lu_init(chemin_test_bd);

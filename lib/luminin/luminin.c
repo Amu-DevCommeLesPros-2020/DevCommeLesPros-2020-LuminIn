@@ -290,6 +290,57 @@ void lu_recherche_poste_par_competences_code_postal(char competences[N_COMPETENC
     }
 }
 
+void lu_recherche_collegue_par_entreprise(size_t const id_entreprise, size_t ids_collegue[N_COLLEGUES])
+{
+    // Filtration des identifiants de collègues par l'entreprise donnée.
+    size_t ids[N_COLLEGUES];
+    memcpy(ids, ids_collegue, N_COLLEGUES * sizeof(size_t));
+    memset(ids_collegue, 0, N_COLLEGUES * sizeof(size_t));
+    
+    // Pour chaque collègue...
+    for(size_t i = 0, j = 0; ids[i] != 0 && i != N_COLLEGUES; ++i)
+    {
+        size_t id_entreprise_collegue;
+        lu_profil_employe(ids[i], NULL, NULL, NULL, NULL, NULL, &id_entreprise_collegue, NULL);
+
+        // ...si il/elle travaille à l'entreprise donnée, on garde l'identifiant.
+        if(id_entreprise == id_entreprise_collegue)
+        {
+            ids_collegue[j++] = ids[i];
+        }
+    }
+}
+
+void lu_recherche_collegue_par_competences(char competences[N_COMPETENCES][L_COMPETENCE], size_t ids_collegue[N_COLLEGUES])
+{
+    size_t ids_poste[N_POSTES];
+    lu_recherche_poste_par_competences(competences, ids_poste);
+
+    // Filtration des résultats obtenus précédement en faisant l'intersection des collègues et des postes d'une même entreprise.
+    size_t ids[N_COLLEGUES];
+    memcpy(ids, ids_collegue, N_COLLEGUES * sizeof(size_t));
+    memset(ids_collegue, 0, N_COLLEGUES * sizeof(size_t));
+    // Pour chaque collègue...
+    for(size_t i = 0, j = 0; ids[i] != 0 && i != N_COLLEGUES; ++i)
+    {
+        size_t id_entreprise_collegue;
+        lu_profil_employe(ids[i], NULL, NULL, NULL, NULL, NULL, &id_entreprise_collegue, NULL);
+
+        // ...et pour chaque poste trouvé, on voit si l'entreprise de ce poste est la même que celle du collègue.
+        size_t id_entreprise_poste = -1;
+        for(size_t k = 0; ids_poste[k] != 0 && k != N_POSTES && id_entreprise_poste != id_entreprise_collegue; ++k)
+        {
+            lu_poste(ids_poste[k], NULL, NULL, &id_entreprise_poste);
+        }
+
+        // Si c'est la même, on garde l'identifiant de ce collègue.
+        if(id_entreprise_poste == id_entreprise_collegue)
+        {
+            ids_collegue[j++] = ids[i];
+        }
+    }
+}
+
 void lu_recherche_chercheur_par_competences(char competences[N_COMPETENCES][L_COMPETENCE], size_t ids_chercheur[N_CHERCHEURS])
 {
     // Liste des chercheurs qualifiés pour le poste et le nombre de compétences remplies.

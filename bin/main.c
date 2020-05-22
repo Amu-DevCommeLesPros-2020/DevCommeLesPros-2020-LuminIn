@@ -39,12 +39,14 @@ typedef enum action
     TRANSITION_EMPLOYE,
     SUPPRIMER_CHERCHEUR,
     CHERCHEUR_RECHERCHE_POSTE,
+    CHERCHEUR_RECHERCHE_COLLEGUE,
     IDENTIFICATION_EMPLOYE,
     CREER_EMPLOYE,
     MODIFIER_EMPLOYE,
     TRANSITION_CHERCHEUR,
     SUPPRIMER_EMPLOYE,
-    EMPLOYE_RECHERCHE_POSTE
+    EMPLOYE_RECHERCHE_POSTE,
+    EMPLOYE_RECHERCHE_COLLEGUE,
 } action;
 
 // actions doit être de taille n + 1 et actions[n] doit décrire l'action à appliquer pour 'r' (menu précédent).
@@ -545,6 +547,53 @@ void chercheur_recherche_poste()
     }
 }
 
+void chercheur_recherche_collegue()
+{
+    assert(id_utilisateur);
+    assert(strlen(nom_utilisateur));
+
+    printf("  * Menu chercheur [%s] *\n\n", nom_utilisateur);
+
+    char c = '\0';
+    for(int i = 0; i != 5 && !(c == 'e' || c == 'c'); ++i)
+    {
+        printf("Recherche pour une entreprise particuliere ou par vos competences? [e/c] :");
+        c = getchar();
+        if(c != '\n') getchar();
+    }
+
+    size_t ids_collegue[N_COLLEGUES] = {0};
+    lu_profil_chercheur(id_utilisateur, NULL, NULL, NULL, NULL, NULL, ids_collegue);
+    
+    if(c == 'e')
+    {
+        printf("Identifiant de l'entreprise : ");
+        size_t id_entreprise;
+        if(scanf(" %zu", &id_entreprise) == 1)
+        {
+            lu_recherche_collegue_par_entreprise(id_entreprise, ids_collegue);
+        }
+        getchar();
+    }
+    else if(c == 'c')
+    {
+        char competences[N_COMPETENCES][L_COMPETENCE];
+        lu_profil_chercheur(id_utilisateur, NULL, NULL, NULL, NULL, competences, NULL);
+        size_t ids_collegue[N_COLLEGUES] = {0};
+        lu_recherche_collegue_par_competences(competences, ids_collegue);
+    }
+
+    for(size_t i = 0; ids_collegue[i] != 0 && i != N_COLLEGUES; ++i)
+    {
+        char nom[L_NOM];
+        char prenom[L_PRENOM];
+        char mail[L_MAIL];
+        lu_profil_employe(ids_collegue[i], nom, prenom, mail, NULL, NULL, NULL, NULL);
+
+        printf("Nom : %s, Prenom : %s, Mail : %s\n", nom, prenom, mail);
+    }
+}
+
 action menu_chercheur()
 {
     assert(id_utilisateur);
@@ -555,9 +604,10 @@ action menu_chercheur()
 1. Modifier votre profil\n\
 2. Transitionner vers un profil d'employé\n\
 3. Supprimer votre profil\n\
-4. Faire une recherche parmi les postes offerts\n\n");
+4. Faire une recherche parmi les postes offerts\n\
+5. Faire une recherche parmi vos anciens collegues\n\n");
 
-    return choix(4, (action []){MODIFIER_CHERCHEUR, TRANSITION_EMPLOYE, SUPPRIMER_CHERCHEUR, CHERCHEUR_RECHERCHE_POSTE, NAVIGUER_MENU_PRINCIPAL});
+    return choix(5, (action []){MODIFIER_CHERCHEUR, TRANSITION_EMPLOYE, SUPPRIMER_CHERCHEUR, CHERCHEUR_RECHERCHE_POSTE, CHERCHEUR_RECHERCHE_COLLEGUE, NAVIGUER_MENU_PRINCIPAL});
 }
 
 action identification_employe()
@@ -819,6 +869,53 @@ void employe_recherche_poste()
     }
 }
 
+void employe_recherche_collegue()
+{
+    assert(id_utilisateur);
+    assert(strlen(nom_utilisateur));
+
+    printf("  * Menu employe [%s] *\n\n", nom_utilisateur);
+
+    char c = '\0';
+    for(int i = 0; i != 5 && !(c == 'e' || c == 'c'); ++i)
+    {
+        printf("Recherche pour une entreprise particuliere ou par vos competences? [e/c] :");
+        c = getchar();
+        if(c != '\n') getchar();
+    }
+
+    size_t ids_collegue[N_COLLEGUES] = {0};
+    lu_profil_employe(id_utilisateur, NULL, NULL, NULL, NULL, NULL, NULL, ids_collegue);
+    
+    if(c == 'e')
+    {
+        printf("Identifiant de l'entreprise : ");
+        size_t id_entreprise;
+        if(scanf(" %zu", &id_entreprise) == 1)
+        {
+            lu_recherche_collegue_par_entreprise(id_entreprise, ids_collegue);
+        }
+        getchar();
+    }
+    else if(c == 'c')
+    {
+        char competences[N_COMPETENCES][L_COMPETENCE];
+        lu_profil_employe(id_utilisateur, NULL, NULL, NULL, NULL, competences, NULL, NULL);
+        size_t ids_collegue[N_COLLEGUES] = {0};
+        lu_recherche_collegue_par_competences(competences, ids_collegue);
+    }
+
+    for(size_t i = 0; ids_collegue[i] != 0 && i != N_COLLEGUES; ++i)
+    {
+        char nom[L_NOM];
+        char prenom[L_PRENOM];
+        char mail[L_MAIL];
+        lu_profil_employe(ids_collegue[i], nom, prenom, mail, NULL, NULL, NULL, NULL);
+
+        printf("Nom : %s, Prenom : %s, Mail : %s\n", nom, prenom, mail);
+    }
+}
+
 action menu_employe()
 {
     assert(id_utilisateur);
@@ -829,9 +926,10 @@ action menu_employe()
 1. Modifier votre profil\n\
 2. Transitionner vers un profil de chercheur d'emploi\n\
 3. Supprimer votre profil\n\
-4. Faire une recherche parmi les postes offerts\n\n");
+4. Faire une recherche parmi les postes offerts\n\
+5. Faire une recherche parmi vos anciens collegues\n\n");
 
-    return choix(4, (action []){MODIFIER_EMPLOYE, TRANSITION_CHERCHEUR, SUPPRIMER_EMPLOYE, EMPLOYE_RECHERCHE_POSTE, NAVIGUER_MENU_PRINCIPAL});
+    return choix(5, (action []){MODIFIER_EMPLOYE, TRANSITION_CHERCHEUR, SUPPRIMER_EMPLOYE, EMPLOYE_RECHERCHE_POSTE, EMPLOYE_RECHERCHE_COLLEGUE, NAVIGUER_MENU_PRINCIPAL});
 }
 
 int main()
@@ -901,6 +999,10 @@ int main()
                 chercheur_recherche_poste();
                 a = NAVIGUER_MENU_CHERCHEUR;
                 break;
+            case CHERCHEUR_RECHERCHE_COLLEGUE:
+                chercheur_recherche_collegue();
+                a = NAVIGUER_MENU_CHERCHEUR;
+                break;
             case IDENTIFICATION_EMPLOYE:
                 a = identification_employe();
                 break;
@@ -925,6 +1027,10 @@ int main()
                 break;
             case EMPLOYE_RECHERCHE_POSTE:
                 employe_recherche_poste();
+                a = NAVIGUER_MENU_EMPLOYE;
+                break;
+            case EMPLOYE_RECHERCHE_COLLEGUE:
+                employe_recherche_collegue();
                 a = NAVIGUER_MENU_EMPLOYE;
                 break;
             case QUITTER:

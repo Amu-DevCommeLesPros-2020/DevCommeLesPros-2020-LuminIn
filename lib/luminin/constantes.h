@@ -9,12 +9,16 @@
 #define L_TITRE 128
 #define SL_CP 5
 
-// Nombre maximum devaleurs dans un champ.
-#define N_CHERCHEURS 999
+// Nombre maximum de valeurs dans un champ.
 #define N_COLLEGUES 50
 #define N_COMPETENCES 50
-#define N_POSTES 999
 #define NL_COMPETENCES 6400
+
+// Nombre maximum d'éléments dans une table.
+#define N_CHERCHEURS 999
+#define N_EMPLOYES 999
+#define N_ENTREPRISES 999
+#define N_POSTES 999
 
 // Nombre de départ pour les identifiants des entités.
 #define I_CHERCHEUR 1000
