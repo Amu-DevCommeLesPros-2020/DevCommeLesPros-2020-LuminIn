@@ -43,11 +43,11 @@ collegues[0]=%zu,collegues[1]=%zu,collegues[2]=%zu,collegues[3]=%zu,collegues[4]
     strcpy(ch->prenom, prenom);
     strcpy(ch->mail, mail);
     strcpy(ch->code_postal, code_postal);
-    for(int i = 0; competences[i] && i != N_COMPETENCES; ++i)
+    for(int i = 0; i != N_COMPETENCES && competences[i]; ++i)
     {
         strcpy(ch->competences[i], competences[i]);
     }
-    for(int i = 0; id_collegues[i] && i != N_COLLEGUES; ++i)
+    for(int i = 0; i != N_COLLEGUES && id_collegues[i]; ++i)
     {
         ch->id_collegues[i] = id_collegues[i];
     }

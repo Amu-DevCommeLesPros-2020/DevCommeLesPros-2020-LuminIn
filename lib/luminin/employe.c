@@ -44,12 +44,12 @@ size_t em_creer_profil(char const nom[L_NOM], char const prenom[L_PRENOM], char 
     strcpy(em->prenom, prenom);
     strcpy(em->mail, mail);
     strcpy(em->code_postal, code_postal);
-    for(int i = 0; competences[i] && i != N_COMPETENCES; ++i)
+    for(int i = 0; i != N_COMPETENCES && competences[i]; ++i)
     {
         strcpy(em->competences[i], competences[i]);
     }
     em->id_entreprise = id_entreprise;
-    for(int i = 0; id_collegues[i] && i != N_COLLEGUES; ++i)
+    for(int i = 0; i != N_COLLEGUES && id_collegues[i]; ++i)
     {
         em->id_collegues[i] = id_collegues[i];
     }

@@ -255,7 +255,7 @@ void recherche_chercheur()
     printf("Pour le poste [");
     size_t ids_poste[N_POSTES];
     lu_postes_par_entreprise(id_utilisateur, ids_poste);
-    for(size_t i = 0; ids_poste[i] != 0 && i != N_POSTES; ++i)
+    for(size_t i = 0; i != N_POSTES && ids_poste[i] != 0; ++i)
     {
         if(i != 0)
         {
@@ -294,7 +294,7 @@ void recherche_chercheur()
     else
     {
         printf("\nChercheurs qualifies par ordre de competences :\n");
-        for(size_t i = 0; ids_chercheur[i] != 0 && i != N_CHERCHEURS; ++i)
+        for(size_t i = 0; i != N_CHERCHEURS && ids_chercheur[i] != 0; ++i)
         {
             char nom[L_NOM];
             char prenom[L_PRENOM];
@@ -531,7 +531,7 @@ void chercheur_recherche_poste()
     else
     {
         printf("\nPoste(s) pour lesquels vous vous qualifiez par ordre de competences :\n");
-        for(size_t i = 0; ids_poste[i] != 0 && i != N_POSTES; ++i)
+        for(size_t i = 0; i != N_POSTES && ids_poste[i] != 0; ++i)
         {
             size_t id_utilisateur;
             char titre[L_TITRE];
@@ -583,7 +583,7 @@ void chercheur_recherche_collegue()
         lu_recherche_collegue_par_competences(competences, ids_collegue);
     }
 
-    for(size_t i = 0; ids_collegue[i] != 0 && i != N_COLLEGUES; ++i)
+    for(size_t i = 0; i != N_COLLEGUES && ids_collegue[i] != 0; ++i)
     {
         char nom[L_NOM];
         char prenom[L_PRENOM];
@@ -835,7 +835,7 @@ void employe_recherche_poste()
     size_t ids[N_POSTES];
     memcpy(ids, ids_poste, N_POSTES * sizeof(size_t));
     memset(ids_poste, 0, N_POSTES * sizeof(size_t));
-    for(size_t i = 0, j = 0; ids[i] != 0 && i != N_POSTES; ++i)
+    for(size_t i = 0, j = 0; i != N_POSTES && ids[i] != 0; ++i)
     {
         size_t poste_id_entreprise;
         lu_poste(ids[i], NULL, NULL, &poste_id_entreprise);
@@ -853,7 +853,7 @@ void employe_recherche_poste()
     else
     {
         printf("\nPoste(s) pour lesquels vous vous qualifiez par ordre de competences :\n");
-        for(size_t i = 0; ids_poste[i] != 0 && i != N_POSTES; ++i)
+        for(size_t i = 0; i != N_POSTES && ids_poste[i] != 0; ++i)
         {
             size_t id_entreprise;
             char titre[L_TITRE];
@@ -905,7 +905,7 @@ void employe_recherche_collegue()
         lu_recherche_collegue_par_competences(competences, ids_collegue);
     }
 
-    for(size_t i = 0; ids_collegue[i] != 0 && i != N_COLLEGUES; ++i)
+    for(size_t i = 0; i != N_COLLEGUES && ids_collegue[i] != 0; ++i)
     {
         char nom[L_NOM];
         char prenom[L_PRENOM];

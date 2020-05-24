@@ -38,7 +38,7 @@ size_t po_creer_poste(char const titre[L_TITRE], char competences[N_COMPETENCES]
     poste *po = calloc(1, sizeof(poste));
     po->id = pos_->tete ? ((poste*)(l_tail(pos_->tete)->data))->id + 1 : I_POSTE;
     strcpy(po->titre, titre);
-    for(int i = 0; competences[i] && i != N_COMPETENCES; ++i)
+    for(int i = 0; i != N_COMPETENCES && competences[i]; ++i)
     {
         strcpy(po->competences[i], competences[i]);
     }

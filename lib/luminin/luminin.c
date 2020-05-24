@@ -233,10 +233,10 @@ void lu_recherche_poste_par_competences(char competences[N_COMPETENCES][L_COMPET
         bool qualifie = false;
 
         // Pour chaque compétence du chercheur...
-        for(size_t cci = 0; strlen(competences[cci]) && cci != N_COMPETENCES; ++cci)
+        for(size_t cci = 0; cci != N_COMPETENCES && strlen(competences[cci]); ++cci)
         {
             // Pour chaque compétence requise du poste...
-            for(size_t pci = 0; strlen(p->competences[pci]) && pci != N_COMPETENCES; ++pci)
+            for(size_t pci = 0; pci != N_COMPETENCES && strlen(p->competences[pci]); ++pci)
             {
                 // Si c'est la même...
                 if(strcmp(competences[cci], p->competences[pci]) == 0)
@@ -281,7 +281,7 @@ void lu_recherche_poste_par_competences_code_postal(char competences[N_COMPETENC
     size_t ids[N_POSTES];
     memcpy(ids, ids_poste, N_POSTES * sizeof(size_t));
     memset(ids_poste, 0, N_POSTES * sizeof(size_t));
-    for(size_t i = 0, j = 0; ids[i] != 0 && i != N_POSTES; ++i)
+    for(size_t i = 0, j = 0; i != N_POSTES && ids[i] != 0; ++i)
     {
         if(strcmp(en_recherche(po_recherche(ids[i])->id_entreprise)->code_postal, code_postal) == 0)
         {
@@ -298,7 +298,7 @@ void lu_recherche_collegue_par_entreprise(size_t const id_entreprise, size_t ids
     memset(ids_collegue, 0, N_COLLEGUES * sizeof(size_t));
     
     // Pour chaque collègue...
-    for(size_t i = 0, j = 0; ids[i] != 0 && i != N_COLLEGUES; ++i)
+    for(size_t i = 0, j = 0; i != N_COLLEGUES && ids[i] != 0; ++i)
     {
         size_t id_entreprise_collegue;
         lu_profil_employe(ids[i], NULL, NULL, NULL, NULL, NULL, &id_entreprise_collegue, NULL);
@@ -321,14 +321,14 @@ void lu_recherche_collegue_par_competences(char competences[N_COMPETENCES][L_COM
     memcpy(ids, ids_collegue, N_COLLEGUES * sizeof(size_t));
     memset(ids_collegue, 0, N_COLLEGUES * sizeof(size_t));
     // Pour chaque collègue...
-    for(size_t i = 0, j = 0; ids[i] != 0 && i != N_COLLEGUES; ++i)
+    for(size_t i = 0, j = 0; i != N_COLLEGUES && ids[i] != 0; ++i)
     {
         size_t id_entreprise_collegue;
         lu_profil_employe(ids[i], NULL, NULL, NULL, NULL, NULL, &id_entreprise_collegue, NULL);
 
         // ...et pour chaque poste trouvé, on voit si l'entreprise de ce poste est la même que celle du collègue.
         size_t id_entreprise_poste = -1;
-        for(size_t k = 0; ids_poste[k] != 0 && k != N_POSTES && id_entreprise_poste != id_entreprise_collegue; ++k)
+        for(size_t k = 0; k != N_POSTES && ids_poste[k] != 0 && id_entreprise_poste != id_entreprise_collegue; ++k)
         {
             lu_poste(ids_poste[k], NULL, NULL, &id_entreprise_poste);
         }
@@ -357,10 +357,10 @@ void lu_recherche_chercheur_par_competences(char competences[N_COMPETENCES][L_CO
         bool qualifie = false;
 
         // Pour chaque compétence du chercheur...
-        for(size_t cci = 0; strlen(c->competences[cci]) && cci != N_COMPETENCES; ++cci)
+        for(size_t cci = 0; cci != N_COMPETENCES && strlen(c->competences[cci]); ++cci)
         {
             // Pour chaque compétence requise du poste...
-            for(size_t pci = 0; strlen(competences[pci]) && pci != N_COMPETENCES; ++pci)
+            for(size_t pci = 0; pci != N_COMPETENCES && strlen(competences[pci]); ++pci)
             {
                 // Si c'est la même...
                 if(strcmp(c->competences[cci], competences[pci]) == 0)
@@ -405,7 +405,7 @@ void lu_recherche_chercheur_par_competences_code_postal(char competences[N_COMPE
     size_t ids[N_CHERCHEURS];
     memcpy(ids, ids_chercheur, N_CHERCHEURS * sizeof(size_t));
     memset(ids_chercheur, 0, N_CHERCHEURS * sizeof(size_t));
-    for(size_t i = 0, j = 0; ids[i] != 0 && i != N_CHERCHEURS; ++i)
+    for(size_t i = 0, j = 0; i != N_CHERCHEURS && ids[i] != 0; ++i)
     {
         if(strcmp(ch_recherche(ids[i])->code_postal, code_postal) == 0)
         {
