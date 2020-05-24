@@ -36,7 +36,7 @@ size_t po_creer_poste(char const titre[L_TITRE], char competences[N_COMPETENCES]
     j_ecrire("Creation poste. [titre=%s,competence[0]=%s,competence[1]=%s,competence[2]=%s,competence[3]=%s,competence[4]=%s,id_entreprise=%zu]", titre, competences[0], competences[1], competences[2], competences[3], competences[4], id_compagnie);
 
     poste *po = calloc(1, sizeof(poste));
-    po->id = pos_->tete ? ((poste*)(l_tail(pos_->tete)->data))->id + 1 : I_POSTE;
+    po->id = pos_->tete ? ((poste*)(l_tail(pos_->tete)->data))->id + 1 : I_POSTE + 1;
     strcpy(po->titre, titre);
     for(int i = 0; i != N_COMPETENCES && competences[i]; ++i)
     {

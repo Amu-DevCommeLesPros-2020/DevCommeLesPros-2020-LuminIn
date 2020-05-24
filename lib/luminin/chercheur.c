@@ -38,7 +38,7 @@ competence[0]=%s,competence[1]=%s,competence[2]=%s,competence[3]=%s,competence[4
 collegues[0]=%zu,collegues[1]=%zu,collegues[2]=%zu,collegues[3]=%zu,collegues[4]=%zu", nom, prenom, mail, code_postal, competences[0], competences[1], competences[2], competences[3], competences[4], id_collegues[0], id_collegues[1], id_collegues[2], id_collegues[3], id_collegues[4]);
 
     chercheur *ch = calloc(1, sizeof(chercheur));
-    ch->id = chs_->tete ? ((chercheur*)(l_tail(chs_->tete)->data))->id + 1 : I_CHERCHEUR;
+    ch->id = chs_->tete ? ((chercheur*)(l_tail(chs_->tete)->data))->id + 1 : I_CHERCHEUR + 1;
     strcpy(ch->nom, nom);
     strcpy(ch->prenom, prenom);
     strcpy(ch->mail, mail);

@@ -812,12 +812,12 @@ int main()
         char mail[L_MAIL];
         char competences[N_COMPETENCES][L_COMPETENCE];
         size_t id_collegues[N_COLLEGUES];
-        lu_profil_chercheur(I_CHERCHEUR, nom, prenom, mail, code_postal, competences, id_collegues);
+        lu_profil_chercheur(I_CHERCHEUR + 1, nom, prenom, mail, code_postal, competences, id_collegues);
 
         strcpy(code_postal, "22222");
         strcpy(competences[4], "ponctualite");
-        lu_modifier_profil_chercheur(I_CHERCHEUR, code_postal, competences, id_collegues);
-        lu_profil_chercheur(I_CHERCHEUR, nom, prenom, mail, code_postal, competences, id_collegues);
+        lu_modifier_profil_chercheur(I_CHERCHEUR + 1, code_postal, competences, id_collegues);
+        lu_profil_chercheur(I_CHERCHEUR + 1, nom, prenom, mail, code_postal, competences, id_collegues);
         TEST(strcmp(code_postal, "22222") == 0);
         TEST(strcmp(competences[4], "ponctualite") == 0);
     }

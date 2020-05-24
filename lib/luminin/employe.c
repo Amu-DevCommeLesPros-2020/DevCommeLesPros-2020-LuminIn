@@ -39,7 +39,7 @@ size_t em_creer_profil(char const nom[L_NOM], char const prenom[L_PRENOM], char 
               id_entreprise=%zu,collegues[0]=%zu,collegues[1]=%zu,collegues[2]=%zu,collegues[3]=%zu,collegues[4]=%zu", nom, prenom, mail, code_postal, competences[0], competences[1], competences[2], competences[3], competences[4], id_entreprise, id_collegues[0], id_collegues[1], id_collegues[2], id_collegues[3], id_collegues[4]);
 
     employe *em = calloc(1, sizeof(employe));
-    em->id = ems_->tete ? ((employe*)(l_tail(ems_->tete)->data))->id + 1 : I_EMPLOYE;
+    em->id = ems_->tete ? ((employe*)(l_tail(ems_->tete)->data))->id + 1 : I_EMPLOYE + 1;
     strcpy(em->nom, nom);
     strcpy(em->prenom, prenom);
     strcpy(em->mail, mail);
