@@ -100,6 +100,16 @@ void em_modifier_profil(size_t const id, char const code_postal[L_CP], char comp
     }
 }
 
+void em_ids(size_t ids[N_EMPLOYES])
+{
+    memset(ids, 0, N_EMPLOYES * sizeof(size_t));
+    int i = 0;
+    for(node const* n = ems_->tete; n; n = n->next)
+    {
+        ids[i++] = ((employe*)(n->data))->id;
+    }
+}
+
 employe* em_recherche(size_t const id)
 {
     j_ecrire("Recherche profil employe. [identifiant=%zu]", id);

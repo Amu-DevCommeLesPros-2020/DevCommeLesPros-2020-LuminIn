@@ -947,6 +947,99 @@ int main()
         TEST(ids_chercheur[1] == 0);
     }
 
+    // Test pour création de profil d'employé.
+    {
+        lu_init(chemin_test_ecriture_bd);
+
+        char competences[N_COMPETENCES][L_COMPETENCE] = {"rythme", "force", "souplesse", "", ""};
+        size_t const id = lu_creer_profil_chercheur("Danseur", "Denis", "denis.danseur@scene.com", "13004", competences, (const size_t []){0});
+        TEST(id != 0);
+        TEST(strcmp(lu_nom_chercheur(id), "Danseur") == 0);
+    }
+
+    // Test pour suppression de profil d'employé.
+    {
+        lu_init(chemin_test_ecriture_bd);
+
+        char competences_1[N_COMPETENCES][L_COMPETENCE] = {"gag", "comédie", "insouciance", "", ""};
+        size_t ids_collegue_1[N_COLLEGUES] = {I_EMPLOYE + 2, I_EMPLOYE + 3, 0};
+        size_t const id_1 = lu_creer_profil_employe("Howard", "Moe", "moe@hollywood.ca.us", "90232", competences_1, I_ENTREPRISE + 1, ids_collegue_1);
+
+        char competences_2[N_COMPETENCES][L_COMPETENCE] = {"gag", "comédie", "insolence", "", ""};
+        size_t ids_collegue_2[N_COLLEGUES] = {I_EMPLOYE + 1, I_EMPLOYE + 3, 0};
+        size_t const id_2 = lu_creer_profil_employe("Fine", "Larry", "larry@hollywood.ca.us", "90232", competences_2, I_ENTREPRISE + 1, ids_collegue_2);
+
+        char competences_3[N_COMPETENCES][L_COMPETENCE] = {"gag", "comédie", "incompétence", "", ""};
+        size_t ids_collegue_3[N_COLLEGUES] = {I_EMPLOYE + 1, I_EMPLOYE + 2, 0};
+        size_t const id_3 = lu_creer_profil_employe("Howard", "Curly", "curly@hollywood.ca.us", "90232", competences_3, I_ENTREPRISE + 1, ids_collegue_3);
+
+        lu_supprimer_profil_employe(id_1);
+        TEST(lu_nom_employe(id_1) == NULL);
+
+        size_t ids_collegue[N_COLLEGUES];
+        lu_profil_employe(id_2, NULL, NULL, NULL, NULL, NULL, NULL, ids_collegue);
+        TEST(ids_collegue[0] == id_3);
+        lu_profil_employe(id_3, NULL, NULL, NULL, NULL, NULL, NULL, ids_collegue);
+        TEST(ids_collegue[0] == id_2);
+
+        lu_supprimer_profil_employe(id_2);
+        lu_profil_employe(id_3, NULL, NULL, NULL, NULL, NULL, NULL, ids_collegue);
+        TEST(ids_collegue[0] == 0);
+    }
+
+    // Test pour profil d'employé.
+    {
+        lu_init(chemin_test_bd);
+
+        char nom[L_NOM];
+        char prenom[L_PRENOM];
+        char code_postal[L_CP];
+        char mail[L_MAIL];
+        char competences[N_COMPETENCES][L_COMPETENCE];
+        size_t id_entreprise;
+        size_t id_collegues[N_COLLEGUES];
+
+        lu_profil_employe(I_EMPLOYE + 1, nom, prenom, mail, code_postal, competences, &id_entreprise, id_collegues);
+        TEST(strcmp(nom, "Untel") == 0);
+        TEST(strcmp(prenom, "Michel") == 0);
+        TEST(strcmp(mail, "m_untel@google.com") == 0);
+        TEST(strcmp(code_postal, "13010") == 0);
+        TEST(strcmp(competences[0], "C++") == 0);
+        TEST(strcmp(competences[1], "Python") == 0);
+        TEST(strcmp(competences[2], "") == 0);
+        TEST(id_entreprise == I_ENTREPRISE + 2);
+        TEST(id_collegues[0] == 0);
+
+        lu_profil_employe(I_EMPLOYE + 4, nom, prenom, mail, code_postal, competences, &id_entreprise, id_collegues);
+        TEST(strcmp(nom, "") == 0);
+        TEST(strcmp(prenom, "") == 0);
+        TEST(strcmp(mail, "") == 0);
+        TEST(strcmp(code_postal, "") == 0);
+        TEST(strcmp(competences[0], "") == 0);
+        TEST(id_entreprise == 0);
+        TEST(id_collegues[0] == 0);
+    }
+
+    // Test pour modification de profil d'employé.
+    {
+        lu_init(chemin_test_ecriture_bd);
+
+        char code_postal[L_CP];
+        char competences[N_COMPETENCES][L_COMPETENCE];
+        size_t id_entreprise;
+        size_t ids_collegue[N_COLLEGUES];
+        lu_profil_employe(I_EMPLOYE + 3, NULL, NULL, NULL, code_postal, competences, &id_entreprise, ids_collegue);
+
+        strcpy(code_postal, "90038");
+        strcpy(competences[3], "indolence");
+        id_entreprise = I_ENTREPRISE + 3;
+        lu_modifier_profil_employe(I_EMPLOYE + 3, code_postal, competences, id_entreprise, ids_collegue);
+        lu_profil_employe(I_EMPLOYE + 3, NULL, NULL, NULL, code_postal, competences, &id_entreprise, ids_collegue);
+        TEST(strcmp(code_postal, "90038") == 0);
+        TEST(strcmp(competences[3], "indolence") == 0);
+        TEST(id_entreprise == I_ENTREPRISE + 3);
+    }
+
     printf("%d/%d\n", tests_reussis, tests_executes);
 
     return tests_executes - tests_reussis;

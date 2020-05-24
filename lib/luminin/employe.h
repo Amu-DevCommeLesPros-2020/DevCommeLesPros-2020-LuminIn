@@ -36,5 +36,8 @@ void em_supprimer_profil(size_t const id);
 // Modifier un profil, donné un index.
 void em_modifier_profil(size_t const id, char const code_postal[L_CP], char competences[N_COMPETENCES][L_COMPETENCE], size_t const id_entreprise, size_t const id_collegues[N_COLLEGUES]);
 
+// Liste des employés existants.
+void em_ids(size_t ids[N_POSTES]);
+
 // Rechercher un employé par id.
 struct employe* em_recherche(size_t const id);

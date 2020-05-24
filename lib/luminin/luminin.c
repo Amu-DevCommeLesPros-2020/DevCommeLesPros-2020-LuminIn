@@ -171,6 +171,64 @@ size_t lu_creer_profil_employe(char const nom[L_NOM], char const prenom[L_PRENOM
 
 void lu_supprimer_profil_employe(size_t const id)
 {
+    // Supprime cet identifiant s'il se trouve parmi les anciens collègues de travail de chercheurs d'emploi.
+    size_t ids_chercheur[N_CHERCHEURS];
+    ch_ids(ids_chercheur);
+    for(size_t i = 0; i != N_CHERCHEURS && ids_chercheur[i] != 0; ++i)
+    {
+        chercheur *ch = ch_recherche(ids_chercheur[i]);
+        size_t ids_collegue[N_COLLEGUES];
+        memcpy(ids_collegue, ch->id_collegues, N_COLLEGUES * sizeof(size_t));
+
+        size_t j;
+        for(j = 0; j != N_COLLEGUES && ids_collegue[j] != id && ids_collegue[j] != 0; ++j)
+        {}
+        if(ids_collegue[j] == id)
+        {
+            for(; j != N_COLLEGUES - 1; ++j)
+            {
+                ids_collegue[j] = ids_collegue[j + 1];
+            }
+            ids_collegue[N_COLLEGUES - 1] = 0;
+
+            char code_postal[L_CP];
+            strcpy(code_postal, ch->code_postal);
+            char competences[N_COMPETENCES][L_COMPETENCE];
+            memcpy(competences, ch->competences, NL_COMPETENCES);
+
+            ch_modifier_profil(ch->id, code_postal, competences, ids_collegue);
+        }
+    }
+
+    // Supprime cet identifiant s'il se trouve parmi les anciens collègues de travail d'employés.
+    size_t ids_employe[N_EMPLOYES];
+    em_ids(ids_employe);
+    for(size_t i = 0; i != N_EMPLOYES && ids_employe[i] != 0; ++i)
+    {
+        employe *em = em_recherche(ids_employe[i]);
+        size_t ids_collegue[N_COLLEGUES];
+        memcpy(ids_collegue, em->id_collegues, N_COLLEGUES * sizeof(size_t));
+
+        size_t j;
+        for(j = 0; j != N_COLLEGUES && ids_collegue[j] != id && ids_collegue[j] != 0; ++j)
+        {}
+        if(ids_collegue[j] == id)
+        {
+            for(; j != N_COLLEGUES - 1; ++j)
+            {
+                ids_collegue[j] = ids_collegue[j + 1];
+            }
+            ids_collegue[N_COLLEGUES - 1] = 0;
+
+            char code_postal[L_CP];
+            strcpy(code_postal, em->code_postal);
+            char competences[N_COMPETENCES][L_COMPETENCE];
+            memcpy(competences, em->competences, NL_COMPETENCES);
+
+            em_modifier_profil(em->id, code_postal, competences, em->id_entreprise, ids_collegue);
+        }
+    }
+
     em_supprimer_profil(id);
 }
 
