@@ -95,6 +95,11 @@ int main()
         TEST(ems->tete == NULL);
         TEST(ens->tete == NULL);
         TEST(pos->tete == NULL);
+
+        free_chercheurs(chs);
+        free_employes(ems);
+        free_entreprises(ens);
+        free_postes(pos);
     }
 
     // Tests pour la lecture d'une BD existante.
@@ -148,6 +153,8 @@ int main()
         TEST(strcmp(developpeur->competences[4], "") == 0);
         TEST(developpeur->id_entreprise == I_ENTREPRISE + 2);
 
+        free_postes(pos);
+
         // Lecture d'une liste d'employés d'une BD dont les valeurs sont connues.
         employes *ems;
         bd_lecture_employes(&ems);
@@ -189,6 +196,8 @@ int main()
         TEST(em->id_collegues[3] == 0);
         TEST(em->id_collegues[4] == 0);
 
+        free_employes(ems);
+
         // Lecture d'une liste de chercheurs d'une BD dont les valeurs sont connues.
         chercheurs *chs;
         bd_lecture_chercheurs(&chs);
@@ -227,6 +236,8 @@ int main()
         TEST(ch->id_collegues[2] == 0);
         TEST(ch->id_collegues[3] == 0);
         TEST(ch->id_collegues[4] == 0);
+
+        free_chercheurs(chs);
     }
 
     // Test pour écriture d'une structure entreprises dans la BD.
@@ -665,6 +676,8 @@ int main()
         TEST(strcmp(lu_nom_entreprise(I_ENTREPRISE + 2), "Google") == 0);
         TEST(strcmp(lu_nom_entreprise(I_ENTREPRISE + 3), "Polytech") == 0);
         TEST(lu_nom_entreprise(4) == NULL);
+
+        lu_destroy();
     }
 
     // Tests pour créer une entreprise.
@@ -674,6 +687,8 @@ int main()
         size_t const id = lu_creer_profil_entreprise("Fictive", "99000", "rh@fictive.com");
         TEST(id != 0);
         TEST(strcmp(lu_nom_entreprise(id), "Fictive") == 0);
+
+        lu_destroy();
     }
 
     // Test pour suppression d'entreprise.
@@ -684,6 +699,8 @@ int main()
         lu_supprimer_profil_entreprise(id);
 
         TEST(lu_nom_entreprise(id) == NULL);
+
+        lu_destroy();
     }
 
     // Test pour profile d'entreprise.
@@ -703,6 +720,8 @@ int main()
         TEST(strcmp(nom, "") == 0);
         TEST(strcmp(code_postal, "") == 0);
         TEST(strcmp(mail, "") == 0);
+
+        lu_destroy();
     }
 
     // Test de création de poste.
@@ -712,6 +731,8 @@ int main()
         char competences[N_COMPETENCES][L_COMPETENCE] = {"esprit", "humour", "", "", ""};
         size_t const id = lu_creer_poste("improvisateur", competences, 3);
         TEST(id != 0);
+
+        lu_destroy();
     }
 
     // Test de suppression de poste.
@@ -721,6 +742,8 @@ int main()
         char competences[N_COMPETENCES][L_COMPETENCE] = {"esprit", "humour", "", "", ""};
         size_t const id = lu_creer_poste("improvisateur", competences, 3);
         lu_supprimer_poste(id);
+
+        lu_destroy();
     }
 
     // Test pour liste des postes par entreprise.
@@ -739,6 +762,8 @@ int main()
         lu_postes_par_entreprise(I_ENTREPRISE + 3, ids_poste);
         TEST(ids_poste[0] == I_POSTE + 3);
         TEST(ids_poste[1] == 0);
+
+        lu_destroy();
     }
 
     // Test pour nom de chercheur.
@@ -749,6 +774,8 @@ int main()
         TEST(strcmp(lu_nom_chercheur(I_CHERCHEUR + 2), "Pignon") == 0);
         TEST(lu_nom_chercheur(3) == NULL);
         TEST(lu_nom_chercheur(4) == NULL);
+
+        lu_destroy();
     }
 
     // Test pour création de profil de chercheur.
@@ -756,9 +783,12 @@ int main()
         lu_init(chemin_test_ecriture_bd);
 
         char competences[N_COMPETENCES][L_COMPETENCE] = {"esprit", "humour", "", "", ""};
-        size_t const id = lu_creer_profil_chercheur("Rigolo", "Robert", "robert@rigolo.fr", "13001", competences, (const size_t []){0});
+        size_t ids_collegues[N_COLLEGUES] = {0};
+        size_t const id = lu_creer_profil_chercheur("Rigolo", "Robert", "robert@rigolo.fr", "13001", competences, ids_collegues);
         TEST(id != 0);
         TEST(strcmp(lu_nom_chercheur(id), "Rigolo") == 0);
+
+        lu_destroy();
     }
 
     // Test pour suppression de profil de chercheur.
@@ -766,9 +796,12 @@ int main()
         lu_init(chemin_test_ecriture_bd);
 
         char competences[N_COMPETENCES][L_COMPETENCE] = {"esprit", "humour", "", "", ""};
-        size_t const id = lu_creer_profil_chercheur("Rigolo", "Robert", "robert@rigolo.fr", "13001", competences, (const size_t []){0});
+        size_t ids_collegues[N_COLLEGUES] = {0};
+        size_t const id = lu_creer_profil_chercheur("Rigolo", "Robert", "robert@rigolo.fr", "13001", competences, ids_collegues);
         lu_supprimer_profil_chercheur(id);
         TEST(lu_nom_chercheur(id) == NULL);
+
+        lu_destroy();
     }
 
     // Test pour profil de chercheur.
@@ -800,6 +833,8 @@ int main()
         TEST(strcmp(code_postal, "") == 0);
         TEST(strcmp(competences[0], "") == 0);
         TEST(id_collegues[0] == 0);
+
+        lu_destroy();
     }
 
     // Test pour modification de profil de chercheur.
@@ -820,6 +855,8 @@ int main()
         lu_profil_chercheur(I_CHERCHEUR + 1, nom, prenom, mail, code_postal, competences, id_collegues);
         TEST(strcmp(code_postal, "22222") == 0);
         TEST(strcmp(competences[4], "ponctualite") == 0);
+
+        lu_destroy();
     }
 
     // Test pour recherche de postes par compétences.
@@ -842,6 +879,8 @@ int main()
         TEST(ids_poste[0] == I_POSTE + 2);
         TEST(ids_poste[1] == I_POSTE + 3);
         TEST(ids_poste[2] == 0);
+
+        lu_destroy();
     }
 
     // Test pour recherche de postes par compétences et code postal.
@@ -864,6 +903,8 @@ int main()
         lu_recherche_poste_par_competences_code_postal(competences, code_postal, ids_poste);
         TEST(ids_poste[0] == 0);
         TEST(ids_poste[1] == 0);
+
+        lu_destroy();
     }
 
     // Test pour recherche de collegues par compétences.
@@ -883,11 +924,14 @@ int main()
         TEST(ids_collegue_2[0] == I_EMPLOYE + 1);
         TEST(ids_collegue_2[1] == 0);
         TEST(ids_collegue_2[2] == 0);
+
+        lu_destroy();
     }
 
     // Test pour recherche de collegues par entreprise.
     {
         lu_init(chemin_test_bd);
+
         size_t ids_collegue_1[N_EMPLOYES] = {I_EMPLOYE + 1, I_EMPLOYE + 2, I_EMPLOYE + 3};
         lu_recherche_collegue_par_entreprise(I_ENTREPRISE + 1, ids_collegue_1);
         TEST(ids_collegue_1[0] == I_EMPLOYE + 2);
@@ -905,6 +949,8 @@ int main()
         TEST(ids_collegue_3[0] == 0);
         TEST(ids_collegue_3[1] == 0);
         TEST(ids_collegue_3[2] == 0);
+
+        lu_destroy();
     }
 
     // Test pour recherche de chercheur par poste.
@@ -923,6 +969,8 @@ int main()
         lu_recherche_chercheur_par_competences(competences, ids_chercheur);
         TEST(ids_chercheur[0] == I_CHERCHEUR + 2);
         TEST(ids_chercheur[1] == 0);
+
+        lu_destroy();
     }
 
     // Test pour recherche de chercheur par poste et code_postal.
@@ -945,6 +993,8 @@ int main()
         lu_recherche_chercheur_par_competences_code_postal(competences, code_postal, ids_chercheur);
         TEST(ids_chercheur[0] == 0);
         TEST(ids_chercheur[1] == 0);
+
+        lu_destroy();
     }
 
     // Test pour création de profil d'employé.
@@ -952,9 +1002,12 @@ int main()
         lu_init(chemin_test_ecriture_bd);
 
         char competences[N_COMPETENCES][L_COMPETENCE] = {"rythme", "force", "souplesse", "", ""};
-        size_t const id = lu_creer_profil_chercheur("Danseur", "Denis", "denis.danseur@scene.com", "13004", competences, (const size_t []){0});
+        size_t ids_collegues[N_COLLEGUES] = {0};
+        size_t const id = lu_creer_profil_chercheur("Danseur", "Denis", "denis.danseur@scene.com", "13004", competences, ids_collegues);
         TEST(id != 0);
         TEST(strcmp(lu_nom_chercheur(id), "Danseur") == 0);
+
+        lu_destroy();
     }
 
     // Test pour suppression de profil d'employé.
@@ -985,6 +1038,8 @@ int main()
         lu_supprimer_profil_employe(id_2);
         lu_profil_employe(id_3, NULL, NULL, NULL, NULL, NULL, NULL, ids_collegue);
         TEST(ids_collegue[0] == 0);
+
+        lu_destroy();
     }
 
     // Test pour profil d'employé.
@@ -1018,6 +1073,8 @@ int main()
         TEST(strcmp(competences[0], "") == 0);
         TEST(id_entreprise == 0);
         TEST(id_collegues[0] == 0);
+
+        lu_destroy();
     }
 
     // Test pour modification de profil d'employé.
@@ -1038,6 +1095,8 @@ int main()
         TEST(strcmp(code_postal, "90038") == 0);
         TEST(strcmp(competences[3], "indolence") == 0);
         TEST(id_entreprise == I_ENTREPRISE + 3);
+
+        lu_destroy();
     }
 
     printf("%d/%d\n", tests_reussis, tests_executes);
